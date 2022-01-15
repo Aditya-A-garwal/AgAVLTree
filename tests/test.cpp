@@ -1,50 +1,39 @@
-#include <gtest/gtest.h>
-
-#include <string>
 #include <cstdlib>
 
-#define AVL_TEST_MODE 1        // to be able to access private members and add extra diagnostic info collection
-#define CAP_TEST 0             // to run capacity test or not
+#include <gtest/gtest.h>
+
+#define AVL_TEST_MODE \
+    1                                 // to be able to access private members and add extra diagnostic info collection
+#define CAP_TEST 0                    // to run capacity test or not
 #include "../avl.h"
 
 namespace balance_info = avl_tree::balance_info;
 
-#define ASSERT_ROTATIONS(a, b, c, d)         \
+#define ASSERT_ROTATIONS(a, b, c, d)       \
     ASSERT_EQ (balance_info::ll_count, a); \
     ASSERT_EQ (balance_info::lr_count, b); \
     ASSERT_EQ (balance_info::rl_count, c); \
     ASSERT_EQ (balance_info::rr_count, d);
 
-// void
-// ASSERT_ROTATIONS (const int32_t a, const int32_t b, const int32_t c, const int32_t d)
-// {
-//     ASSERT_EQ( balance_info::ll_count, a );
-//     ASSERT_EQ( balance_info::lr_count, b );
-//     ASSERT_EQ( balance_info::rl_count, c );
-//     ASSERT_EQ( balance_info::rr_count, d );
-// }
-
 template <typename tree_t, typename T1, typename... T2>
 void
-insert (tree_t & tree, T1 value, T2... values)
+insert (tree_t & pTree, T1 pValue, T2... pValues)
 {
+    pTree.insert (pValue);
 
-    tree.insert (value);
-
-    if constexpr (sizeof...(values) != 0) {
-        insert (tree, values...);
+    if constexpr (sizeof...(pValues) != 0) {
+        insert (pTree, pValues...);
     }
 }
 
 template <typename tree_t, typename T1, typename... T2>
 void
-erase (tree_t & tree, T1 value, T2... values)
+erase (tree_t & pTree, T1 pValue, T2... pValues)
 {
+    pTree.erase (pValue);
 
-    tree.erase (value);
-
-    if constexpr (sizeof...(values) != 0) {
-        erase (tree, values...);
+    if constexpr (sizeof...(pValues) != 0) {
+        erase (pTree, pValues...);
     }
 }
 
@@ -52,8 +41,8 @@ TEST (Smoke, smoke_test)
 {
     avl_tree::AVL<int32_t> tree;
 
-    constexpr int32_t lo = -1'000'000;
-    constexpr int32_t hi = 1'000'000;
+    constexpr int32_t      lo {-1'000'000};
+    constexpr int32_t      hi {1'000'000};
 
     for (int32_t v = lo; v <= (hi / 2); ++v) {
         tree.insert (v);
@@ -75,14 +64,14 @@ TEST (Smoke, smoke_test)
 }
 
 /**
- *  Test simple insertion with left-left rotation
- *  Produce the following tree
+ * @brief   Test simple insertion with left-left rotation
+ * @note    Produce the following tree
  *
  *                 2
  *                   1
  *                     0
  *
- *  left-left rotation takes place the root to form the tree
+ *          left-left rotation takes place the root to form the tree
  *
  *                 1
  *               0   2
@@ -90,7 +79,6 @@ TEST (Smoke, smoke_test)
  */
 TEST (Insert, insert_ll_simple)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -100,14 +88,14 @@ TEST (Insert, insert_ll_simple)
 }
 
 /**
- *  Test simple insertion with left-right rotation
- *  Produce the following tree
+ * @brief   Test simple insertion with left-right rotation
+ * @note    Produce the following tree
  *
  *                 2
  *             0
  *               1
  *
- *  left-right rotation takes place the root to form the tree
+ *          left-right rotation takes place the root to form the tree
  *
  *                 1
  *               0   2
@@ -115,7 +103,6 @@ TEST (Insert, insert_ll_simple)
  */
 TEST (Insert, insert_lr_simple)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -125,14 +112,14 @@ TEST (Insert, insert_lr_simple)
 }
 
 /**
- *  Test simple insertion with right-left rotation
- *  Produce the following tree
+ * @brief   Test simple insertion with right-left rotation
+ * @note    Produce the following tree
  *
  *                 0
  *                     2
  *                   1
  *
- *  right-left rotation takes place the root to form the tree
+ *          right-left rotation takes place the root to form the tree
  *
  *                 1
  *               0   2
@@ -140,7 +127,6 @@ TEST (Insert, insert_lr_simple)
  */
 TEST (Insert, insert_rl_simple)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -150,14 +136,14 @@ TEST (Insert, insert_rl_simple)
 }
 
 /**
- *  Test simple insertion with right-left rotation
- *  Produce the following tree
+ * @brief   Test simple insertion with right-left rotation
+ * @note    Produce the following tree
  *
  *                 0
  *               1
  *             2
  *
- *  right-left rotation takes place the root to form the tree
+ *          right-left rotation takes place the root to form the tree
  *
  *                 1
  *               0   2
@@ -165,7 +151,6 @@ TEST (Insert, insert_rl_simple)
  */
 TEST (Insert, insert_rr_simple)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -174,99 +159,112 @@ TEST (Insert, insert_rr_simple)
     ASSERT_ROTATIONS (0, 0, 0, 1);
 }
 
+/**
+ * @brief   Test insertion with multiple left-left rotations
+ *
+ *  @note   Multiple rotations are intended to take place after the final insertion
+ *          This is intended
+ */
 TEST (Insert, insert_ll_compound)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 2, 1, 0);     // first left-left rotation
-    ASSERT_ROTATIONS (1, 0, 0, 0);
+    insert (tree, 2, 1, 0);                           // first left-left rotation
+    ASSERT_ROTATIONS (1, 0, 0, 0);                    //
 
-    insert (tree, -1, -2);      // second left-left rotation
-    ASSERT_ROTATIONS (2, 0, 0, 0);
+    insert (tree, -1, -2);                            // second left-left rotation
+    ASSERT_ROTATIONS (2, 0, 0, 0);                    //
 
-    insert (tree, -3, -4);      // third and fourth left-left rotations
-    ASSERT_ROTATIONS (4, 0, 0, 0);
+    insert (tree, -3, -4);                            // third and fourth left-left rotations
+    ASSERT_ROTATIONS (4, 0, 0, 0);                    //
 }
 
+/**
+ * @brief   Test insertion with multiple left-right rotations
+ *
+ *  @note   Multiple rotations are intended to take place after the final insertion
+ *          This is intended
+ */
 TEST (Insert, insert_lr_compound)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 2, 0, 1);     // first left-right rotation
-    ASSERT_ROTATIONS (0, 1, 0, 0);
+    insert (tree, 2, 0, 1);                           // first left-right rotation
+    ASSERT_ROTATIONS (0, 1, 0, 0);                    //
 
-    insert (tree, -2, -1);      // second left-right rotation
-    ASSERT_ROTATIONS (0, 2, 0, 0);
+    insert (tree, -2, -1);                            // second left-right rotation
+    ASSERT_ROTATIONS (0, 2, 0, 0);                    //
 
-    insert (tree, -4, -3);      // third left-right, first left-left rotations
-    ASSERT_ROTATIONS (1, 3, 0, 0);
+    insert (tree, -4, -3);                            // third left-right, first left-left rotations
+    ASSERT_ROTATIONS (1, 3, 0, 0);                    //
 }
 
+/**
+ * @brief   Test insertion with multiple right-left rotations
+ *
+ *  @note   Multiple rotations are intended to take place after the final insertion
+ *          This is intended
+ */
 TEST (Insert, insert_rl_compound)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 0, 2, 1);     // first right-left rotation
-    ASSERT_ROTATIONS (0, 0, 1, 0);
+    insert (tree, 0, 2, 1);                           // first right-left rotation
+    ASSERT_ROTATIONS (0, 0, 1, 0);                    //
 
-    insert (tree, 4, 3);        // second right-left rotiation
-    ASSERT_ROTATIONS (0, 0, 2, 0);
+    insert (tree, 4, 3);                              // second right-left rotiation
+    ASSERT_ROTATIONS (0, 0, 2, 0);                    //
 
-    insert (tree, 6, 5);        // third right-left, first right-right rotation
-    ASSERT_ROTATIONS (0, 0, 3, 1);
+    insert (tree, 6, 5);                              // third right-left, first right-right rotation
+    ASSERT_ROTATIONS (0, 0, 3, 1);                    //
 }
 
+/**
+ * @brief   Test insertion with multiple right-right rotations
+ *
+ *  @note   Multiple rotations are intended to take place after the final insertion
+ *          This is intended
+ */
 TEST (Insert, insert_rr_compound)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 0, 1, 2);     // first right-right rotation
-    ASSERT_ROTATIONS (0, 0, 0, 1);
+    insert (tree, 0, 1, 2);                           // first right-right rotation
+    ASSERT_ROTATIONS (0, 0, 0, 1);                    //
 
-    insert (tree, 3, 4);        // second right-right rotation
-    ASSERT_ROTATIONS (0, 0, 0, 2);
+    insert (tree, 3, 4);                              // second right-right rotation
+    ASSERT_ROTATIONS (0, 0, 0, 2);                    //
 
-    insert (tree, 5, 6);        // third and fourth right-right rotation
+    insert (tree, 5, 6);                    // third and fourth right-right rotation
     ASSERT_ROTATIONS (0, 0, 0, 4);
 }
 
+/**
+ * @brief   Test erasing an ancestorless node without chidren (simple case)
+ *
+ */
 TEST (Erase, no_child_simple)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     tree.insert (0);
     ASSERT_EQ (tree.erase (0), 1);
 }
 
-// Test erasing a node with a right child, but no ancestors
-TEST (Erase, right_child_basic)
+/**
+ * @brief   Test erasing an ancestorless node with a right child only (simple case)
+ *
+ */
+TEST (Erase, left_child_simple)
 {
-
-    avl_tree::AVL<int32_t> tree;
-
-    insert (tree, 0, 1);
-
-    ASSERT_EQ (tree.erase (0), 1);
-    ASSERT_EQ (tree.size (), 1);
-}
-
-// Test erasing a node with a keft child, but no ancestors
-TEST (Erase, left_child_basic)
-{
-
     avl_tree::AVL<int32_t> tree;
 
     tree.insert (0);
@@ -276,10 +274,26 @@ TEST (Erase, left_child_basic)
     ASSERT_EQ (tree.size (), 1);
 }
 
-// Test erasing a node with both children, but no ancestors
-TEST (Erase, both_child_basic)
+/**
+ * @brief   Test erasing an ancestorless node with a right child only (simple case)
+ *
+ */
+TEST (Erase, right_child_simple)
 {
+    avl_tree::AVL<int32_t> tree;
 
+    insert (tree, 0, 1);
+
+    ASSERT_EQ (tree.erase (0), 1);
+    ASSERT_EQ (tree.size (), 1);
+}
+
+/**
+ * @brief   Test erasing an ancestorless node with both children (simple case)
+ *
+ */
+TEST (Erase, both_child_simple)
+{
     avl_tree::AVL<int32_t> tree;
 
     insert (tree, 0, -1, 1);
@@ -288,10 +302,12 @@ TEST (Erase, both_child_basic)
     ASSERT_EQ (tree.size (), 2);
 }
 
-// Test erasing a node with no children, with ancestors, causing a left-left rotation
+/**
+ * @brief   Test erasing a node with no children, but having an ancestor become left-left heavy
+ *
+ */
 TEST (Erase, no_child_ll)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -300,10 +316,10 @@ TEST (Erase, no_child_ll)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
-
     ASSERT_EQ (tree.size (), 15);
     ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                    7
     //
     //          3                    11
@@ -313,11 +329,23 @@ TEST (Erase, no_child_ll)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 4, 6, 8, 10, 12, 14);
-    erase (tree, 9, 13);
+    ASSERT_EQ (tree.size (), 9);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after deletions (balanced)
+    //                    7
+    //
+    //          3                    11
+    //
+    //    1          5          9        13
+    //
+    // 0     2
+
+    erase (tree, 9, 13);
     ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (1, 0, 0, 0);
 
+    // Expected shape of tree after deletions (left-left imbalance at node 7)
     //                    7
     //
     //          3                    11
@@ -327,10 +355,12 @@ TEST (Erase, no_child_ll)
     // 0     2
 }
 
-// Test erasing a node with no children, with ancestors, causing a left-right rotation
+/**
+ * @brief   Test erasing a node with no children, but having an ancestor become left-right heavy
+ *
+ */
 TEST (Erase, no_child_lr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -339,7 +369,10 @@ TEST (Erase, no_child_lr)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
+    ASSERT_EQ (tree.size (), 15);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                    7
     //
     //          3                    11
@@ -349,8 +382,23 @@ TEST (Erase, no_child_lr)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 0, 2, 8, 10, 12, 14);
-    erase (tree, 9, 13);
+    ASSERT_EQ (tree.size (), 9);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after deletions (balanced)
+    //                    7
+    //
+    //          3                    11
+    //
+    //    1          5          9        13
+    //
+    //            4    6
+
+    erase (tree, 9, 13);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 1, 0, 0);
+
+    // Expected shape of tree after deletions (left-right imbalance at node 7)
     //                    7
     //
     //          3                    11
@@ -358,14 +406,14 @@ TEST (Erase, no_child_lr)
     //    1          5
     //
     //            4     6
-
-    ASSERT_ROTATIONS (0, 1, 0, 0);
 }
 
-// Test erasing a node with no children, with ancestors causing a right-left rotation
+/**
+ * @brief   Test erasing a node with no children, but having an ancestor become right-left heavy
+ *
+ */
 TEST (Erase, no_child_rl)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -374,7 +422,10 @@ TEST (Erase, no_child_rl)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
+    ASSERT_EQ (tree.size (), 15);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                    7
     //
     //          3                    11
@@ -384,8 +435,23 @@ TEST (Erase, no_child_rl)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 0, 2, 4, 6, 12, 14);
-    erase (tree, 1, 5);
+    ASSERT_EQ (tree.size (), 9);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after deletions (balanced)
+    //                    7
+    //
+    //          3                    11
+    //
+    //    1          5          9        13
+    //
+    //                      8    10
+
+    erase (tree, 1, 5);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 0, 1, 0);
+
+    // Expected shape of tree after insertions (right-left imbalance at node 7)
     //                    7
     //
     //          3                    11
@@ -393,14 +459,14 @@ TEST (Erase, no_child_rl)
     //                          9        13
     //
     //                      8    10
-
-    ASSERT_ROTATIONS (0, 0, 1, 0);
 }
 
-// Test erasing a node with no children, with ancestors causing a right-right rotation
+/**
+ * @brief   Test erasing a node with no children, but having an ancestor become right-right heavy
+ *
+ */
 TEST (Erase, no_child_rr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -409,7 +475,10 @@ TEST (Erase, no_child_rr)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
+    ASSERT_EQ (tree.size (), 15);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                    7
     //
     //          3                    11
@@ -418,10 +487,24 @@ TEST (Erase, no_child_rr)
     //
     // 0     2    4    6    8    10   12   14
 
-
     erase (tree, 0, 2, 4, 6, 8, 10);
-    erase (tree, 1, 5);
+    ASSERT_EQ (tree.size (), 9);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
+    //                    7
+    //
+    //          3                    11
+    //
+    //    1          5          9        13
+    //
+    //                                12   14
+
+    erase (tree, 1, 5);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 0, 0, 1);
+
+    // Expected shape of tree after deletions (right-right imbalance at node 7)
     //                    7
     //
     //          3                    11
@@ -429,14 +512,14 @@ TEST (Erase, no_child_rr)
     //                          9        13
     //
     //                                12   14
-
-    ASSERT_ROTATIONS (0, 0, 0, 1);
 }
 
-// Test erasing a node with a left child, with ancestors causing a right-left rotation
+/**
+ * @brief   Test erasing a node with a left child, but having an ancestor become right-left heavy
+ *
+ */
 TEST (Erase, left_child_rl)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -444,21 +527,32 @@ TEST (Erase, left_child_rl)
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 3, 5);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // expected shape of tree after insertions (balanced)
     //                       2
     //          1                       6
-    //    0           x           4           8
-    // x     x     x     x     3     5     x     x
+    //    0                       4           8
+    //                         3     5
 
     tree.erase (0);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (0, 0, 1, 0);
+
+    // expected shape of tree after deletion (right-left imbalance at node 2)
+    //                       2
+    //          1                       6
+    //                            4           8
+    //                         3     5
 }
 
-// Test erasing a node with a left child, with ancestors causing a right-right rotation
+/**
+ * @brief   Test erasing a node with a left child, but having an ancestor become right-right heavy
+ *
+ */
 TEST (Erase, left_child_rr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -466,21 +560,32 @@ TEST (Erase, left_child_rr)
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 7, 9);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                       2
     //          1                       6
-    //    0           x           4           8
-    // x     x     x     x     x     x     7     9
+    //    0                       4           8
+    //                                     7     9
 
     tree.erase (0);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (0, 0, 0, 1);
+
+    // Expected shape of tree after insertions (right-right imbalance at node 2)
+    //                       2
+    //          1                       6
+    //    0                       4           8
+    //                                     7     9
 }
 
-// Test erasing a node with a left child, with ancestors causing a left-left rotation
+/**
+ * @brief   Test erasing a node with a right child, but having an ancestor become left-left heavy
+ *
+ */
 TEST (Erase, right_child_ll)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -488,21 +593,32 @@ TEST (Erase, right_child_ll)
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 0, 2);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                       7
     //          3                       8
-    //    1           3           x           9
-    // 0     2     x     x     x     x     x     x
+    //    1           3                       9
+    // 0     2
 
     tree.erase (9);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (1, 0, 0, 0);
+
+    // Expected shape of tree after deletions (left-left imbalance at node 7)
+    //                       7
+    //          3                       8
+    //    1           3
+    // 0     2
 }
 
-// Test erasing a node with a left child, with ancestors causing a left-right rotation
+/**
+ * @brief   Test erasing a node with a right child, but having an ancestor become left-right heavy
+ *
+ */
 TEST (Erase, right_child_lr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -510,20 +626,28 @@ TEST (Erase, right_child_lr)
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 4, 6);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    // Expected shape of tree after insertions (balanced)
     //                       7
     //          3                       8
-    //    1           3           x           9
-    // x     x     4     6     x     x     x     x
+    //    1           3                       9
+    //             4     6
 
     tree.erase (9);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (0, 1, 0, 0);
+
+    // Expected shape of tree after deletions (left-right imbalance at node 7)
+    //                       7
+    //          3                       8
+    //    1           3
+    //             4     6
 }
 
 TEST (Erase, both_child_find_min_basic)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -531,15 +655,16 @@ TEST (Erase, both_child_find_min_basic)
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
     tree.erase (3);
-
+    ASSERT_EQ (tree.size (), 6);
     ASSERT_ROTATIONS (0, 0, 0, 0);
 }
 
 TEST (Erase, both_child_find_min_rl)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -547,17 +672,17 @@ TEST (Erase, both_child_find_min_rl)
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 7);
-
-    tree.insert (6);
+    insert (tree, 6);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
     tree.erase (3);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (0, 0, 1, 0);
 }
 
 TEST (Erase, both_child_find_min_rr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
@@ -565,60 +690,59 @@ TEST (Erase, both_child_find_min_rr)
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
-
-    tree.insert (7);
+    insert (tree, 7);
+    ASSERT_EQ (tree.size (), 8);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
     tree.erase (3);
-
+    ASSERT_EQ (tree.size (), 7);
     ASSERT_ROTATIONS (0, 0, 0, 1);
 }
 
 TEST (Erase, both_child_ll)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 5);              // Layer 1 (root)
-    insert (tree, 2, 7);           // Layer 2
-    insert (tree, 1, 4, 6);        // Layer 3
+    insert (tree, 4);
+    insert (tree, 2, 6);
+    insert (tree, 1, 3, 5);
+    insert (tree, 0);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
+    tree.erase (4);
     ASSERT_EQ (tree.size (), 6);
-
-    insert (tree, 0);        // Insertion which causes imbalance
-
-    tree.erase (5);        // erase current root node
-
     ASSERT_ROTATIONS (1, 0, 0, 0);
 }
 
 TEST (Erase, both_child_lr)
 {
-
     avl_tree::AVL<int32_t> tree;
 
     balance_info::init ();
 
-    insert (tree, 5);                 // Layer 1 (root)
-    insert (tree, 2, 7);              // Layer 2
-    insert (tree, 1, 4, 6, 3);        // Layer 3
+    insert (tree, 5);
+    insert (tree, 2, 7);
+    insert (tree, 1, 4, 6);
+    insert (tree, 3);
+    ASSERT_EQ (tree.size (), 7);
+    ASSERT_ROTATIONS (0, 0, 0, 0);
 
-    tree.erase (5);        // erase current root node
-
+    tree.erase (5);
+    ASSERT_EQ (tree.size (), 6);
     ASSERT_ROTATIONS (0, 1, 0, 0);
 }
 
-// Test simple forward iteration using forward iterators
 TEST (Iteration, forward)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
 
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
-
-    auto end = tree.end ();
+    auto                   end = tree.end ();
     for (int32_t v = lo; v <= hi; ++v) {
         tree.insert (v);
     }
@@ -630,16 +754,15 @@ TEST (Iteration, forward)
     }
 }
 
-// Test simple reverse iteration using reverse iterators
 TEST (Iteration, reverse)
 {
 
     avl_tree::AVL<int32_t> tree;
 
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
+    constexpr int32_t      lo  = 1;
+    constexpr int32_t      hi  = 1'000;
 
-    auto end = tree.rend ();
+    auto                   end = tree.rend ();
     for (int32_t v = hi; v >= lo; --v) {
         tree.insert (v);
     }
@@ -651,14 +774,12 @@ TEST (Iteration, reverse)
     }
 }
 
-// Test simple forward iteration using foreach loop
 TEST (Iteration, for_each)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = lo; v <= hi; ++v) {
         tree.insert (v);
@@ -671,20 +792,18 @@ TEST (Iteration, for_each)
     }
 }
 
-// Test all operators and edge cases for end iterator
 TEST (Iteration, end_iterator_test)
 {
+    constexpr int32_t                lo {1};
+    constexpr int32_t                hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
+    avl_tree::AVL<int32_t>           tree;
 
     avl_tree::AVL<int32_t>::iterator it;
     avl_tree::AVL<int32_t>::iterator end = tree.end ();
 
     // While Tree is empty
-    it = tree.end ();
+    it                                   = tree.end ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
@@ -727,20 +846,18 @@ TEST (Iteration, end_iterator_test)
     }
 }
 
-// Test all operators and edge cases for rend iterator
 TEST (Iteration, rend_iterator_test)
 {
+    constexpr int32_t                        lo {1};
+    constexpr int32_t                        hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
+    avl_tree::AVL<int32_t>                   tree;
 
     avl_tree::AVL<int32_t>::reverse_iterator it;
     avl_tree::AVL<int32_t>::reverse_iterator end = tree.rend ();
 
     // While Tree is empty
-    it = tree.rend ();
+    it                                           = tree.rend ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
@@ -782,14 +899,12 @@ TEST (Iteration, rend_iterator_test)
     }
 }
 
-// Test all operators and edge cases for begin iterator
 TEST (Iteration, begin_iterator_test)
 {
+    constexpr int32_t                lo {1};
+    constexpr int32_t                hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
+    avl_tree::AVL<int32_t>           tree;
 
     avl_tree::AVL<int32_t>::iterator it;
 
@@ -841,14 +956,12 @@ TEST (Iteration, begin_iterator_test)
     }
 }
 
-// Test all operators and edge cases for rbegin iterator
 TEST (Iteration, rbegin_iterator_test)
 {
+    constexpr int32_t                        lo {1};
+    constexpr int32_t                        hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
+    avl_tree::AVL<int32_t>                   tree;
 
     avl_tree::AVL<int32_t>::reverse_iterator it;
 
@@ -900,14 +1013,12 @@ TEST (Iteration, rbegin_iterator_test)
     }
 }
 
-// The find method returns an iterator an exact match of the given element (end() on failure)
 TEST (BinarySearch, find_equal_strict_test)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.find (v), tree.end ());
@@ -922,15 +1033,12 @@ TEST (BinarySearch, find_equal_strict_test)
     }
 }
 
-// The first_greater_strict method returns an iterator to the smallest element strictly greater
-// than the given element (end() on failure)
 TEST (BinarySearch, find_greater_strict_test)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_strict (v), tree.end ());
@@ -946,15 +1054,12 @@ TEST (BinarySearch, find_greater_strict_test)
     ASSERT_EQ (tree.first_greater_strict (hi), tree.end ());
 }
 
-// The first_greater_equals method returns an iterator to the smallest element greater than or
-// equal to the given element (end() on failure)
 TEST (BinarySearch, find_greater_equals_test)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_equals (v), tree.end ());
@@ -981,15 +1086,12 @@ TEST (BinarySearch, find_greater_equals_test)
     }
 }
 
-// The last_smaller_strict method returns an iterator to the largest element strictly less than the
-// the given element (end() on failure)
 TEST (BinarySearch, find_less_strict_test)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_strict (v), tree.end ());
@@ -1005,15 +1107,12 @@ TEST (BinarySearch, find_less_strict_test)
     ASSERT_EQ (tree.last_smaller_strict (lo), tree.end ());
 }
 
-// The last_smaller_equals method returns an iterator to the largest element less than or equal to
-// the given element (end() on failure)
 TEST (BinarySearch, find_less_equals_test)
 {
+    constexpr int32_t      lo {1};
+    constexpr int32_t      hi {1000};
 
     avl_tree::AVL<int32_t> tree;
-
-    constexpr int32_t lo = 1;
-    constexpr int32_t hi = 1'000;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_equals (v), tree.end ());
@@ -1037,50 +1136,5 @@ TEST (BinarySearch, find_less_equals_test)
         ASSERT_EQ (*(tree.last_smaller_equals (lo)), lo);
     } else {
         ASSERT_EQ (tree.last_smaller_equals (lo), tree.end ());
-    }
-}
-
-// Test with std::string
-TEST (DataTypes, cpp_string)
-{
-
-    avl_tree::AVL<std::string> tree;
-
-    insert (tree, "AVL", "Trees", "are", "very", "useful", "useful");
-
-    ASSERT_EQ (tree.size (), 5);
-
-    auto it1 = tree.begin ();
-    auto it2 = tree.begin ();
-    ++it2;
-
-    for (; it2 != tree.end (); ++it1, ++it2) {
-        ASSERT_LT (*it1, *it2);
-    }
-}
-
-bool
-comp_lt (const char * const & a, const char * const & b)
-{
-    return strcmp (a, b) < 0;
-}
-
-// Test with C-style string
-TEST (DataTypes, c_string)
-{
-
-    avl_tree::AVL<const char *, comp_lt> tree;
-
-    insert (tree, "AVL", "Trees", "are", "very", "useful", "useful");
-
-    ASSERT_EQ (tree.size (), 5);
-
-    auto it1 = tree.begin ();
-    auto it2 = tree.begin ();
-
-    ++it2;
-
-    for (; it2 != tree.end (); ++it1, ++it2) {
-        ASSERT_LT (strcmp (*it1, *it2), 0);
     }
 }
