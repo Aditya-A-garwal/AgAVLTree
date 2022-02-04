@@ -52,77 +52,23 @@ class AVL {
         tree_ptr_t tree_ptr {nullptr};
 
         public:
-        iterator (ptr_t _ptr, tree_ptr_t _tree_ptr) : ptr {_ptr}, tree_ptr {_tree_ptr}
-        {}
+        iterator (ptr_t _ptr, tree_ptr_t _tree_ptr);
 
         iterator () = default;
 
-        ref_t
-        operator* () const
-        {
-            return ptr->val;
-        }
+        ref_t    operator* () const;
 
-        iterator
-        operator++ ()
-        {
+        iterator operator++ ();
 
-            if (ptr != nullptr) {
-                ptr = tree_ptr->first_greater_strict_ptr (ptr->val);
-            }
-            return *this;
-        }
+        iterator operator++ (int);
 
-        iterator
-        operator++ (int)
-        {
+        iterator operator-- ();
 
-            iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
+        iterator operator-- (int);
 
-        iterator
-        operator-- ()
-        {
+        bool     operator== (const iterator & pOther) const;
 
-            if (ptr != nullptr) {
-
-                ptr_t t = tree_ptr->last_smaller_strict_ptr (ptr->val);
-
-                if (t != nullptr) {
-                    ptr = t;
-                }
-
-                // this points to beginning of container
-                else {
-                }
-            } else {
-                ptr = tree_ptr->find_max ();
-            }
-
-            return *this;
-        }
-
-        iterator
-        operator-- (int)
-        {
-
-            iterator tmp = *this;
-            --(*this);
-            return tmp;
-        }
-
-        friend bool
-        operator== (const iterator & a, const iterator & b)
-        {
-            return a.ptr == b.ptr and a.tree_ptr == b.tree_ptr;
-        }
-        friend bool
-        operator!= (const iterator & a, const iterator & b)
-        {
-            return a.ptr != b.ptr or a.tree_ptr != b.tree_ptr;
-        }
+        bool     operator!= (const iterator & pOther) const;
     };
 
     struct reverse_iterator {
@@ -140,74 +86,24 @@ class AVL {
         tree_ptr_t tree_ptr {nullptr};
 
         public:
-        reverse_iterator (ptr_t _ptr, tree_ptr_t _tree_ptr) : ptr {_ptr}, tree_ptr {_tree_ptr}
-        {}
+        reverse_iterator (ptr_t _ptr, tree_ptr_t _tree_ptr);
 
         reverse_iterator () = default;
 
 
-        ref_t
-        operator* () const
-        {
-            return ptr->val;
-        }
+        ref_t            operator* () const;
 
-        reverse_iterator
-        operator++ ()
-        {
+        reverse_iterator operator++ ();
 
-            if (ptr != nullptr) {
-                ptr = tree_ptr->last_smaller_strict_ptr (ptr->val);
-            }
-            return *this;
-        }
+        reverse_iterator operator++ (int);
 
-        reverse_iterator
-        operator++ (int)
-        {
+        reverse_iterator operator-- ();
 
-            reverse_iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
+        reverse_iterator operator-- (int);
 
-        reverse_iterator
-        operator-- ()
-        {
+        bool             operator== (const reverse_iterator & pOther) const;
 
-            if (ptr != nullptr) {
-
-                ptr_t t = tree_ptr->first_greater_strict_ptr (ptr->val);
-
-                if (t != nullptr) {
-                    ptr = t;
-                } else {
-                }
-            } else {
-                ptr = tree_ptr->find_min ();
-            }
-            return *this;
-        }
-
-        reverse_iterator
-        operator-- (int)
-        {
-
-            reverse_iterator tmp = *this;
-            --(*this);
-            return tmp;
-        }
-
-        friend bool
-        operator== (const reverse_iterator & a, const reverse_iterator & b)
-        {
-            return a.ptr == b.ptr and a.tree_ptr == b.tree_ptr;
-        }
-        friend bool
-        operator!= (const reverse_iterator & a, const reverse_iterator & b)
-        {
-            return a.ptr != b.ptr or a.tree_ptr != b.tree_ptr;
-        }
+        bool             operator!= (const reverse_iterator & pOther) const;
     };
 
     AVL ();
@@ -1379,4 +1275,164 @@ avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t cur)
     if (cur->cptr[1] != nullptr)
         clear (cur->cptr[1]);
     delete cur;
+}
+
+
+//! Iterators
+
+template <typename val_t>
+avl_tree::AVL<val_t>::iterator::iterator (avl_tree::AVL<val_t>::node_t * _ptr, const avl_tree::AVL<val_t> * _tree_ptr) :
+    ptr {_ptr}, tree_ptr {_tree_ptr}
+{}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::iterator::ref_t
+avl_tree::AVL<val_t>::iterator::operator* () const
+{
+    return ptr->val;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::iterator
+avl_tree::AVL<val_t>::iterator::operator++ ()
+{
+
+    if (ptr != nullptr) {
+        ptr = tree_ptr->first_greater_strict_ptr (ptr->val);
+    }
+    return *this;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::iterator
+avl_tree::AVL<val_t>::iterator::operator++ (int)
+{
+
+    iterator tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::iterator
+avl_tree::AVL<val_t>::iterator::operator-- ()
+{
+
+    if (ptr != nullptr) {
+
+        ptr_t t = tree_ptr->last_smaller_strict_ptr (ptr->val);
+
+        if (t != nullptr) {
+            ptr = t;
+        }
+
+        // this points to beginning of container
+        else {
+        }
+    } else {
+        ptr = tree_ptr->find_max ();
+    }
+
+    return *this;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::iterator
+avl_tree::AVL<val_t>::iterator::operator-- (int)
+{
+
+    iterator tmp = *this;
+    --(*this);
+    return tmp;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator & pOther) const
+{
+    return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator & pOther) const
+{
+    return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
+}
+
+template <typename val_t>
+avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (avl_tree::AVL<val_t>::node_t * _ptr,
+                                                          const avl_tree::AVL<val_t> *   _tree_ptr) :
+    ptr {_ptr}, tree_ptr {_tree_ptr}
+{}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::reverse_iterator::ref_t
+avl_tree::AVL<val_t>::reverse_iterator::operator* () const
+{
+    return ptr->val;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::reverse_iterator
+avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
+{
+
+    if (ptr != nullptr) {
+        ptr = tree_ptr->last_smaller_strict_ptr (ptr->val);
+    }
+    return *this;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::reverse_iterator
+avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
+{
+
+    reverse_iterator tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::reverse_iterator
+avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
+{
+
+    if (ptr != nullptr) {
+
+        ptr_t t = tree_ptr->first_greater_strict_ptr (ptr->val);
+
+        if (t != nullptr) {
+            ptr = t;
+        } else {
+        }
+    } else {
+        ptr = tree_ptr->find_min ();
+    }
+    return *this;
+}
+
+template <typename val_t>
+typename avl_tree::AVL<val_t>::reverse_iterator
+avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
+{
+
+    reverse_iterator tmp = *this;
+    --(*this);
+    return tmp;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
+{
+    return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
+{
+    return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
 }
