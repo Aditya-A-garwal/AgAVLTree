@@ -1013,68 +1013,72 @@ TEST (Iteration, rbegin_iterator_test)
     }
 }
 
-TEST (Iteration, equality_test) {
+TEST (Iteration, equality_test)
+{
 
-    avl_tree::AVL<int32_t>                  tree1;
-    avl_tree::AVL<int32_t>                  tree2;
+    avl_tree::AVL<int32_t> tree1;
+    avl_tree::AVL<int32_t> tree2;
 
-    tree1.insert(0);
-    tree1.insert(1);
+    tree1.insert (0);
+    tree1.insert (1);
 
-    tree2.insert(0);
-    tree2.insert(1);
+    tree2.insert (0);
+    tree2.insert (1);
 
-    auto it1 = tree1.begin();
-    auto it1_cpy = tree1.begin();
-    auto it2 = tree2.begin();
-    auto it2_cpy = tree2.begin();
+    auto it1     = tree1.begin ();
+    auto it1_cpy = tree1.begin ();
+    auto it2     = tree2.begin ();
+    auto it2_cpy = tree2.begin ();
 
     // same tree, same node
-    ASSERT_EQ(it1, it1_cpy);
-    ASSERT_EQ(it2, it2_cpy);
+    ASSERT_EQ (it1, it1_cpy);
+    ASSERT_EQ (it2, it2_cpy);
 
     // different tree same value node
-    ASSERT_NE(it1, it2);
+    ASSERT_NE (it1, it2);
 
     // same tree, different node
-    ++it1; it2++;
-    ASSERT_NE(it1, it1_cpy);
-    ASSERT_NE(it2, it2_cpy);
+    ++it1;
+    it2++;
+    ASSERT_NE (it1, it1_cpy);
+    ASSERT_NE (it2, it2_cpy);
 
     // different tree, different value node
-    ASSERT_NE(it1_cpy, it2);
+    ASSERT_NE (it1_cpy, it2);
 }
 
-TEST (Iteration, reverse_equality_test) {
+TEST (Iteration, reverse_equality_test)
+{
 
-    avl_tree::AVL<int32_t>                  tree1;
-    avl_tree::AVL<int32_t>                  tree2;
+    avl_tree::AVL<int32_t> tree1;
+    avl_tree::AVL<int32_t> tree2;
 
-    tree1.insert(0);
-    tree1.insert(1);
+    tree1.insert (0);
+    tree1.insert (1);
 
-    tree2.insert(0);
-    tree2.insert(1);
+    tree2.insert (0);
+    tree2.insert (1);
 
-    auto it1 = tree1.rbegin();
-    auto it1_cpy = tree1.rbegin();
-    auto it2 = tree2.rbegin();
-    auto it2_cpy = tree2.rbegin();
+    auto it1     = tree1.rbegin ();
+    auto it1_cpy = tree1.rbegin ();
+    auto it2     = tree2.rbegin ();
+    auto it2_cpy = tree2.rbegin ();
 
     // same tree, same node
-    ASSERT_EQ(it1, it1_cpy);
-    ASSERT_EQ(it2, it2_cpy);
+    ASSERT_EQ (it1, it1_cpy);
+    ASSERT_EQ (it2, it2_cpy);
 
     // different tree same value node
-    ASSERT_NE(it1, it2);
+    ASSERT_NE (it1, it2);
 
     // same tree, different node
-    ++it1; it2++;
-    ASSERT_NE(it1, it1_cpy);
-    ASSERT_NE(it2, it2_cpy);
+    ++it1;
+    it2++;
+    ASSERT_NE (it1, it1_cpy);
+    ASSERT_NE (it2, it2_cpy);
 
     // different tree, different value node
-    ASSERT_NE(it1_cpy, it2);
+    ASSERT_NE (it1_cpy, it2);
 }
 
 TEST (BinarySearch, find_equal_strict_test)
@@ -1227,9 +1231,11 @@ TEST (ComparatorTest, c_string_test)
     tree.insert ("very");
     tree.insert ("useful");
 
+    tree.insert (ar);
+
     ASSERT_EQ (tree.size (), 5);
 
-    for (auto it1 = tree.begin (), it2 = ++tree.begin (); it2 != tree.end(); ++it1, ++it2) {
+    for (auto it1 = tree.begin (), it2 = ++tree.begin (); it2 != tree.end (); ++it1, ++it2) {
         ASSERT_EQ (lt (*it1, *it2), 1);
     }
 }
