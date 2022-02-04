@@ -1013,6 +1013,70 @@ TEST (Iteration, rbegin_iterator_test)
     }
 }
 
+TEST (Iteration, equality_test) {
+
+    avl_tree::AVL<int32_t>                  tree1;
+    avl_tree::AVL<int32_t>                  tree2;
+
+    tree1.insert(0);
+    tree1.insert(1);
+
+    tree2.insert(0);
+    tree2.insert(1);
+
+    auto it1 = tree1.begin();
+    auto it1_cpy = tree1.begin();
+    auto it2 = tree2.begin();
+    auto it2_cpy = tree2.begin();
+
+    // same tree, same node
+    ASSERT_EQ(it1, it1_cpy);
+    ASSERT_EQ(it2, it2_cpy);
+
+    // different tree same value node
+    ASSERT_NE(it1, it2);
+
+    // same tree, different node
+    ++it1; it2++;
+    ASSERT_NE(it1, it1_cpy);
+    ASSERT_NE(it2, it2_cpy);
+
+    // different tree, different value node
+    ASSERT_NE(it1_cpy, it2);
+}
+
+TEST (Iteration, reverse_equality_test) {
+
+    avl_tree::AVL<int32_t>                  tree1;
+    avl_tree::AVL<int32_t>                  tree2;
+
+    tree1.insert(0);
+    tree1.insert(1);
+
+    tree2.insert(0);
+    tree2.insert(1);
+
+    auto it1 = tree1.rbegin();
+    auto it1_cpy = tree1.rbegin();
+    auto it2 = tree2.rbegin();
+    auto it2_cpy = tree2.rbegin();
+
+    // same tree, same node
+    ASSERT_EQ(it1, it1_cpy);
+    ASSERT_EQ(it2, it2_cpy);
+
+    // different tree same value node
+    ASSERT_NE(it1, it2);
+
+    // same tree, different node
+    ++it1; it2++;
+    ASSERT_NE(it1, it1_cpy);
+    ASSERT_NE(it2, it2_cpy);
+
+    // different tree, different value node
+    ASSERT_NE(it1_cpy, it2);
+}
+
 TEST (BinarySearch, find_equal_strict_test)
 {
     constexpr int32_t      lo {1};
@@ -1136,5 +1200,36 @@ TEST (BinarySearch, find_less_equals_test)
         ASSERT_EQ (*(tree.last_smaller_equals (lo)), lo);
     } else {
         ASSERT_EQ (tree.last_smaller_equals (lo), tree.end ());
+    }
+}
+
+bool
+lt (const char * const & a, const char * const & b)
+{
+    return strcmp (a, b) < 0;
+}
+bool
+eq (const char * const & a, const char * const & b)
+{
+    return strcmp (a, b) == 0;
+}
+
+TEST (ComparatorTest, c_string_test)
+{
+
+    avl_tree::AVL<const char *> tree (lt, eq);
+
+    char                        ar[] = "useful";
+
+    tree.insert ("AVL");
+    tree.insert ("Trees");
+    tree.insert ("are");
+    tree.insert ("very");
+    tree.insert ("useful");
+
+    ASSERT_EQ (tree.size (), 5);
+
+    for (auto it1 = tree.begin (), it2 = ++tree.begin (); it2 != tree.end(); ++it1, ++it2) {
+        ASSERT_EQ (lt (*it1, *it2), 1);
     }
 }
