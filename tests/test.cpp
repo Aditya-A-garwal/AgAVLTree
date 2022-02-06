@@ -15,6 +15,13 @@ namespace balance_info = avl_tree::balance_info;
     ASSERT_EQ (balance_info::rl_count, c); \
     ASSERT_EQ (balance_info::rr_count, d);
 
+/**
+ * @brief                       Inserts all given elements into a tree, in the same order
+ * @note                        This is a utility function to improve readability where a lot of contiguous inserts are required
+ *
+ * @param pTree                 Reference to the tree in which to insert the values
+ * @param pValues               The values to insert
+ */
 template <typename tree_t, typename T1, typename... T2>
 void
 insert (tree_t & pTree, T1 pValue, T2... pValues)
@@ -26,6 +33,13 @@ insert (tree_t & pTree, T1 pValue, T2... pValues)
     }
 }
 
+/**
+ * @brief                       Erases all given elements from a tree, in the given order
+ * @note                        This is a utility function to improve readability where a lot of contiguous erases are required
+ *
+ * @param pTree                 Reference to the tree in which to insert the values
+ * @param pValues               The values to erase
+ */
 template <typename tree_t, typename T1, typename... T2>
 void
 erase (tree_t & pTree, T1 pValue, T2... pValues)
@@ -1218,7 +1232,7 @@ eq (const char * const & a, const char * const & b)
     return strcmp (a, b) == 0;
 }
 
-TEST (ComparatorTest, c_string_test)
+TEST (Comparator, c_string_test)
 {
 
     avl_tree::AVL<const char *> tree (lt, eq);
