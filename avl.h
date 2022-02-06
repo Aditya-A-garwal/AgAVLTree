@@ -40,14 +40,15 @@ class AVL {
     public:
     struct iterator {
 
+#ifndef AVL_TEST_MODE
+        protected:
+#endif
+
         using value_t    = val_t;
         using ptr_t      = node_ptr_t;
         using tree_ptr_t = const AVL<val_t> *;
         using ref_t      = const val_t &;
 
-#ifndef AVL_TEST_MODE
-        private:
-#endif
         ptr_t      ptr {nullptr};
         tree_ptr_t tree_ptr {nullptr};
 
@@ -73,14 +74,14 @@ class AVL {
 
     struct reverse_iterator {
 
+#ifndef AVL_TEST_MODE
+        protected:
+#endif
+
         using value_t    = val_t;
         using ptr_t      = node_ptr_t;
         using tree_ptr_t = const AVL<val_t> *;
         using ref_t      = const val_t &;
-
-#ifndef AVL_TEST_MODE
-        private:
-#endif
 
         ptr_t      ptr {nullptr};
         tree_ptr_t tree_ptr {nullptr};
@@ -107,6 +108,10 @@ class AVL {
     };
 
     AVL ();
+
+    AVL (std::initializer_list<val_t> pVals);
+
+    AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp);
 
     AVL (const comp_t pLtComp, const comp_t pEqComp);
 
@@ -137,76 +142,6 @@ class AVL {
     iterator         last_smaller_strict (const val_t val) const;
 
     iterator         last_smaller_equals (const val_t val) const;
-
-    void
-    printPreorder (node_ptr_t cur)
-    {
-
-        if (cur == nullptr)
-            return;
-
-        printPreorder (cur->cptr[0]);
-        printPreorder (cur->cptr[1]);
-
-        std::cout << '(';
-        if (cur->cptr[0] != nullptr)
-            std::cout << cur->cptr[0]->val;
-        else
-            std::cout << 'x';
-
-        std::cout << ", " << cur->val << ", ";
-
-        if (cur->cptr[1] != nullptr)
-            std::cout << cur->cptr[1]->val;
-        else
-            std::cout << 'x';
-        std::cout << ')';
-
-        std::cout << ' ' << cur->dep;
-
-        std::cout << std::endl;
-    }
-
-    void
-    printPreorder ()
-    {
-        printPreorder (m_root);
-    }
-
-    void
-    printPostorder (node_ptr_t cur)
-    {
-
-        if (cur == nullptr)
-            return;
-
-        std::cout << '(';
-        if (cur->cptr[0] != nullptr)
-            std::cout << cur->cptr[0]->val;
-        else
-            std::cout << 'x';
-
-        std::cout << ", " << cur->val << ", ";
-
-        if (cur->cptr[1] != nullptr)
-            std::cout << cur->cptr[1]->val;
-        else
-            std::cout << 'x';
-        std::cout << ')';
-
-        std::cout << ' ' << cur->dep;
-
-        std::cout << std::endl;
-
-        printPostorder (cur->cptr[0]);
-        printPostorder (cur->cptr[1]);
-    }
-
-    void
-    printPostorder ()
-    {
-        printPostorder (m_root);
-    }
 
     bool
     checkBalance (node_ptr_t cur)
@@ -331,6 +266,36 @@ avl_tree::AVL<val_t>::AVL () : comp {default_lessthan}, equals {default_equals}
 template <typename val_t>
 avl_tree::AVL<val_t>::AVL (const comp_t pLtComp, const comp_t pEqComp) : comp {pLtComp}, equals {pEqComp}
 {}
+
+/**
+ * @brief Construct a new avl tree::AVL<val t>::AVL object
+ *
+ * @tparam val_t
+ * @param pVals
+ */
+template <typename val_t>
+avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals) : comp {default_lessthan}, equals {default_equals}
+{
+    for(auto &e : pVals) {
+        insert (e);
+    }
+}
+
+/**
+ * @brief Construct a new avl tree::AVL<val t>::AVL object
+ *
+ * @tparam val_t
+ * @param pVals
+ * @param pLtComp
+ * @param pEqComp
+ */
+template <typename val_t>
+avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp) : comp {pLtComp}, equals {pEqComp}
+{
+    for(auto &e : pVals) {
+        insert (e);
+    }
+}
 
 /**
  * @brief                   Returns the size of the tree (number of elements)
@@ -1262,7 +1227,7 @@ avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & val) const
 /**
  * @brief                   Clear the subtree of an entire node (including the node) by deleting
  *
- * @tparam val_t            The Type of data held by tree instance
+ * @tparam val_t            Type of data held by tree instance
  * @param cur               Pointer to node whose subtree is to be deleted
  */
 template <typename val_t>
@@ -1280,11 +1245,24 @@ avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t cur)
 
 //! Iterators
 
+/**
+ * @brief                   Construct a new avl tree::AVL<val t>::iterator::iterator object
+ *
+ * @tparam val_t            Type of data held by tree instance
+ * @param _ptr              The pointer to encapsulate (points to node or nullptr)
+ * @param _tree_ptr         The point to the tree which contains the node
+ */
 template <typename val_t>
 avl_tree::AVL<val_t>::iterator::iterator (avl_tree::AVL<val_t>::node_t * _ptr, const avl_tree::AVL<val_t> * _tree_ptr) :
     ptr {_ptr}, tree_ptr {_tree_ptr}
 {}
 
+/**
+ * @brief                   Dereferences and returns the value held by the encapsulated node
+ *
+ * @tparam val_t            Type of data held by tree instance
+ * @return avl_tree::AVL<val_t>::iterator::ref_t Data held by tree node the iterator points to
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator::ref_t
 avl_tree::AVL<val_t>::iterator::operator* () const
@@ -1292,6 +1270,12 @@ avl_tree::AVL<val_t>::iterator::operator* () const
     return ptr->val;
 }
 
+/**
+ * @brief                   Post increment operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator++ ()
@@ -1303,6 +1287,12 @@ avl_tree::AVL<val_t>::iterator::operator++ ()
     return *this;
 }
 
+/**
+ * @brief                   Post increment operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator++ (int)
@@ -1313,6 +1303,12 @@ avl_tree::AVL<val_t>::iterator::operator++ (int)
     return tmp;
 }
 
+/**
+ * @brief                   Post decrement operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator-- ()
@@ -1336,6 +1332,12 @@ avl_tree::AVL<val_t>::iterator::operator-- ()
     return *this;
 }
 
+/**
+ * @brief                   Pre decrement operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator-- (int)
@@ -1346,6 +1348,14 @@ avl_tree::AVL<val_t>::iterator::operator-- (int)
     return tmp;
 }
 
+/**
+ * @brief                   Checks if the iterator points to the same node in the same tree
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @param pOther            The iterator to compare to
+ * @return true             If both iterators point to the same node of the same tree
+ * @return false            If both iterators dont point to the same node or belong to different trees
+ */
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator & pOther) const
@@ -1353,6 +1363,14 @@ avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator
     return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
 }
 
+/**
+ * @brief                   Checks if the iterator points to different nodes or belong to different trees
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @param pOther            The iterator to compare to
+ * @return true             If both iterators point to the different nodes or belong to different trees
+ * @return false            If both iterators point to the same node in the same tree
+ */
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator & pOther) const
@@ -1360,12 +1378,25 @@ avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator
     return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
 }
 
+/**
+ * @brief Construct a new avl tree::AVL<val t>::reverse iterator::reverse iterator object
+ *
+ * @tparam val_t            Type of data held by tree instance
+ * @param _ptr              The pointer to encapsulate (points to node or nullptr)
+ * @param _tree_ptr         The point to the tree which contains the node
+ */
 template <typename val_t>
 avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (avl_tree::AVL<val_t>::node_t * _ptr,
                                                           const avl_tree::AVL<val_t> *   _tree_ptr) :
     ptr {_ptr}, tree_ptr {_tree_ptr}
 {}
 
+/**
+ * @brief                   Dereferences and returns the value held by the encapsulated node
+ *
+ * @tparam val_t            Type of data held by tree instance
+ * @return avl_tree::AVL<val_t>::reverse_iterator::ref_t Data held by tree node the iterator points to
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator::ref_t
 avl_tree::AVL<val_t>::reverse_iterator::operator* () const
@@ -1373,6 +1404,12 @@ avl_tree::AVL<val_t>::reverse_iterator::operator* () const
     return ptr->val;
 }
 
+/**
+ * @brief                   Post increment operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
@@ -1384,6 +1421,12 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
     return *this;
 }
 
+/**
+ * @brief                   Pre increment operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
@@ -1394,6 +1437,12 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
     return tmp;
 }
 
+/**
+ * @brief                   Post decrement operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
@@ -1413,6 +1462,12 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
     return *this;
 }
 
+/**
+ * @brief                   Pre decrement operator (incremements the pointer to the next inorder node)
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @return avl_tree::AVL<val_t>::reverse_iterator Decremented Iterator
+ */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
@@ -1423,6 +1478,14 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
     return tmp;
 }
 
+/**
+ * @brief                   Checks if the iterator points to different nodes or belong to different trees
+ *
+ * @tparam val_t            Type of data held by the tree instance
+ * @param pOther            The iterator to compare to
+ * @return true             If both iterators point to the different nodes or belong to different trees
+ * @return false            If both iterators point to the same node in the same tree
+ */
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
@@ -1430,6 +1493,13 @@ avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::
     return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
 }
 
+/**
+ * @brief Construct a new avl tree::AVL<val t>::reverse iterator::reverse iterator object
+ *
+ * @tparam val_t            Type of data held by tree instance
+ * @param _ptr              The pointer to encapsulate (points to node or nullptr)
+ * @param _tree_ptr         The point to the tree which contains the node
+ */
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
