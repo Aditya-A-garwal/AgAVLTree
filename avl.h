@@ -148,6 +148,8 @@ class AVL {
 
     bool             check_balance ();
 
+    val_t            get_root_val ();
+
     private:
     node_ptr_t  m_root {nullptr};
     size_t      m_sz {0};
@@ -578,8 +580,9 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (top, ldep, rdep);
     top->dep = max (ldep, rdep);
 
-    calc_depth (bot, ldep, rdep);
-    bot->dep = max (ldep, rdep);
+    // calc_depth (bot, ldep, rdep);
+    // bot->dep = max (ldep, rdep);
+    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
 
 #ifdef AVL_TEST_MODE
     balance_info::ll_count += 1;
@@ -616,8 +619,9 @@ avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (mid, ldep, rdep);
     mid->dep = max (ldep, rdep);
 
-    calc_depth (bot, ldep, rdep);
-    bot->dep = max (ldep, rdep);
+    // calc_depth (bot, ldep, rdep);
+    // bot->dep = max (ldep, rdep);
+    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
 
 #ifdef AVL_TEST_MODE
     balance_info::lr_count += 1;
@@ -654,8 +658,9 @@ avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (mid, ldep, rdep);
     mid->dep = max (ldep, rdep);
 
-    calc_depth (bot, ldep, rdep);
-    bot->dep = max (ldep, rdep);
+    // calc_depth (bot, ldep, rdep);
+    // bot->dep = max (ldep, rdep);
+    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
 
 #ifdef AVL_TEST_MODE
     balance_info::rl_count += 1;
@@ -686,8 +691,10 @@ avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (top, ldep, rdep);
     top->dep = max (ldep, rdep);
 
-    calc_depth (bot, ldep, rdep);
-    bot->dep = max (ldep, rdep);
+    // calc_depth (bot, ldep, rdep);
+    // bot->dep = max (ldep, rdep);
+
+    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
 
 #ifdef AVL_TEST_MODE
     balance_info::rr_count += 1;
@@ -1489,18 +1496,18 @@ bool
 avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
 {
 
-    uint8_t ldep;
-    uint8_t rdep;
+    uint8_t ldep {};
+    uint8_t rdep {};
     bool    flag {1};
 
-    if (cur->ldep != nullptr) {
-        flag = checkBalance (cur->ldep);
-        ldep = 1 + cur->ldep;
+    if (cur->lptr != nullptr) {
+        flag = check_balance (cur->lptr);
+        ldep = 1 + cur->lptr->dep;
     }
 
-    if (cur->rdep != nullptr) {
-        flag = checkBalance (cur->rdep);
-        ldep = 1 + cur->rdep;
+    if (cur->rptr != nullptr) {
+        flag = check_balance (cur->rptr);
+        rdep = 1 + cur->rptr->dep;
     }
 
     if (ldep > 1 + rdep)
@@ -1514,5 +1521,17 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::check_balance ()
 {
-    return check_balance (m_root);
+    if (m_root != nullptr) {
+        return check_balance (m_root);
+    }
+    return 1;
 }
+
+#ifdef AVL_TEST_MODE
+template <typename val_t>
+val_t
+avl_tree::AVL<val_t>::get_root_val ()
+{
+    return m_root->val;
+}
+#endif
