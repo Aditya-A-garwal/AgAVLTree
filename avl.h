@@ -27,7 +27,8 @@ class AVL {
 
     protected:
     struct tree_node_t {
-        tree_node_t * cptr[2] {nullptr, nullptr};
+        tree_node_t * lptr {nullptr};
+        tree_node_t * rptr {nullptr};
         uint8_t       dep {0};
         val_t         val;
     };
@@ -143,39 +144,13 @@ class AVL {
 
     iterator         last_smaller_equals (const val_t val) const;
 
-    bool
-    checkBalance (node_ptr_t cur)
-    {
+    bool             check_balance (node_ptr_t cur);
 
-        uint8_t dep[2] {0, 0};
-        bool    flag {1};
-
-#pragma unroll
-        for (int32_t which = 0; which < 2; ++which) {
-
-            if (cur->cptr[which] != nullptr) {
-                flag       = checkBalance (cur->cptr[which]);
-                dep[which] = 1 + cur->cptr[which]->dep;
-            }
-        }
-
-        if (!(dep[1] <= (1 + dep[0]) or dep[0] <= (1 + dep[1]))) {
-            return false;
-        }
-
-        return flag;
-    }
-
-    bool
-    checkBalance ()
-    {
-        return checkBalance (m_root);
-    }
+    bool             check_balance ();
 
     private:
     node_ptr_t  m_root {nullptr};
     size_t      m_sz {0};
-    balance_t   m_balance[2][2] {{balance_ll, balance_lr}, {balance_rl, balance_rr}};
 
     comp_t      comp;
     comp_t      equals;
@@ -575,8 +550,8 @@ void
 avl_tree::AVL<val_t>::calc_depth (avl_tree::AVL<val_t>::node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep)
 {
     // if a child does not exist, return 0 (the corresponding subtree is non-existant)
-    pLdep = (pCur->cptr[0] != nullptr) ? (1 + pCur->cptr[0]->dep) : (0);
-    pRdep = (pCur->cptr[1] != nullptr) ? (1 + pCur->cptr[1]->dep) : (0);
+    pLdep = (pCur->lptr != nullptr) ? (1 + pCur->lptr->dep) : (0);
+    pRdep = (pCur->rptr != nullptr) ? (1 + pCur->rptr->dep) : (0);
 }
 
 /**
@@ -593,11 +568,11 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     uint8_t    rdep;
 
     node_ptr_t top = *pRoot;
-    node_ptr_t bot = top->cptr[0];
+    node_ptr_t bot = top->lptr;
 
-    top->cptr[0]   = bot->cptr[1];                    // right child of bot becomes left child of top
-    bot->cptr[1]   = top;                             // top becomes the right child of bot
-    *pRoot         = bot;                             // pointer to top now points to bot
+    top->lptr      = bot->rptr;                    // right child of bot becomes left child of top
+    bot->rptr      = top;                          // top becomes the right child of bot
+    *pRoot         = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
@@ -622,17 +597,17 @@ void
 avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
     node_ptr_t top = *pRoot;
-    node_ptr_t mid = top->cptr[0];
-    node_ptr_t bot = mid->cptr[1];
+    node_ptr_t mid = top->lptr;
+    node_ptr_t bot = mid->rptr;
 
     uint8_t    ldep;
     uint8_t    rdep;
 
-    mid->cptr[1] = bot->cptr[0];                    // left child of bot becomes right child of mid
-    bot->cptr[0] = mid;                             // mid becomes left child of bot
-    top->cptr[0] = bot->cptr[1];                    // right child of bot becomes left child of top
-    bot->cptr[1] = top;                             // top becomes right child of bot
-    *pRoot       = bot;                             // pointer to top now points to bot
+    mid->rptr = bot->lptr;                    // left child of bot becomes right child of mid
+    bot->lptr = mid;                          // mid becomes left child of bot
+    top->lptr = bot->rptr;                    // right child of bot becomes left child of top
+    bot->rptr = top;                          // top becomes right child of bot
+    *pRoot    = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
@@ -660,17 +635,17 @@ void
 avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
     node_ptr_t top = *pRoot;
-    node_ptr_t mid = top->cptr[1];
-    node_ptr_t bot = mid->cptr[0];
+    node_ptr_t mid = top->rptr;
+    node_ptr_t bot = mid->lptr;
 
     uint8_t    ldep;
     uint8_t    rdep;
 
-    top->cptr[1] = bot->cptr[0];                    // left child of bot becomes right child of top
-    bot->cptr[0] = top;                             // top becomes left child of bot
-    mid->cptr[0] = bot->cptr[1];                    // right child of bot becomes left child of mid
-    bot->cptr[1] = mid;                             // mid becomes right child of bot
-    *pRoot       = bot;                             // pointer to top now points to bot
+    top->rptr = bot->lptr;                    // left child of bot becomes right child of top
+    bot->lptr = top;                          // top becomes left child of bot
+    mid->lptr = bot->rptr;                    // right child of bot becomes left child of mid
+    bot->rptr = mid;                          // mid becomes right child of bot
+    *pRoot    = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
@@ -698,14 +673,14 @@ void
 avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
     node_ptr_t top = *pRoot;
-    node_ptr_t bot = top->cptr[1];
+    node_ptr_t bot = top->rptr;
 
     uint8_t    ldep;
     uint8_t    rdep;
 
-    top->cptr[1] = bot->cptr[0];                    // left child of bot becomes right child of top
-    bot->cptr[0] = top;                             // top becomes the left child of bot
-    *pRoot       = bot;                             // pointer to top now points to bot
+    top->rptr = bot->lptr;                    // left child of bot becomes right child of top
+    bot->lptr = top;                          // top becomes the left child of bot
+    *pRoot    = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
@@ -736,8 +711,8 @@ avl_tree::AVL<val_t>::find_min (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
         return res;
     }
 
-    while (res->cptr[0] != nullptr) {
-        res = res->cptr[0];
+    while (res->lptr != nullptr) {
+        res = res->lptr;
     }
 
     return res;
@@ -773,8 +748,8 @@ avl_tree::AVL<val_t>::find_max (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
         return res;
     }
 
-    while (res->cptr[1] != nullptr) {
-        res = res->cptr[1];
+    while (res->rptr != nullptr) {
+        res = res->rptr;
     }
 
     return res;
@@ -810,7 +785,7 @@ avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_
     // if the current pointet points to null, this is the correct location to insert a node_t
     if (*cur == nullptr) {
 
-        node_ptr_t ins = new (std::nothrow) node_t {{nullptr, nullptr}, 0, val};
+        node_ptr_t ins = new (std::nothrow) node_t {nullptr, nullptr, 0, val};
         // failed insertion
         if (ins == nullptr) {
             return 0;
@@ -826,8 +801,7 @@ avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_
     // if not equal, try to recursively insert
     // if successful, recalculate depths and m_balance
     // if( insert( &(*cur)->cptr[!comp( val, (*cur)->val )], val ) ) {
-    if (!equals ((*cur)->val, val) and
-        insert ((comp (val, (*cur)->val)) ? (&(*cur)->cptr[0]) : (&(*cur)->cptr[1]), val)) {
+    if (!equals ((*cur)->val, val) and insert ((comp (val, (*cur)->val)) ? (&(*cur)->lptr) : (&(*cur)->rptr), val)) {
 
         uint8_t ldep;
         uint8_t rdep;
@@ -836,19 +810,19 @@ avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_
 
         if (ldep > (1 + rdep)) {
 
-            if (comp (val, (*cur)->cptr[0]->val)) {
-                m_balance[0][0](cur);
+            if (comp (val, (*cur)->lptr->val)) {
+                balance_ll (cur);
             } else {
-                m_balance[0][1](cur);
+                balance_lr (cur);
             }
 
             --ldep;
         } else if (rdep > (1 + ldep)) {
 
-            if (comp (val, (*cur)->cptr[1]->val)) {
-                m_balance[1][0](cur);
+            if (comp (val, (*cur)->rptr->val)) {
+                balance_rl (cur);
             } else {
-                m_balance[1][1](cur);
+                balance_rr (cur);
             }
 
             --rdep;
@@ -888,22 +862,22 @@ avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_t
 
         // the node_t to be deleted has two children, find inorder successor and move it up
         // todo use inorder predeccessor if more efficient
-        if ((*cur)->cptr[0] != nullptr and (*cur)->cptr[1] != nullptr) {
+        if ((*cur)->lptr != nullptr and (*cur)->rptr != nullptr) {
 
-            nxt          = find_min_move_up (&(*cur)->cptr[1]);
+            nxt       = find_min_move_up (&(*cur)->rptr);
 
-            nxt->cptr[0] = (*cur)->cptr[0];
-            nxt->cptr[1] = (*cur)->cptr[1];
+            nxt->lptr = (*cur)->lptr;
+            nxt->rptr = (*cur)->rptr;
         }
 
         // left child but not right child, move it up and delete
-        else if ((*cur)->cptr[0] != nullptr and (*cur)->cptr[1] == nullptr) {
-            nxt = (*cur)->cptr[0];
+        else if ((*cur)->lptr != nullptr and (*cur)->rptr == nullptr) {
+            nxt = (*cur)->lptr;
         }
 
         // right child but not left child, move it up and delete
-        else if ((*cur)->cptr[1] != nullptr and (*cur)->cptr[0] == nullptr) {
-            nxt = (*cur)->cptr[1];
+        else if ((*cur)->rptr != nullptr and (*cur)->lptr == nullptr) {
+            nxt = (*cur)->rptr;
         }
 
         delete *cur;
@@ -913,7 +887,7 @@ avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_t
     }
 
     // try to recursively erase, if could not, return 0 to indicate failed deletion
-    else if (!erase ((comp (val, (*cur)->val)) ? (&(*cur)->cptr[0]) : (&(*cur)->cptr[1]), val)) {
+    else if (!erase ((comp (val, (*cur)->val)) ? (&(*cur)->lptr) : (&(*cur)->rptr), val)) {
         return 0;
     }
 
@@ -930,23 +904,23 @@ avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_t
 
         if (ldep > (1 + rdep)) {
 
-            calc_depth ((*cur)->cptr[0], lldep, rrdep);
+            calc_depth ((*cur)->lptr, lldep, rrdep);
 
             if (lldep >= rrdep) {
-                m_balance[0][0](cur);
+                balance_ll (cur);
             } else {
-                m_balance[0][1](cur);
+                balance_lr (cur);
             }
 
             --ldep;
         } else if (rdep > (1 + ldep)) {
 
-            calc_depth ((*cur)->cptr[1], lldep, rrdep);
+            calc_depth ((*cur)->rptr, lldep, rrdep);
 
             if (lldep >= rrdep) {
-                m_balance[1][0](cur);
+                balance_rl (cur);
             } else {
-                m_balance[1][1](cur);
+                balance_rr (cur);
             }
 
             --rdep;
@@ -973,9 +947,9 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
     node_ptr_t res;
 
     // since the left child is not null, we can find atleast one smaller node
-    if ((*cur)->cptr[0] != nullptr) {
+    if ((*cur)->lptr != nullptr) {
 
-        res = find_min_move_up (&(*cur)->cptr[0]);
+        res = find_min_move_up (&(*cur)->lptr);
 
         uint8_t ldep;
         uint8_t rdep;
@@ -987,13 +961,13 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
 
         // if( ldep > ( 1 + rdep ) ) {
 
-        //     calc_depth( (*cur)->cptr[0], lldep, rrdep );
+        //     calc_depth( (*cur)->lptr, lldep, rrdep );
 
         //     if( lldep >= rrdep ) {
-        //         m_balance[0][0]( cur );
+        //         balance_ll( cur );
         //     }
         //     else {
-        //         m_balance[0][1]( cur );
+        //         balance_lr( cur );
         //     }
 
         //     --ldep;
@@ -1001,12 +975,12 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
 
         if (rdep > (1 + ldep)) {
 
-            calc_depth ((*cur)->cptr[1], lldep, rrdep);
+            calc_depth ((*cur)->rptr, lldep, rrdep);
 
             if (lldep > rrdep) {
-                m_balance[1][0](cur);
+                balance_rl (cur);
             } else {
-                m_balance[1][1](cur);
+                balance_rr (cur);
             }
 
             --rdep;
@@ -1019,7 +993,7 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
     else {
 
         res  = *cur;
-        *cur = res->cptr[1];
+        *cur = res->rptr;
     }
 
     return res;
@@ -1061,7 +1035,8 @@ avl_tree::AVL<val_t>::find_ptr (const val_t & val) const
         }
 
         // if specified value is less than current node, go left, else go right
-        cur = cur->cptr[!comp (val, cur->val)];
+        cur = (comp (val, cur->val)) ? (cur->lptr) : (cur->rptr);
+        // cur = cur->cptr[!comp (val, cur->val)];
     }
 
     return nullptr;
@@ -1086,9 +1061,9 @@ avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & val, avl_tree::AVL
 
     // current node_t has value <= requirement, go right
     if (comp (cur->val, val) or equals (cur->val, val))
-        return first_greater_strict_ptr (val, cur->cptr[1]);
+        return first_greater_strict_ptr (val, cur->rptr);
 
-    node_ptr_t res {first_greater_strict_ptr (val, cur->cptr[0])};
+    node_ptr_t res {first_greater_strict_ptr (val, cur->lptr)};
 
     return (res != nullptr) ? (res) : (cur);
 }
@@ -1126,9 +1101,9 @@ avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & val, avl_tree::AVL
 
     // current node_t has value < requirement, go right
     if (comp (cur->val, val))
-        return first_greater_equals_ptr (val, cur->cptr[1]);
+        return first_greater_equals_ptr (val, cur->rptr);
 
-    node_ptr_t res {first_greater_equals_ptr (val, cur->cptr[0])};
+    node_ptr_t res {first_greater_equals_ptr (val, cur->lptr)};
 
     return (res != nullptr) ? (res) : (cur);
 }
@@ -1166,9 +1141,9 @@ avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & val, avl_tree::AVL<
 
     // current node_t has value >= requirement, go left
     if (comp (val, cur->val) or equals (val, cur->val))
-        return last_smaller_strict_ptr (val, cur->cptr[0]);
+        return last_smaller_strict_ptr (val, cur->lptr);
 
-    node_ptr_t res {last_smaller_strict_ptr (val, cur->cptr[1])};
+    node_ptr_t res {last_smaller_strict_ptr (val, cur->rptr)};
 
     return (res != nullptr) ? (res) : (cur);
 }
@@ -1206,9 +1181,9 @@ avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & val, avl_tree::AVL<
 
     // if specified value < current node's value, go left
     if (comp (val, cur->val))
-        return last_smaller_equals_ptr (val, cur->cptr[0]);
+        return last_smaller_equals_ptr (val, cur->lptr);
 
-    node_ptr_t res {last_smaller_equals_ptr (val, cur->cptr[1])};
+    node_ptr_t res {last_smaller_equals_ptr (val, cur->rptr)};
 
     return (res != nullptr) ? (res) : (cur);
 }
@@ -1238,10 +1213,10 @@ void
 avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t cur)
 {
 
-    if (cur->cptr[0] != nullptr)
-        clear (cur->cptr[0]);
-    if (cur->cptr[1] != nullptr)
-        clear (cur->cptr[1]);
+    if (cur->lptr != nullptr)
+        clear (cur->lptr);
+    if (cur->rptr != nullptr)
+        clear (cur->rptr);
     delete cur;
 }
 
@@ -1457,7 +1432,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
 
         if (t != nullptr) {
             ptr = t;
-        } else {
         }
     } else {
         ptr = tree_ptr->find_min ();
@@ -1508,4 +1482,37 @@ bool
 avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
 {
     return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
+{
+
+    uint8_t ldep;
+    uint8_t rdep;
+    bool    flag {1};
+
+    if (cur->ldep != nullptr) {
+        flag = checkBalance (cur->ldep);
+        ldep = 1 + cur->ldep;
+    }
+
+    if (cur->rdep != nullptr) {
+        flag = checkBalance (cur->rdep);
+        ldep = 1 + cur->rdep;
+    }
+
+    if (ldep > 1 + rdep)
+        return false;
+    if (rdep > 1 + ldep)
+        return false;
+    return flag;
+}
+
+template <typename val_t>
+bool
+avl_tree::AVL<val_t>::check_balance ()
+{
+    return check_balance (m_root);
 }
