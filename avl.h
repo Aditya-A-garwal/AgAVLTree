@@ -276,7 +276,7 @@ avl_tree::AVL<val_t>::AVL (const comp_t pLtComp, const comp_t pEqComp) : comp {p
 template <typename val_t>
 avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals) : comp {default_lessthan}, equals {default_equals}
 {
-    for(auto &e : pVals) {
+    for (auto & e : pVals) {
         insert (e);
     }
 }
@@ -290,9 +290,10 @@ avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals) : comp {default_l
  * @param pEqComp
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp) : comp {pLtComp}, equals {pEqComp}
+avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp) :
+    comp {pLtComp}, equals {pEqComp}
 {
-    for(auto &e : pVals) {
+    for (auto & e : pVals) {
         insert (e);
     }
 }
@@ -588,7 +589,6 @@ template <typename val_t>
 void
 avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
-
     uint8_t    ldep;
     uint8_t    rdep;
 
@@ -602,7 +602,9 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
     top->dep = max (ldep, rdep);
-    bot->dep = 1 + max (bot->cptr[0]->dep, bot->cptr[1]->dep);
+
+    calc_depth (bot, ldep, rdep);
+    bot->dep = max (ldep, rdep);
 
 #ifdef AVL_TEST_MODE
     balance_info::ll_count += 1;
@@ -619,7 +621,6 @@ template <typename val_t>
 void
 avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
-
     node_ptr_t top = *pRoot;
     node_ptr_t mid = top->cptr[0];
     node_ptr_t bot = mid->cptr[1];
@@ -640,7 +641,8 @@ avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (mid, ldep, rdep);
     mid->dep = max (ldep, rdep);
 
-    bot->dep = 1 + max (bot->cptr[0]->dep, bot->cptr[1]->dep);
+    calc_depth (bot, ldep, rdep);
+    bot->dep = max (ldep, rdep);
 
 #ifdef AVL_TEST_MODE
     balance_info::lr_count += 1;
@@ -657,7 +659,6 @@ template <typename val_t>
 void
 avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
-
     node_ptr_t top = *pRoot;
     node_ptr_t mid = top->cptr[1];
     node_ptr_t bot = mid->cptr[0];
@@ -675,10 +676,11 @@ avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     calc_depth (top, ldep, rdep);
     top->dep = max (ldep, rdep);
 
-    calc_depth (top, ldep, rdep);
+    calc_depth (mid, ldep, rdep);
     mid->dep = max (ldep, rdep);
 
-    bot->dep = 1 + max (bot->cptr[0]->dep, bot->cptr[1]->dep);
+    calc_depth (bot, ldep, rdep);
+    bot->dep = max (ldep, rdep);
 
 #ifdef AVL_TEST_MODE
     balance_info::rl_count += 1;
@@ -695,7 +697,6 @@ template <typename val_t>
 void
 avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
 {
-
     node_ptr_t top = *pRoot;
     node_ptr_t bot = top->cptr[1];
 
@@ -709,7 +710,9 @@ avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
     // recalculate depths of shifted nodes
     calc_depth (top, ldep, rdep);
     top->dep = max (ldep, rdep);
-    bot->dep = 1 + max (bot->cptr[0]->dep, bot->cptr[1]->dep);
+
+    calc_depth (bot, ldep, rdep);
+    bot->dep = max (ldep, rdep);
 
 #ifdef AVL_TEST_MODE
     balance_info::rr_count += 1;
@@ -1000,7 +1003,7 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
 
             calc_depth ((*cur)->cptr[1], lldep, rrdep);
 
-            if (lldep >= rrdep) {
+            if (lldep > rrdep) {
                 m_balance[1][0](cur);
             } else {
                 m_balance[1][1](cur);
