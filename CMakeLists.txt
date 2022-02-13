@@ -1,12 +1,12 @@
-cmake_minimum_required( VERSION 3.16 )
+cmake_minimum_required (VERSION 3.16)
 
-project( AVLtree LANGUAGES CXX )
-set( CMAKE_CXX_STANDARD 17 )
-set( CMAKE_CXX_STANDARD_REQUIRED ON )
+project (AVLtree LANGUAGES CXX)
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory( ${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/build )
+add_subdirectory (${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/build)
 
-add_executable(
+add_executable (
     main
     main.cpp
 )
