@@ -85,7 +85,7 @@ TEST (Smoke, smoke_test)
  *                   1
  *                     0
  *
- *          left-left rotation takes place the root to form the tree
+ *          left-left rotation takes place at the root to form the tree
  *
  *                 1
  *               0   2
@@ -109,7 +109,7 @@ TEST (Insert, insert_ll_simple)
  *             0
  *               1
  *
- *          left-right rotation takes place the root to form the tree
+ *          left-right rotation takes place at the root to form the tree
  *
  *                 1
  *               0   2
@@ -133,7 +133,7 @@ TEST (Insert, insert_lr_simple)
  *                     2
  *                   1
  *
- *          right-left rotation takes place the root to form the tree
+ *          right-left rotation takes place at the root to form the tree
  *
  *                 1
  *               0   2
@@ -157,7 +157,7 @@ TEST (Insert, insert_rl_simple)
  *               1
  *             2
  *
- *          right-left rotation takes place the root to form the tree
+ *          right-left rotation takes place at the root to form the tree
  *
  *                 1
  *               0   2
