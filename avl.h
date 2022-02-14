@@ -1,3 +1,5 @@
+//! VERY IMPORTANT IMPLEMENT DESTRUCTOR TO FIX MEMORY LEAK
+
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
 
@@ -25,267 +27,254 @@ init ()
 template <typename val_t>
 class AVL {
 
+#ifdef AVL_TEST_MODE
+    public:
+#else
     protected:
+#endif
     struct tree_node_t {
         tree_node_t * lptr {nullptr};
         tree_node_t * rptr {nullptr};
-        uint8_t       dep {0};
+        uint8_t       height {0};
         val_t         val;
     };
 
-    using node_t     = tree_node_t;
-    using node_ptr_t = node_t *;
-    using balance_t  = void (*) (node_ptr_t *);
-    using comp_t     = bool (*) (const val_t &, const val_t &);
+    using node_t        = tree_node_t;
+    using node_ptr_t    = node_t *;
+
+    using link_t        = node_t *;
+    using link_ptr_t    = link_t *;
+
+    using balance_t     = void (*) (node_ptr_t *);
+    using comparator_t  = bool (*) (const val_t &, const val_t &);
 
     public:
+
+    //      terator types
+
     struct iterator {
 
-#ifndef AVL_TEST_MODE
+#ifdef AVL_TEST_MODE
+        public:
+#else
         protected:
 #endif
 
-        using value_t    = val_t;
-        using ptr_t      = node_ptr_t;
-        using tree_ptr_t = const AVL<val_t> *;
-        using ref_t      = const val_t &;
+        using tree_ptr_t        = const AVL<val_t> *;
+        using ref_t             = const val_t &;
 
-        ptr_t      ptr {nullptr};
-        tree_ptr_t tree_ptr {nullptr};
+        node_ptr_t mPtr         {nullptr};
+        tree_ptr_t mTreePtr     {nullptr};
 
         public:
-        iterator (ptr_t _ptr, tree_ptr_t _tree_ptr);
 
-        iterator () = default;
+        iterator                (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
+        iterator                () = default;
 
-        ref_t    operator* () const;
+        iterator operator++     ();
+        iterator operator++     (int);
+        iterator operator--     ();
+        iterator operator--     (int);
 
-        iterator operator++ ();
+        ref_t    operator*      () const;
 
-        iterator operator++ (int);
-
-        iterator operator-- ();
-
-        iterator operator-- (int);
-
-        bool     operator== (const iterator & pOther) const;
-
-        bool     operator!= (const iterator & pOther) const;
+        bool     operator==     (const iterator & pOther) const;
+        bool     operator!=     (const iterator & pOther) const;
     };
+
+
 
     struct reverse_iterator {
 
-#ifndef AVL_TEST_MODE
+#ifdef AVL_TEST_MODE
+        public:
+#else
         protected:
 #endif
 
-        using value_t    = val_t;
-        using ptr_t      = node_ptr_t;
-        using tree_ptr_t = const AVL<val_t> *;
-        using ref_t      = const val_t &;
+        using tree_ptr_t        = const AVL<val_t> *;
+        using ref_t             = const val_t &;
 
-        ptr_t      ptr {nullptr};
-        tree_ptr_t tree_ptr {nullptr};
+        node_ptr_t mPtr         {nullptr};
+        tree_ptr_t mTreePtr     {nullptr};
 
         public:
-        reverse_iterator (ptr_t _ptr, tree_ptr_t _tree_ptr);
 
-        reverse_iterator () = default;
+        reverse_iterator        (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
+        reverse_iterator        () = default;
 
+        reverse_iterator operator++     ();
+        reverse_iterator operator++     (int);
+        reverse_iterator operator--     ();
+        reverse_iterator operator--     (int);
 
-        ref_t            operator* () const;
+        ref_t            operator*      () const;
 
-        reverse_iterator operator++ ();
-
-        reverse_iterator operator++ (int);
-
-        reverse_iterator operator-- ();
-
-        reverse_iterator operator-- (int);
-
-        bool             operator== (const reverse_iterator & pOther) const;
-
-        bool             operator!= (const reverse_iterator & pOther) const;
+        bool             operator==     (const reverse_iterator & pOther) const;
+        bool             operator!=     (const reverse_iterator & pOther) const;
     };
 
-    AVL ();
 
-    AVL (std::initializer_list<val_t> pVals);
 
-    AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp);
+    //      Constructors
 
-    AVL (const comp_t pLtComp, const comp_t pEqComp);
+    AVL                                         ();
+    AVL                                         (const comparator_t pLtComp, const comparator_t pEqComp);
+    AVL                                         (const AVL &) = delete;
 
-    AVL (const AVL &) = delete;
+    //      Destructor
 
-    size_t           size () const;
+    ~AVL                                        ();
 
-    void             clear ();
+    //      Getter for size
 
-    iterator         begin () const;
+    size_t           size                       () const;
 
-    iterator         end () const;
+    //      Setter for clear
 
-    reverse_iterator rbegin () const;
+    void             clear                      ();
 
-    reverse_iterator rend () const;
+    //      Iterators
 
-    bool             insert (const val_t val);
+    iterator         begin                      () const;
+    iterator         end                        () const;
+    reverse_iterator rbegin                     () const;
+    reverse_iterator rend                       () const;
 
-    bool             erase (const val_t val);
+    //      Modifiers
 
-    iterator         find (const val_t val) const;
+    bool             insert                     (const val_t pVal);
+    bool             erase                      (const val_t pVal);
 
-    iterator         first_greater_strict (const val_t val) const;
+    //      Binary searches
 
-    iterator         first_greater_equals (const val_t val) const;
+    iterator         find                       (const val_t pVal) const;
+    iterator         first_greater_strict       (const val_t pVal) const;
+    iterator         first_greater_equals       (const val_t pVal) const;
+    iterator         last_smaller_strict        (const val_t pVal) const;
+    iterator         last_smaller_equals        (const val_t pVal) const;
 
-    iterator         last_smaller_strict (const val_t val) const;
+    //      Utilities for testing
 
-    iterator         last_smaller_equals (const val_t val) const;
+#ifdef AVL_TEST_MODE
+    bool             check_balance              (node_ptr_t pCur);
+    bool             check_balance              ();
+    val_t            get_root_val               ();
+#endif
 
-    bool             check_balance (node_ptr_t cur);
-
-    bool             check_balance ();
-
-    val_t            get_root_val ();
-
+#ifdef AVL_TEST_MODE
+    public:
+#else
     private:
-    node_ptr_t  m_root {nullptr};
-    size_t      m_sz {0};
+#endif
 
-    comp_t      comp;
-    comp_t      equals;
+    node_ptr_t   mRoot {nullptr};
+    size_t       mSz {0};
 
-    static bool default_lessthan (const val_t & pA, const val_t & pB);
+    comparator_t mComp;
+    comparator_t mEquals;
 
-    static bool default_equals (const val_t & pA, const val_t & pB);
+    //      Comparators
+
+    static bool  default_lessthan               (const val_t & pA, const val_t & pB);
+    static bool  default_equals                 (const val_t & pA, const val_t & pB);
+
+    //      Aggregators
 
     template <typename arg_t>
-    static arg_t max (const arg_t & pA, const arg_t & pB);
-
+    static arg_t max                            (const arg_t & pA, const arg_t & pB);
     template <typename arg_t>
-    static arg_t min (const arg_t & pA, const arg_t & pB);
+    static arg_t min                            (const arg_t & pA, const arg_t & pB);
 
-    static void  calc_depth (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep);
+    //      Balance Utilities
 
-    static void  balance_ll (node_ptr_t * pRoot);
+    static void  calc_height                    (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep);
+    static void  balance_ll                     (link_ptr_t pRoot);
+    static void  balance_lr                     (link_ptr_t pRoot);
+    static void  balance_rl                     (link_ptr_t pRoot);
+    static void  balance_rr                     (link_ptr_t pRoot);
 
-    static void  balance_lr (node_ptr_t * pRoot);
+    //
 
-    static void  balance_rl (node_ptr_t * pRoot);
+    node_ptr_t   find_min                       (node_ptr_t pRoot) const;
+    node_ptr_t   find_max                       (node_ptr_t pRoot) const;
+    node_ptr_t   find_min                       () const;
+    node_ptr_t   find_max                       () const;
 
-    static void  balance_rr (node_ptr_t * pRoot);
+    //      Modifiers
 
-    node_ptr_t   find_min (node_ptr_t pRoot) const;
+    bool         insert                         (node_ptr_t * pCur, const val_t & pVal);
+    bool         erase                          (node_ptr_t * pCur, const val_t & pVal);
 
-    node_ptr_t   find_max (node_ptr_t pRoot) const;
+    //
 
-    node_ptr_t   find_min () const;
+    node_ptr_t   find_min_move_up               (link_ptr_t pCur);
+    node_ptr_t   find_min_move_up               ();
+    node_ptr_t   find_max_move_up               (link_ptr_t pCur);
+    node_ptr_t   find_max_move_up               ();
 
-    node_ptr_t   find_max () const;
+    //      Binary searches
 
-    bool         insert (node_ptr_t * cur, const val_t & val);
+    node_ptr_t   find_ptr                       (const val_t & pVal) const;
+    node_ptr_t   first_greater_strict_ptr       (const val_t & pVal, node_ptr_t pVur) const;
+    node_ptr_t   first_greater_strict_ptr       (const val_t & pVal) const;
+    node_ptr_t   first_greater_equals_ptr       (const val_t & pVal, node_ptr_t pCur) const;
+    node_ptr_t   first_greater_equals_ptr       (const val_t & pVal) const;
+    node_ptr_t   last_smaller_strict_ptr        (const val_t & pVal, node_ptr_t pCur) const;
+    node_ptr_t   last_smaller_strict_ptr        (const val_t & pVal) const;
+    node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal, node_ptr_t pCur) const;
+    node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal) const;
 
-    bool         erase (node_ptr_t * cur, const val_t & val);
+    //      Setter for clear
 
-    node_ptr_t   find_min_move_up (node_ptr_t * cur);
-
-    node_ptr_t   find_min_move_up ();
-
-    node_ptr_t   find_max_move_up (node_ptr_t * cur);
-
-    node_ptr_t   find_max_move_up ();
-
-    node_ptr_t   find_ptr (const val_t & val) const;
-
-    node_ptr_t   first_greater_strict_ptr (const val_t & val, node_ptr_t cur) const;
-
-    node_ptr_t   first_greater_strict_ptr (const val_t & val) const;
-
-    node_ptr_t   first_greater_equals_ptr (const val_t & val, node_ptr_t cur) const;
-
-    node_ptr_t   first_greater_equals_ptr (const val_t & val) const;
-
-    node_ptr_t   last_smaller_strict_ptr (const val_t & val, node_ptr_t cur) const;
-
-    node_ptr_t   last_smaller_strict_ptr (const val_t & val) const;
-
-    node_ptr_t   last_smaller_equals_ptr (const val_t & val, node_ptr_t cur) const;
-
-    node_ptr_t   last_smaller_equals_ptr (const val_t & val) const;
-
-    void         clear (node_ptr_t cur);
+    void         clear                          (node_ptr_t pCur);
 };
 };                    // namespace avl_tree
 
-#endif
-
-
-//! PUBLIC
-
 /**
  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
  *
  * @tparam val_t
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::AVL () : comp {default_lessthan}, equals {default_equals}
+avl_tree::AVL<val_t>::AVL () : mComp {default_lessthan}, mEquals {default_equals}
 {}
 
 /**
  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
  *
  * @tparam val_t
+ *
  * @param pLtComp
  * @param pEqComp
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::AVL (const comp_t pLtComp, const comp_t pEqComp) : comp {pLtComp}, equals {pEqComp}
+avl_tree::AVL<val_t>::AVL (const comparator_t pLtComp, const comparator_t pEqComp) : mComp {pLtComp}, mEquals {pEqComp}
 {}
 
 /**
- * @brief Construct a new avl tree::AVL<val t>::AVL object
+ * @brief                   Destroy the avl tree::AVL<val t>::AVL object
  *
- * @tparam val_t
- * @param pVals
+ * @tparam val_t            Type of data held by tree instance
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals) : comp {default_lessthan}, equals {default_equals}
+avl_tree::AVL<val_t>::~AVL ()
 {
-    for (auto & e : pVals) {
-        insert (e);
-    }
-}
-
-/**
- * @brief Construct a new avl tree::AVL<val t>::AVL object
- *
- * @tparam val_t
- * @param pVals
- * @param pLtComp
- * @param pEqComp
- */
-template <typename val_t>
-avl_tree::AVL<val_t>::AVL (std::initializer_list<val_t> pVals, const comp_t pLtComp, const comp_t pEqComp) :
-    comp {pLtComp}, equals {pEqComp}
-{
-    for (auto & e : pVals) {
-        insert (e);
-    }
+    this->clear();
 }
 
 /**
  * @brief                   Returns the size of the tree (number of elements)
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return size_t           Size of tree
  */
 template <typename val_t>
 size_t
 avl_tree::AVL<val_t>::size () const
 {
-    return m_sz;
+    return mSz;
 }
 
 /**
@@ -297,53 +286,64 @@ template <typename val_t>
 void
 avl_tree::AVL<val_t>::clear ()
 {
-    clear (m_root);
-    m_root = nullptr;
-    m_sz   = 0;
+    // if the root does not exist, return, else clear starting from the root
+    if (mRoot == nullptr) {
+        return;
+    }
+
+    clear (mRoot);
+    mRoot   = nullptr;
+    mSz     = 0;
 }
 
 /**
  * @brief                   Attempts to insert a value into the tree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be inserted into the tree
+ *
+ * @param pVal              The value to be inserted into the tree
+ *
  * @return true             If insertion was successful
  * @return false            If insertion failed
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::insert (val_t val)
+avl_tree::AVL<val_t>::insert (val_t pVal)
 {
-    return insert (&m_root, val);
+    return insert (&mRoot, pVal);
 }
 
 /**
  * @brief                   Attempts to erase a value from the tree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be found and erased
+ *
+ * @param pVal              The value to be found and erased
+ *
  * @return true             If value was successfuly erased
  * @return false            If value could not be successfuly erased (likely not found)
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::erase (val_t val)
+avl_tree::AVL<val_t>::erase (val_t pVal)
 {
-    return erase (&m_root, val);
+    return erase (&mRoot, pVal);
 }
 
 /**
  * @brief                   Finds and returns an iterator to a given value (end() if no match exists in the tree)
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be found
+ *
+ * @param pVal              The value to be found
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to matching value in the tree (end() if no match found)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::find (val_t val) const
+avl_tree::AVL<val_t>::find (val_t pVal) const
 {
-    node_ptr_t res = find_ptr (val);
+    node_ptr_t res  {find_ptr (pVal)};
     return iterator (res, this);
 }
 
@@ -351,14 +351,16 @@ avl_tree::AVL<val_t>::find (val_t val) const
  * @brief                   Finds and returns an iterator to the first value strictly greater than the given value (end() if no match exists)
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be compared with
+ *
+ * @param pVal              The value to be compared with
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to first strictly greater value in the tree (end() if no match found)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::first_greater_strict (val_t val) const
+avl_tree::AVL<val_t>::first_greater_strict (val_t pVal) const
 {
-    node_ptr_t res = first_greater_strict_ptr (val);
+    node_ptr_t res  {first_greater_strict_ptr (pVal)};
     return iterator (res, this);
 }
 
@@ -366,14 +368,16 @@ avl_tree::AVL<val_t>::first_greater_strict (val_t val) const
  * @brief                   Finds and returns an iterator to the first value greater than or equal to the given value (end() if no match exists)
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be compared with
+ *
+ * @param pVal               The value to be compared with
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to first greater or equal value in the tree (end() if no match found)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::first_greater_equals (val_t val) const
+avl_tree::AVL<val_t>::first_greater_equals (val_t pVal) const
 {
-    node_ptr_t res = first_greater_equals_ptr (val);
+    node_ptr_t res  {first_greater_equals_ptr (pVal)};
     return iterator (res, this);
 }
 
@@ -381,14 +385,16 @@ avl_tree::AVL<val_t>::first_greater_equals (val_t val) const
  * @brief                   Finds and returns an iterator to the last value strictly less than the given value (end() if no match exists)
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be compared with
+ *
+ * @param pVal               The value to be compared with
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to last strictly less value in the tree (end() if no match found)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::last_smaller_strict (val_t val) const
+avl_tree::AVL<val_t>::last_smaller_strict (val_t pVal) const
 {
-    node_ptr_t res = last_smaller_strict_ptr (val);
+    node_ptr_t res  {last_smaller_strict_ptr (pVal)};
     return iterator (res, this);
 }
 
@@ -396,14 +402,16 @@ avl_tree::AVL<val_t>::last_smaller_strict (val_t val) const
  * @brief                   Finds and returns an iterator to the last value less than or equal to the given value (end() if no match exists)
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               The value to be compared with
+ *
+ * @param pVal              The value to be compared with
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to last less or equal value in the tree (end() if no match found)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::last_smaller_equals (val_t val) const
+avl_tree::AVL<val_t>::last_smaller_equals (val_t pVal) const
 {
-    node_ptr_t res = last_smaller_equals_ptr (val);
+    node_ptr_t res  {last_smaller_equals_ptr (pVal)};
     return iterator (res, this);
 }
 
@@ -411,19 +419,21 @@ avl_tree::AVL<val_t>::last_smaller_equals (val_t val) const
  * @brief                   Returns an iterator to the beginning
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to the first element
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::begin () const
 {
-    return iterator (find_min (m_root), this);
+    return iterator (find_min (mRoot), this);
 }
 
 /**
  * @brief                   Returns an iterator to the element one after the last element
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Iterator to the element following the last element
  */
 template <typename val_t>
@@ -437,19 +447,21 @@ avl_tree::AVL<val_t>::end () const
  * @brief                   Returns a reverse iterator to the beginning
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterator Reverse Iterator to the beginning
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::rbegin () const
 {
-    return reverse_iterator (find_max (m_root), this);
+    return reverse_iterator (find_max (mRoot), this);
 }
 
 /**
  * @brief                   Returns a reverse iterator to the element one after the last element
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterato Iterator to the element following the last element
  */
 template <typename val_t>
@@ -459,14 +471,16 @@ avl_tree::AVL<val_t>::rend () const
     return reverse_iterator (nullptr, this);
 }
 
-//! PRIVATE
+// PRIVATE
 
 /**
  * @brief                   Default comparator function for less than comparison if none given by user (requires < operator to be implemented)
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pA                First element (element to be compared to)
  * @param pB                Second element (element to be compared)
+ *
  * @return true             If pA is strictly less than pB
  * @return false            If pA is not stricly less than pB
  */
@@ -478,11 +492,13 @@ avl_tree::AVL<val_t>::default_lessthan (const val_t & pA, const val_t & pB)
 }
 
 /**
- * @brief                   Default comparator function for equals comparison if none given by user (requires == operator to be implemented)
+ * @brief                   Default comparator function for mEquals comparison if none given by user (requires == operator to be implemented)
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pA                First element (element to be compared to)
  * @param pB                Second element (element to be compared)
+ *
  * @return true             if pA is strictly equal to pB
  * @return false            if pA is not strictly equal to pB
  */
@@ -498,7 +514,7 @@ avl_tree::AVL<val_t>::default_equals (const val_t & pA, const val_t & pB)
     //                   decltype (std::declval<T> () == std::declval<T> ()), val_t>::value) {
     //     return pA == pB;
     // } else {
-    //     return !(comp (pA, pB)) and !(comp (pB, pA));
+    //     return !(mComp (pA, pB)) and !(mComp (pB, pA));
     // }
     return pA == pB;
 }
@@ -508,8 +524,10 @@ avl_tree::AVL<val_t>::default_equals (const val_t & pA, const val_t & pB)
  *
  * @tparam val_t            Type of data held by tree instance
  * @tparam arg_t            Type of values to be compared
+ *
  * @param pA                First element to be compared
  * @param pB                Second element to be compared
+ *
  * @return arg_t            The maximum of the two supplied arguments
  */
 template <typename val_t>
@@ -521,12 +539,14 @@ avl_tree::AVL<val_t>::max (const arg_t & pA, const arg_t & pB)
 }
 
 /**
- * @brief                   Returns the minimum of two elements (first if both compare equals)
+ * @brief                   Returns the minimum of two elements (first if both compare mEquals)
  *
  * @tparam val_t            Type of data held by tree instance
  * @tparam arg_t            Type of values to be compared
+ *
  * @param pA                First element to be compared
  * @param pB                Second element to be compared
+ *
  * @return arg_t            The maximum of the two supplied arguments
  */
 template <typename val_t>
@@ -541,6 +561,7 @@ avl_tree::AVL<val_t>::min (const arg_t & pA, const arg_t & pB)
  * @brief                   Calculates the depths of the left and right subtrees of the given node
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pCur              Node whose subtrees's heights are to be calculated
  * @param pLdep             Reference to variable where left subtree's depth is kept
  * @param pRdep             Reference to variable where right subtree's depth is kept
@@ -549,40 +570,44 @@ avl_tree::AVL<val_t>::min (const arg_t & pA, const arg_t & pB)
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::calc_depth (avl_tree::AVL<val_t>::node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep)
+avl_tree::AVL<val_t>::calc_height (avl_tree::AVL<val_t>::node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep)
 {
     // if a child does not exist, return 0 (the corresponding subtree is non-existant)
-    pLdep = (pCur->lptr != nullptr) ? (1 + pCur->lptr->dep) : (0);
-    pRdep = (pCur->rptr != nullptr) ? (1 + pCur->rptr->dep) : (0);
+    pLdep   = (pCur->lptr != nullptr) ? (1 + pCur->lptr->height) : (0);
+    pRdep   = (pCur->rptr != nullptr) ? (1 + pCur->rptr->height) : (0);
 }
 
 /**
  * @brief                   Function to balance a node which is left-left heavy
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
+avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::link_ptr_t pRoot)
 {
     uint8_t    ldep;
     uint8_t    rdep;
 
-    node_ptr_t top = *pRoot;
-    node_ptr_t bot = top->lptr;
+    node_ptr_t top;
+    node_ptr_t bot;
 
-    top->lptr      = bot->rptr;                    // right child of bot becomes left child of top
-    bot->rptr      = top;                          // top becomes the right child of bot
-    *pRoot         = bot;                          // pointer to top now points to bot
+    top             = *pRoot;
+    bot             = top->lptr;
+
+    top->lptr       = bot->rptr;                    // right child of bot becomes left child of top
+    bot->rptr       = top;                          // top becomes the right child of bot
+    *pRoot          = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
-    calc_depth (top, ldep, rdep);
-    top->dep = max (ldep, rdep);
+    calc_height (top, ldep, rdep);
+    top->height     = max (ldep, rdep);
 
-    // calc_depth (bot, ldep, rdep);
-    // bot->dep = max (ldep, rdep);
-    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
+    // calc_height (bot, ldep, rdep);
+    // bot->height = max (ldep, rdep);
+    bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
 #ifdef AVL_TEST_MODE
     balance_info::ll_count += 1;
@@ -593,35 +618,40 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
  * @brief                   Function to balance a node which is left-right heavy
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
+avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
 {
-    node_ptr_t top = *pRoot;
-    node_ptr_t mid = top->lptr;
-    node_ptr_t bot = mid->rptr;
-
     uint8_t    ldep;
     uint8_t    rdep;
 
-    mid->rptr = bot->lptr;                    // left child of bot becomes right child of mid
-    bot->lptr = mid;                          // mid becomes left child of bot
-    top->lptr = bot->rptr;                    // right child of bot becomes left child of top
-    bot->rptr = top;                          // top becomes right child of bot
-    *pRoot    = bot;                          // pointer to top now points to bot
+    node_ptr_t top;
+    node_ptr_t mid;
+    node_ptr_t bot;
+
+    top             = *pRoot;
+    mid             = top->lptr;
+    bot             = mid->rptr;
+
+    mid->rptr       = bot->lptr;                    // left child of bot becomes right child of mid
+    bot->lptr       = mid;                          // mid becomes left child of bot
+    top->lptr       = bot->rptr;                    // right child of bot becomes left child of top
+    bot->rptr       = top;                          // top becomes right child of bot
+    *pRoot          = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
-    calc_depth (top, ldep, rdep);
-    top->dep = max (ldep, rdep);
+    calc_height (top, ldep, rdep);
+    top->height     = max (ldep, rdep);
 
-    calc_depth (mid, ldep, rdep);
-    mid->dep = max (ldep, rdep);
+    calc_height (mid, ldep, rdep);
+    mid->height     = max (ldep, rdep);
 
-    // calc_depth (bot, ldep, rdep);
-    // bot->dep = max (ldep, rdep);
-    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
+    // calc_height (bot, ldep, rdep);
+    // bot->height = max (ldep, rdep);
+    bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
 #ifdef AVL_TEST_MODE
     balance_info::lr_count += 1;
@@ -632,35 +662,40 @@ avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
  * @brief                   Function to balance a node which is right-left heavy
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
+avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::link_ptr_t pRoot)
 {
-    node_ptr_t top = *pRoot;
-    node_ptr_t mid = top->rptr;
-    node_ptr_t bot = mid->lptr;
-
     uint8_t    ldep;
     uint8_t    rdep;
 
-    top->rptr = bot->lptr;                    // left child of bot becomes right child of top
-    bot->lptr = top;                          // top becomes left child of bot
-    mid->lptr = bot->rptr;                    // right child of bot becomes left child of mid
-    bot->rptr = mid;                          // mid becomes right child of bot
-    *pRoot    = bot;                          // pointer to top now points to bot
+    node_ptr_t top;
+    node_ptr_t mid;
+    node_ptr_t bot;
+
+    top             = *pRoot;
+    mid             = top->rptr;
+    bot             = mid->lptr;
+
+    top->rptr       = bot->lptr;                    // left child of bot becomes right child of top
+    bot->lptr       = top;                          // top becomes left child of bot
+    mid->lptr       = bot->rptr;                    // right child of bot becomes left child of mid
+    bot->rptr       = mid;                          // mid becomes right child of bot
+    *pRoot          = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
-    calc_depth (top, ldep, rdep);
-    top->dep = max (ldep, rdep);
+    calc_height (top, ldep, rdep);
+    top->height     = max (ldep, rdep);
 
-    calc_depth (mid, ldep, rdep);
-    mid->dep = max (ldep, rdep);
+    calc_height (mid, ldep, rdep);
+    mid->height     = max (ldep, rdep);
 
-    // calc_depth (bot, ldep, rdep);
-    // bot->dep = max (ldep, rdep);
-    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
+    // calc_height (bot, ldep, rdep);
+    // bot->height = max (ldep, rdep);
+    bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
 #ifdef AVL_TEST_MODE
     balance_info::rl_count += 1;
@@ -671,30 +706,34 @@ avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
  * @brief                   Function to balance a node which is right-right heavy
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
+avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
 {
-    node_ptr_t top = *pRoot;
-    node_ptr_t bot = top->rptr;
-
     uint8_t    ldep;
     uint8_t    rdep;
 
-    top->rptr = bot->lptr;                    // left child of bot becomes right child of top
-    bot->lptr = top;                          // top becomes the left child of bot
-    *pRoot    = bot;                          // pointer to top now points to bot
+    node_ptr_t top;
+    node_ptr_t bot;
+
+    top             = *pRoot;
+    bot             = top->rptr;
+
+    top->rptr       = bot->lptr;                    // left child of bot becomes right child of top
+    bot->lptr       = top;                          // top becomes the left child of bot
+    *pRoot          = bot;                          // pointer to top now points to bot
 
     // recalculate depths of shifted nodes
-    calc_depth (top, ldep, rdep);
-    top->dep = max (ldep, rdep);
+    calc_height (top, ldep, rdep);
+    top->height     = max (ldep, rdep);
 
-    // calc_depth (bot, ldep, rdep);
-    // bot->dep = max (ldep, rdep);
+    // calc_height (bot, ldep, rdep);
+    // bot->height = max (ldep, rdep);
 
-    bot->dep = 1 + max (bot->lptr->dep, bot->rptr->dep);
+    bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
 #ifdef AVL_TEST_MODE
     balance_info::rr_count += 1;
@@ -705,7 +744,9 @@ avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::node_ptr_t * pRoot)
  * @brief                   Finds the minimum value node in a subtree without modifying it
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Root of the subtree to be processed
+ *
  * @return node_ptr_t       Pointer to minimum value node in the subtree of pRoot
  */
 template <typename val_t>
@@ -714,10 +755,12 @@ avl_tree::AVL<val_t>::find_min (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
 {
     node_ptr_t res {pRoot};
 
+    // if the root does not exist (no nodes in tree), return null
     if (res == nullptr) {
-        return res;
+        return nullptr;
     }
 
+    // keep going left for as long as possible and return the leftmost (smallest) node
     while (res->lptr != nullptr) {
         res = res->lptr;
     }
@@ -729,20 +772,23 @@ avl_tree::AVL<val_t>::find_min (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
  * @brief                   Finds the minimum value node in the entire tree without modifying it
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return node_ptr_t       Pointer to the minimum value node in the entire tree
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
 avl_tree::AVL<val_t>::find_min () const
 {
-    return find_min (m_root);
+    return find_min (mRoot);
 }
 
 /**
  * @brief                   Finds the maximum value node in a subtree without modifying it
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param pRoot             Root of the subtree to be processed
+ *
  * @return node_ptr_t       Pointer to maximum value node in the subtree of pRoot
  */
 template <typename val_t>
@@ -751,10 +797,12 @@ avl_tree::AVL<val_t>::find_max (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
 {
     node_ptr_t res {pRoot};
 
+    // if the root does not exist (no nodesi n tree), return null
     if (res == nullptr) {
-        return res;
+        return nullptr;
     }
 
+    // keep going right for as long as possible and return the rightmost (greatest) node
     while (res->rptr != nullptr) {
         res = res->rptr;
     }
@@ -766,81 +814,83 @@ avl_tree::AVL<val_t>::find_max (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
  * @brief                   Finds the maximum value node in the entire tree without modifying it
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return node_ptr_t       Pointer to the maximum value node in the entire tree
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
 avl_tree::AVL<val_t>::find_max () const
 {
-    return find_max (m_root);
+    return find_max (mRoot);
 }
 
 /**
  * @brief                   Attempts to insert a new node in the subtree of an existing node
  *
  * @tparam val_t            Type of data held by tree instance
- * @param cur               Pointer to node's link in whose subtree a new value must be inserted
- * @param val               Reference to value to be inserted
+ *
+ * @param pCur              Pointer to node's link in whose subtree a new value must be inserted
+ * @param pVal              Reference to value to be inserted
+ *
  * @return true             If insertion was successful (new node created)
  * @return false            If insertion failed
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_t & val)
+avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t & pVal)
 {
-
     // if the current pointet points to null, this is the correct location to insert a node_t
-    if (*cur == nullptr) {
+    if (*pCur == nullptr) {
 
-        node_ptr_t ins = new (std::nothrow) node_t {nullptr, nullptr, 0, val};
-        // failed insertion
-        if (ins == nullptr) {
-            return 0;
+        node_ptr_t  ins;
+        ins     = new (std::nothrow) node_t {nullptr, nullptr, 0, pVal};
+
+        if (ins == nullptr) {   // failed insertion
+            return false;
         }
 
-        *cur = ins;
+        *pCur   = ins;
 
-        ++m_sz;
+        ++mSz;
 
-        return 1;
+        return true;
+    }
+
+    // found matching node, insert failed
+    if (mEquals ((*pCur)->val, pVal)) {
+        return false;
     }
 
     // if not equal, try to recursively insert
-    // if successful, recalculate depths and m_balance
-    // if( insert( &(*cur)->cptr[!comp( val, (*cur)->val )], val ) ) {
-    if (!equals ((*cur)->val, val) and insert ((comp (val, (*cur)->val)) ? (&(*cur)->lptr) : (&(*cur)->rptr), val)) {
+    // if successful, recalculate depths and mBalance
+    // if( insert( &(*cur)->cptr[!mComp( val, (*cur)->val )], val ) ) {
+
+    node_ptr_t  *whichPtr;
+    whichPtr    = (mComp (pVal, (*pCur)->val)) ? (&(*pCur)->lptr) : (&(*pCur)->rptr);
+
+    if (insert (whichPtr, pVal)) {
 
         uint8_t ldep;
         uint8_t rdep;
 
-        calc_depth (*cur, ldep, rdep);
+        calc_height (*pCur, ldep, rdep);
 
         if (ldep > (1 + rdep)) {
 
-            if (comp (val, (*cur)->lptr->val)) {
-                balance_ll (cur);
-            } else {
-                balance_lr (cur);
-            }
-
+            (mComp (pVal, (*pCur)->lptr->val)) ? (balance_ll (pCur)) : (balance_lr (pCur));
             --ldep;
         } else if (rdep > (1 + ldep)) {
 
-            if (comp (val, (*cur)->rptr->val)) {
-                balance_rl (cur);
-            } else {
-                balance_rr (cur);
-            }
-
+            (mComp (pVal, (*pCur)->rptr->val)) ? (balance_rl (pCur)) : (balance_rr (pCur));
             --rdep;
         }
 
-        (*cur)->dep = max (ldep, rdep);
+        (*pCur)->height = max (ldep, rdep);
 
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 
@@ -848,159 +898,120 @@ avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_
  * @brief                   Attempts to erase a node from the subtree of an existing node
  *
  * @tparam val_t            Type of data held by tree instance
- * @param cur               Pointer to node's link in whose subtree a new value must be inserted
- * @param val               Reference to value to be erased
+ *
+ * @param pCur              Pointer to node's link in whose subtree a new value must be inserted
+ * @param pVal              Reference to value to be erased
+ *
  * @return true             If erasing was successful (old node deleted)
  * @return false            If erasing failed
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::node_ptr_t * cur, const val_t & val)
+avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t & pVal)
 {
+    if (*pCur == nullptr) {
+        return false;                                                           // could not find matching node; return failed insertion
+    }
 
-    // could not find matching node_t, return 0 to indicate failed deletion
-    if (*cur == nullptr)
-        return 0;
-
-    // found matching node_t, remove it
-    if (equals ((*cur)->val, val)) {
+    if (mEquals ((*pCur)->val, pVal)) {                                         // found a matching node, try to remove it
 
         node_ptr_t nxt {nullptr};
 
-        // the node_t to be deleted has two children, find inorder successor and move it up
         // todo use inorder predeccessor if more efficient
-        if ((*cur)->lptr != nullptr and (*cur)->rptr != nullptr) {
+        if ((*pCur)->lptr != nullptr and (*pCur)->rptr != nullptr) {            // the the node to be deleted has both children, find its inorder successor to move up
 
-            nxt       = find_min_move_up (&(*cur)->rptr);
+            nxt       = find_min_move_up (&(*pCur)->rptr);
 
-            nxt->lptr = (*cur)->lptr;
-            nxt->rptr = (*cur)->rptr;
+            nxt->lptr = (*pCur)->lptr;
+            nxt->rptr = (*pCur)->rptr;
         }
 
-        // left child but not right child, move it up and delete
-        else if ((*cur)->lptr != nullptr and (*cur)->rptr == nullptr) {
-            nxt = (*cur)->lptr;
+        else if ((*pCur)->lptr != nullptr and (*pCur)->rptr == nullptr) {       // only left child exists, move it up and delete the current node
+            nxt = (*pCur)->lptr;
         }
 
-        // right child but not left child, move it up and delete
-        else if ((*cur)->rptr != nullptr and (*cur)->lptr == nullptr) {
-            nxt = (*cur)->rptr;
+        else if ((*pCur)->lptr == nullptr and (*pCur)->rptr != nullptr) {       // only right child exists, make this the next node
+            nxt = (*pCur)->rptr;
         }
 
-        delete *cur;
-        *cur = nxt;
+        delete *pCur;                                                           // delete current node
+        *pCur = nxt;                                                            // move up the next node
 
-        --m_sz;
+        --mSz;
     }
 
-    // try to recursively erase, if could not, return 0 to indicate failed deletion
-    else if (!erase ((comp (val, (*cur)->val)) ? (&(*cur)->lptr) : (&(*cur)->rptr), val)) {
-        return 0;
+    else if (!erase ((mComp (pVal, (*pCur)->val)) ? (&(*pCur)->lptr) : (&(*pCur)->rptr), pVal)) {
+        return false;                                                           // try to recursively erase (go left if current > supplied value else right), return false if failed
     }
 
-    // in case a node was removed, recalculate heights and rebalance if required
-    if (*cur != nullptr) {
+    if (*pCur != nullptr) {                                                     // if a node was removed, recalculate heights of all shifted nodes and rebalance
 
-        uint8_t ldep;
-        uint8_t rdep;
+        uint8_t ldep;                                                           // left depth of the current node
+        uint8_t rdep;                                                           // right depth of the current node
 
-        uint8_t lldep;
-        uint8_t rrdep;
+        uint8_t lldep;                                                          // left depth of the heavier child's left child (grandchild of current node)
+        uint8_t rrdep;                                                          // left depth of the heavier child's right child (grandchild of current node)
 
-        calc_depth (*cur, ldep, rdep);
+        calc_height (*pCur, ldep, rdep);                                        // since lower nodes were moved, re-calculate the height of this node
 
         if (ldep > (1 + rdep)) {
 
-            calc_depth ((*cur)->lptr, lldep, rrdep);
-
-            if (lldep >= rrdep) {
-                balance_ll (cur);
-            } else {
-                balance_lr (cur);
-            }
-
+            calc_height ((*pCur)->lptr, lldep, rrdep);                          // in case the left child is too heavy, get heights of its children to check
+            (lldep >= rrdep) ? (balance_ll (pCur)) : (balance_lr (pCur));
             --ldep;
         } else if (rdep > (1 + ldep)) {
 
-            calc_depth ((*cur)->rptr, lldep, rrdep);
-
-            if (lldep >= rrdep) {
-                balance_rl (cur);
-            } else {
-                balance_rr (cur);
-            }
-
+            calc_height ((*pCur)->rptr, lldep, rrdep);                          // in case the right child is too heavy, get heights of its children to check
+            (lldep >= rrdep) ? (balance_rl (pCur)) : (balance_rr (pCur));
             --rdep;
         }
 
-        (*cur)->dep = max (ldep, rdep);
+        (*pCur)->height = max (ldep, rdep);
     }
 
-    return 1;
+    return true;
 }
 
 /**
  * @brief                   Finds inorder successor of a node and replace the node with it
  *
  * @tparam val_t            Type of data held by tree instance
- * @param cur               Pointer to node's link which is to be replaced
- * @return avl_tree::AVL<val_t>::node_ptr_t Inorder succesor of given node
+ *
+ * @param pCur              Pointer to node's link which is to be replaced
+ *
+ * @return avl_tree::AVL<val_t>::node_ptr_t Inorder succesor of given node (after it's right child has been moved up)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
+avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::link_ptr_t pCur)
 {
-
     node_ptr_t res;
 
-    // since the left child is not null, we can find atleast one smaller node
-    if ((*cur)->lptr != nullptr) {
+    uint8_t ldep;                                                               // left depth of current node
+    uint8_t rdep;                                                               // right depth of current node
 
-        res = find_min_move_up (&(*cur)->lptr);
+    uint8_t lldep;                                                              // left depth of current node's right child
+    uint8_t rrdep;                                                              // right depth of current node's right child
 
-        uint8_t ldep;
-        uint8_t rdep;
+    if ((*pCur)->lptr != nullptr) {                                             // if the left child exists, then atleast one smaller node exists
 
-        uint8_t lldep;
-        uint8_t rrdep;
-
-        calc_depth (*cur, ldep, rdep);
-
-        // if( ldep > ( 1 + rdep ) ) {
-
-        //     calc_depth( (*cur)->lptr, lldep, rrdep );
-
-        //     if( lldep >= rrdep ) {
-        //         balance_ll( cur );
-        //     }
-        //     else {
-        //         balance_lr( cur );
-        //     }
-
-        //     --ldep;
-        // }
+        res = find_min_move_up (&(*pCur)->lptr);                                // recursively go left
+        calc_height (*pCur, ldep, rdep);                                        // after left subtree is processed, recalculate height of current node
 
         if (rdep > (1 + ldep)) {
 
-            calc_depth ((*cur)->rptr, lldep, rrdep);
-
-            if (lldep > rrdep) {
-                balance_rl (cur);
-            } else {
-                balance_rr (cur);
-            }
-
+            // in case the right child is too heavy, get its childrens's heights and balance accordingly
+            calc_height ((*pCur)->rptr, lldep, rrdep);
+            (lldep > rrdep) ? (balance_rl (pCur)) : (balance_rr (pCur));
             --rdep;
         }
 
-        (*cur)->dep = max (ldep, rdep);
-    }
+        (*pCur)->height = max (ldep, rdep);
 
-    // this is the smallest node_t, move its right child up and return it
-    else {
+    } else {                                                                    // since no left child exsists. this is the smallest node in the current subtree
 
-        res  = *cur;
-        *cur = res->rptr;
+        res  = *pCur;                                                           // make res point to the current node
+        *pCur = res->rptr;                                                      // replace the current node with its right child
     }
 
     return res;
@@ -1010,42 +1021,44 @@ avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::node_ptr_t * cur)
  * @brief                   Finds inorder successor of the root
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Inorder succesor of the root
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
 avl_tree::AVL<val_t>::find_min_move_up ()
 {
-    return find_min_move_up (&m_root);
+    return find_min_move_up (&mRoot);
 }
 
 /**
  * @brief                   Finds a node with value equal to the given value
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
+ *
+ * @param pVal              Value to find
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to the node with equal value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::find_ptr (const val_t & val) const
+avl_tree::AVL<val_t>::find_ptr (const val_t & pVal) const
 {
+    node_ptr_t cur {mRoot};
 
-    node_ptr_t cur {m_root};
-
-    // break out if reached beyond a leaf node_t
+    // repeat while a valid node is being pointed to (not crossed a leaf)
     while (cur != nullptr) {
 
-        // found node_t with same value
-        if (equals (val, cur->val)) {
+        // if a matching node was found, return it
+        if (mEquals (pVal, cur->val)) {
             return cur;
         }
 
-        // if specified value is less than current node, go left, else go right
-        cur = (comp (val, cur->val)) ? (cur->lptr) : (cur->rptr);
-        // cur = cur->cptr[!comp (val, cur->val)];
+        // go left if current node is too big, else go right
+        cur = (mComp (pVal, cur->val)) ? (cur->lptr) : (cur->rptr);
     }
 
+    // if no match was found, return null
     return nullptr;
 }
 
@@ -1053,178 +1066,200 @@ avl_tree::AVL<val_t>::find_ptr (const val_t & val) const
  * @brief                   Finds a node with value strictly greater than the given value in an existing node's subtree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
- * @param cur               Pointer to node in whose subtree the search must take place
+ *
+ * @param pVal              Value to find
+ * @param pCur              Pointer to node in whose subtree the search must take place
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly greater value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & val, avl_tree::AVL<val_t>::node_ptr_t cur) const
+avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
 {
-
-    // reached beyond leaf, return garbage
-    if (cur == nullptr)
+    // if reached beyond leaf (no valid node could be found in the current subtree), return null
+    if (pCur == nullptr) {
         return nullptr;
+    }
 
-    // current node_t has value <= requirement, go right
-    if (comp (cur->val, val) or equals (cur->val, val))
-        return first_greater_strict_ptr (val, cur->rptr);
+    // if the current node <= supplied value, go right (current node's value is too small)
+    if (mComp (pCur->val, pVal) or mEquals (pCur->val, pVal)) {
+        return first_greater_strict_ptr (pVal, pCur->rptr);
+    }
 
-    node_ptr_t res {first_greater_strict_ptr (val, cur->lptr)};
-
-    return (res != nullptr) ? (res) : (cur);
+    node_ptr_t res  {first_greater_strict_ptr (pVal, pCur->lptr)};              // try going right recursively to find a better match than the current node
+    return (res != nullptr) ? (res) : (pCur);                                   // if a valid, larger-value node was found, use it otherwise use the current node
 }
 
 /**
  * @brief                   Finds a node with value strictly greater than the given value
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
+ *
+ * @param pVal              Value to find
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly greater value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & val) const
+avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal) const
 {
-    return first_greater_strict_ptr (val, m_root);
+    return first_greater_strict_ptr (pVal, mRoot);
 }
 
 /**
  * @brief                   Finds a node with value not less than the given value in an existing node's subtree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
- * @param cur               Pointer to node in whose subtree the search must take place
+ *
+ * @param pVal              Value to find
+ * @param pCur              Pointer to node in whose subtree the search must take place
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a greater or equal value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & val, avl_tree::AVL<val_t>::node_ptr_t cur) const
+avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
 {
-
-    // reached beyond leaf, return garbage
-    if (cur == nullptr)
+    // if reached beyond leaf (no valid node could be found in the current subtree), return null
+    if (pCur == nullptr) {
         return nullptr;
+    }
 
-    // current node_t has value < requirement, go right
-    if (comp (cur->val, val))
-        return first_greater_equals_ptr (val, cur->rptr);
+    // if the current node < supplied value, go right (current node's value is too small)
+    if (mComp (pCur->val, pVal)) {
+        return first_greater_equals_ptr (pVal, pCur->rptr);
+    }
 
-    node_ptr_t res {first_greater_equals_ptr (val, cur->lptr)};
-
-    return (res != nullptr) ? (res) : (cur);
+    node_ptr_t res  {first_greater_equals_ptr (pVal, pCur->lptr)};              // try going left recursively to find a better match than the current node
+    return (res != nullptr) ? (res) : (pCur);                                   // if a valid, smaller-value node was found, use it otherwise use the current node
 }
 
 /**
  * @brief                   Finds a node with value not less than the given value
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
+ *
+ * @param pVal              Value to find
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a greater or equal value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & val) const
+avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal) const
 {
-    return first_greater_equals_ptr (val, m_root);
+    return first_greater_equals_ptr (pVal, mRoot);
 }
 
 /**
  * @brief                   Finds a node with value strictly less than the given value in an existing node's subtree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
- * @param cur               Pointer to node in whose subtree the search must take place
+ *
+ * @param pVal              Value to find
+ * @param pCur              Pointer to node in whose subtree the search must take place
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly less value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & val, avl_tree::AVL<val_t>::node_ptr_t cur) const
+avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
 {
-
-    // reached beyond leaf, return garbage
-    if (cur == nullptr)
+    // if reached beyond leaf (no valid node could be found in the current subtree), return null
+    if (pCur == nullptr) {
         return nullptr;
+    }
 
-    // current node_t has value >= requirement, go left
-    if (comp (val, cur->val) or equals (val, cur->val))
-        return last_smaller_strict_ptr (val, cur->lptr);
+    // if the supplied value <= current node, go left (current node's value is too big)
+    if (mComp (pVal, pCur->val) or mEquals (pVal, pCur->val)) {
+        return last_smaller_strict_ptr (pVal, pCur->lptr);
+    }
 
-    node_ptr_t res {last_smaller_strict_ptr (val, cur->rptr)};
-
-    return (res != nullptr) ? (res) : (cur);
+    node_ptr_t res  {last_smaller_strict_ptr (pVal, pCur->rptr)};               // try going right recursively to find a better match than the current node
+    return (res != nullptr) ? (res) : (pCur);                                   // if a valid, larger-value node was found, use it otherwise use the current node
 }
 
 /**
  * @brief                   Finds a node with value strictly less than the given value
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
+ *
+ * @param pVal              Value to find
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly less value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & val) const
+avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal) const
 {
-    return last_smaller_strict_ptr (val, m_root);
+    return last_smaller_strict_ptr (pVal, mRoot);
 }
 
 /**
  * @brief                   Finds a node with value not more than the given value in an existing node's subtree
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
- * @param cur               Pointer to node in whose subtree the search must take place
+ *
+ * @param pVal              Value to find
+ * @param pCur              Pointer to node in whose subtree the search must take place
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a less or equal value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & val, avl_tree::AVL<val_t>::node_ptr_t cur) const
+avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
 {
-
-    // reached beyond leaf, return garbage
-    if (cur == nullptr)
+    // if reached beyond leaf (no valid node could be found in current subtree), return null
+    if (pCur == nullptr) {
         return nullptr;
+    }
 
-    // if specified value < current node's value, go left
-    if (comp (val, cur->val))
-        return last_smaller_equals_ptr (val, cur->lptr);
+    // if the supplied value < current node, go left (current node's value is too big)
+    if (mComp (pVal, pCur->val)) {
+        return last_smaller_equals_ptr (pVal, pCur->lptr);
+    }
 
-    node_ptr_t res {last_smaller_equals_ptr (val, cur->rptr)};
-
-    return (res != nullptr) ? (res) : (cur);
+    node_ptr_t res  {last_smaller_equals_ptr (pVal, pCur->rptr)};               // try going right recursively to find a better match than the current node
+    return (res != nullptr) ? (res) : (pCur);                                   // if a valid, larger-value node was found, use it otherwise use the current node
 }
 
 /**
  * @brief                   Finds a node with value not more than the given value
  *
  * @tparam val_t            Type of data held by tree instance
- * @param val               Value to find
+ *
+ * @param pVal              Value to find
+ *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a less or equal value (or nullptr in the case of no match)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & val) const
+avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal) const
 {
-    return last_smaller_equals_ptr (val, m_root);
+    return last_smaller_equals_ptr (pVal, mRoot);
 }
 
 /**
  * @brief                   Clear the subtree of an entire node (including the node) by deleting
  *
  * @tparam val_t            Type of data held by tree instance
- * @param cur               Pointer to node whose subtree is to be deleted
+ *
+ * @param pCur              Pointer to node whose subtree is to be deleted
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t cur)
+avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t pCur)
 {
+    // if left child exists, recursively clear its subtree
+    if (pCur->lptr != nullptr) {
+        clear (pCur->lptr);
+    }
 
-    if (cur->lptr != nullptr)
-        clear (cur->lptr);
-    if (cur->rptr != nullptr)
-        clear (cur->rptr);
-    delete cur;
+    // if right child exists, recursively clear its subtree
+    if (pCur->rptr != nullptr) {
+        clear (pCur->rptr);
+    }
+
+    delete pCur;
 }
 
 
@@ -1234,40 +1269,43 @@ avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t cur)
  * @brief                   Construct a new avl tree::AVL<val t>::iterator::iterator object
  *
  * @tparam val_t            Type of data held by tree instance
- * @param _ptr              The pointer to encapsulate (points to node or nullptr)
- * @param _tree_ptr         The point to the tree which contains the node
+ *
+ * @param pPtr              The pointer to encapsulate (points to node or nullptr)
+ * @param PTreeptr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::iterator::iterator (avl_tree::AVL<val_t>::node_t * _ptr, const avl_tree::AVL<val_t> * _tree_ptr) :
-    ptr {_ptr}, tree_ptr {_tree_ptr}
+avl_tree::AVL<val_t>::iterator::iterator (avl_tree::AVL<val_t>::node_t * pPtr, const avl_tree::AVL<val_t> * pTreePtr) :
+    mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator::ref_t Data held by tree node the iterator points to
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator::ref_t
 avl_tree::AVL<val_t>::iterator::operator* () const
 {
-    return ptr->val;
+    return mPtr->val;
 }
 
 /**
  * @brief                   Post increment operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator++ ()
 {
-
-    if (ptr != nullptr) {
-        ptr = tree_ptr->first_greater_strict_ptr (ptr->val);
+    // if not pointing to end(), then get the next greater node
+    if (mPtr != nullptr) {
+        mPtr = mTreePtr->first_greater_strict_ptr (mPtr->val);                  // if a valid node is pointed to (not end()), then get the next greater node
     }
     return *this;
 }
@@ -1276,42 +1314,34 @@ avl_tree::AVL<val_t>::iterator::operator++ ()
  * @brief                   Post increment operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator++ (int)
 {
-
-    iterator tmp = *this;
-    ++(*this);
-    return tmp;
+    iterator cpy (this->mPtr, this->mTreePtr);                                  // create a copy of the current iterator,
+    ++(*this);                                                                  // increment it,
+    return cpy;                                                                 // and finally return the copy
 }
 
 /**
  * @brief                   Post decrement operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator-- ()
 {
-
-    if (ptr != nullptr) {
-
-        ptr_t t = tree_ptr->last_smaller_strict_ptr (ptr->val);
-
-        if (t != nullptr) {
-            ptr = t;
-        }
-
-        // this points to beginning of container
-        else {
-        }
-    } else {
-        ptr = tree_ptr->find_max ();
+    if (mPtr != nullptr) {                                                      // if the node being being pointed to is valid,
+        node_ptr_t t    {mTreePtr->last_smaller_strict_ptr (mPtr->val)};        // try to get the next smaller node
+        mPtr            = (t != nullptr) ? (t) : (mPtr);                        // if such a node exists, use it
+    } else {                                                                    // else, if the current node is not valid (instance points to end())
+        mPtr = mTreePtr->find_max ();                                           // then get the greateest (last) element of the tree
     }
 
     return *this;
@@ -1321,23 +1351,25 @@ avl_tree::AVL<val_t>::iterator::operator-- ()
  * @brief                   Pre decrement operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::iterator::operator-- (int)
 {
-
-    iterator tmp = *this;
-    --(*this);
-    return tmp;
+    iterator cpy (this->mPtr, this->mTreePtr);                                  // create a copy of the current iterator,
+    --(*this);                                                                  // decrement it,
+    return cpy;                                                                 // and finally return the copy
 }
 
 /**
  * @brief                   Checks if the iterator points to the same node in the same tree
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @param pOther            The iterator to compare to
+ *
  * @return true             If both iterators point to the same node of the same tree
  * @return false            If both iterators dont point to the same node or belong to different trees
  */
@@ -1345,14 +1377,16 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator & pOther) const
 {
-    return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
+    return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
 }
 
 /**
  * @brief                   Checks if the iterator points to different nodes or belong to different trees
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @param pOther            The iterator to compare to
+ *
  * @return true             If both iterators point to the different nodes or belong to different trees
  * @return false            If both iterators point to the same node in the same tree
  */
@@ -1360,48 +1394,51 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator & pOther) const
 {
-    return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
+    return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
 }
 
 /**
  * @brief Construct a new avl tree::AVL<val t>::reverse iterator::reverse iterator object
  *
  * @tparam val_t            Type of data held by tree instance
- * @param _ptr              The pointer to encapsulate (points to node or nullptr)
- * @param _tree_ptr         The point to the tree which contains the node
+ *
+ * @param pPtr              The pointer to encapsulate (points to node or nullptr)
+ * @param pTreePtr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (avl_tree::AVL<val_t>::node_t * _ptr,
-                                                          const avl_tree::AVL<val_t> *   _tree_ptr) :
-    ptr {_ptr}, tree_ptr {_tree_ptr}
+avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (avl_tree::AVL<val_t>::node_t * pPtr,
+                                                          const avl_tree::AVL<val_t> *   pTreePtr) :
+    mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterator::ref_t Data held by tree node the iterator points to
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator::ref_t
 avl_tree::AVL<val_t>::reverse_iterator::operator* () const
 {
-    return ptr->val;
+    return mPtr->val;
 }
 
 /**
  * @brief                   Post increment operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
 {
-
-    if (ptr != nullptr) {
-        ptr = tree_ptr->last_smaller_strict_ptr (ptr->val);
+    // if not pointing to rend(), then get the next greater node
+    if (mPtr != nullptr) {
+        mPtr = mTreePtr->last_smaller_strict_ptr (mPtr->val);
     }
     return *this;
 }
@@ -1410,38 +1447,34 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
  * @brief                   Pre increment operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
 {
-
-    reverse_iterator tmp = *this;
-    ++(*this);
-    return tmp;
+    reverse_iterator cpy (this->mPtr, this->mTreePtr);                          // create a copy of the current iterator,
+    ++(*this);                                                                  // increment it,
+    return cpy;                                                                 // and finally return the copy
 }
 
 /**
  * @brief                   Post decrement operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
 {
-
-    if (ptr != nullptr) {
-
-        ptr_t t = tree_ptr->first_greater_strict_ptr (ptr->val);
-
-        if (t != nullptr) {
-            ptr = t;
-        }
-    } else {
-        ptr = tree_ptr->find_min ();
+    if (mPtr != nullptr) {                                                      // if the node being being pointed to is valid,
+        node_ptr_t t    {mTreePtr->first_greater_strict_ptr (mPtr->val)};       // try to get the next greater node
+        mPtr            = (t != nullptr) ? (t) : (mPtr);                        // if such a node exists, use it
+    } else {                                                                    // else, if the current node is not valid (instance points to rend())
+        mPtr = mTreePtr->find_min ();                                           // then get the smallest (first) element of the tree
     }
     return *this;
 }
@@ -1450,23 +1483,25 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
  * @brief                   Pre decrement operator (incremements the pointer to the next inorder node)
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @return avl_tree::AVL<val_t>::reverse_iterator Decremented Iterator
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::reverse_iterator
 avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
 {
-
-    reverse_iterator tmp = *this;
-    --(*this);
-    return tmp;
+    reverse_iterator cpy (this->mPtr, this->mTreePtr);                          // create a copy of the current iterator,
+    --(*this);                                                                  // decrement it,
+    return cpy;                                                                 // and finally return the copy
 }
 
 /**
  * @brief                   Checks if the iterator points to different nodes or belong to different trees
  *
  * @tparam val_t            Type of data held by the tree instance
+ *
  * @param pOther            The iterator to compare to
+ *
  * @return true             If both iterators point to the different nodes or belong to different trees
  * @return false            If both iterators point to the same node in the same tree
  */
@@ -1474,13 +1509,14 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
 {
-    return ptr == pOther.ptr and tree_ptr == pOther.tree_ptr;
+    return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
 }
 
 /**
  * @brief Construct a new avl tree::AVL<val t>::reverse iterator::reverse iterator object
  *
  * @tparam val_t            Type of data held by tree instance
+ *
  * @param _ptr              The pointer to encapsulate (points to node or nullptr)
  * @param _tree_ptr         The point to the tree which contains the node
  */
@@ -1488,9 +1524,10 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
 {
-    return ptr != pOther.ptr or tree_ptr != pOther.tree_ptr;
+    return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
 }
 
+#ifdef AVL_TEST_MODE
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
@@ -1502,12 +1539,12 @@ avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
 
     if (cur->lptr != nullptr) {
         flag = check_balance (cur->lptr);
-        ldep = 1 + cur->lptr->dep;
+        ldep = 1 + cur->lptr->height;
     }
 
     if (cur->rptr != nullptr) {
         flag = check_balance (cur->rptr);
-        rdep = 1 + cur->rptr->dep;
+        rdep = 1 + cur->rptr->height;
     }
 
     if (ldep > 1 + rdep)
@@ -1521,17 +1558,21 @@ template <typename val_t>
 bool
 avl_tree::AVL<val_t>::check_balance ()
 {
-    if (m_root != nullptr) {
-        return check_balance (m_root);
+    if (mRoot != nullptr) {
+        return check_balance (mRoot);
     }
     return 1;
 }
+
+#endif
 
 #ifdef AVL_TEST_MODE
 template <typename val_t>
 val_t
 avl_tree::AVL<val_t>::get_root_val ()
 {
-    return m_root->val;
+    return mRoot->val;
 }
 #endif
+
+#endif                    // Header guard
