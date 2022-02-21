@@ -19,3 +19,5 @@ target_link_libraries (
     gtest_main
     pthread
 )
+
+set (CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic-errors")
