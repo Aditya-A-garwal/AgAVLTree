@@ -205,8 +205,8 @@ class AVL {
 
     //      Modifiers
 
-    bool         insert                         (node_ptr_t * pCur, const val_t & pVal);
-    bool         erase                          (node_ptr_t * pCur, const val_t & pVal);
+    bool         insert                         (link_ptr_t pCur, const val_t & pVal);
+    bool         erase                          (link_ptr_t pCur, const val_t & pVal);
     void         clear                          (node_ptr_t pCur);
 
     //      Erase modifiers
@@ -585,7 +585,7 @@ avl_tree::AVL<val_t>::min (const arg_t & pA, const arg_t & pB)
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::calc_height (avl_tree::AVL<val_t>::node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep)
+avl_tree::AVL<val_t>::calc_height (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep)
 {
     // if a child does not exist, return 0 (the corresponding subtree is non-existant) otherwise return its height + 1
     pLdep   = (pCur->lptr != nullptr) ? (1 + pCur->lptr->height) : (0);
@@ -601,7 +601,7 @@ avl_tree::AVL<val_t>::calc_height (avl_tree::AVL<val_t>::node_ptr_t pCur, uint8_
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::link_ptr_t pRoot)
+avl_tree::AVL<val_t>::balance_ll (link_ptr_t pRoot)
 {
     uint8_t    ldep;                                // stores the left and
     uint8_t    rdep;                                // right depths of the pivot (top) node
@@ -636,7 +636,7 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::link_ptr_t pRoot)
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
+avl_tree::AVL<val_t>::balance_lr (link_ptr_t pRoot)
 {
     uint8_t    ldep;                                // intermediary variables for storing the left
     uint8_t    rdep;                                // and right depths of nodes while recalculating their depths
@@ -678,7 +678,7 @@ avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::link_ptr_t pRoot)
+avl_tree::AVL<val_t>::balance_rl (link_ptr_t pRoot)
 {
     uint8_t    ldep;                                // intermediary variables for storing the left
     uint8_t    rdep;                                // and right depths of nodes while recalculating their depths
@@ -720,7 +720,7 @@ avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::link_ptr_t pRoot)
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
+avl_tree::AVL<val_t>::balance_rr (link_ptr_t pRoot)
 {
     uint8_t    ldep;                                // stores the left and
     uint8_t    rdep;                                // right depths of the pivot (top) node
@@ -758,7 +758,7 @@ avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::find_min (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
+avl_tree::AVL<val_t>::find_min (node_ptr_t pRoot) const
 {
     node_ptr_t res {pRoot};
 
@@ -801,7 +801,7 @@ avl_tree::AVL<val_t>::find_min () const
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::find_max (avl_tree::AVL<val_t>::node_ptr_t pRoot) const
+avl_tree::AVL<val_t>::find_max (node_ptr_t pRoot) const
 {
     node_ptr_t res {pRoot};
 
@@ -846,7 +846,7 @@ avl_tree::AVL<val_t>::find_max () const
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t & pVal)
+avl_tree::AVL<val_t>::insert (link_ptr_t pCur, const val_t & pVal)
 {
     // if the current pointer points to null, this is the correct location to insert a node
     if (*pCur == nullptr) {
@@ -926,7 +926,7 @@ avl_tree::AVL<val_t>::insert (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t & pVal)
+avl_tree::AVL<val_t>::erase (link_ptr_t pCur, const val_t & pVal)
 {
     // could not find matching node, return failed insertion
     if (*pCur == nullptr) {
@@ -1022,7 +1022,7 @@ avl_tree::AVL<val_t>::erase (avl_tree::AVL<val_t>::link_ptr_t pCur, const val_t 
  */
 template <typename val_t>
 void
-avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t pCur)
+avl_tree::AVL<val_t>::clear (node_ptr_t pCur)
 {
     // if left child exists, recursively clear its subtree
     if (pCur->lptr != nullptr) {
@@ -1048,7 +1048,7 @@ avl_tree::AVL<val_t>::clear (avl_tree::AVL<val_t>::node_ptr_t pCur)
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::find_min_move_up (avl_tree::AVL<val_t>::link_ptr_t pCur)
+avl_tree::AVL<val_t>::find_min_move_up (link_ptr_t pCur)
 {
     node_ptr_t res;
 
@@ -1141,7 +1141,7 @@ avl_tree::AVL<val_t>::find_ptr (const val_t & pVal) const
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
+avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal, node_ptr_t pCur) const
 {
     // if reached beyond leaf (no valid node could be found in the current subtree), return null
     if (pCur == nullptr) {
@@ -1185,7 +1185,7 @@ avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal) const
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
+avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal, node_ptr_t pCur) const
 {
     // if reached beyond leaf (no valid node could be found in the current subtree), return null
     if (pCur == nullptr) {
@@ -1229,7 +1229,7 @@ avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal) const
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
+avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal, node_ptr_t pCur) const
 {
     // if reached beyond leaf (no valid node could be found in the current subtree), return null
     if (pCur == nullptr) {
@@ -1273,7 +1273,7 @@ avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal) const
  */
 template <typename val_t>
 typename avl_tree::AVL<val_t>::node_ptr_t
-avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal, avl_tree::AVL<val_t>::node_ptr_t pCur) const
+avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal, node_ptr_t pCur) const
 {
     // if reached beyond leaf (no valid node could be found in current subtree), return null
     if (pCur == nullptr) {
@@ -1308,7 +1308,7 @@ avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal) const
 TEST_MODE (
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
+avl_tree::AVL<val_t>::check_balance (node_ptr_t cur)
 {
 
     uint8_t ldep {};
