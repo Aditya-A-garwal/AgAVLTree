@@ -22,7 +22,7 @@ A set of exhaustive unit tests are included which can be used to test the featur
 ## Build
 The tree uses Cmake as a build system generator. Create two build directories in the root ```AVLtree``` and ```tests``` directories. Then CD into ```AVLtree/build``` and run the following command-
 
-```cmake --build .```
+```cmake -S .. -B .```
 
 The example program (more information given below) can be run by running the file ```build/main``` while the tests can be run by running the file ```tests/build/tests``` (both paths are relative to the root ```AVLtree``` directory)
 ## How to use
