@@ -9,7 +9,7 @@
  * @param PTreeptr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::iterator::iterator (avl_tree::AVL<val_t>::node_t * pPtr, const avl_tree::AVL<val_t> * pTreePtr) :
+avl_tree::AVL<val_t>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
@@ -107,7 +107,7 @@ avl_tree::AVL<val_t>::iterator::operator-- (int)
  * @param pOther            The iterator to compare to
  *
  * @return true             If both iterators point to the same node of the same tree
- * @return false            If both iterators dont point to the same node or belong to different trees
+ * @return false            If both iterators point to different nodes or belong to different trees
  */
 template <typename val_t>
 bool
@@ -134,7 +134,7 @@ avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator
 }
 
 /**
- * @brief                   Construct a new avl tree::AVL<val t>::reverse iterator::reverse iterator object
+ * @brief                   Construct a new avl tree::AVL<val t>::reverse_iterator instance
  *
  * @note                    if pPtr is nullptr, then the iterator is said to be pointing to pTreePtr->rend() (the logical element after the end in the reverse direction)
  *
@@ -144,8 +144,7 @@ avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator
  * @param pTreePtr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (avl_tree::AVL<val_t>::node_t * pPtr,
-                                                          const avl_tree::AVL<val_t> *   pTreePtr) :
+avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
@@ -241,8 +240,8 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
  *
  * @param pOther            The iterator to compare to
  *
- * @return true             If both iterators point to the different nodes or belong to different trees
- * @return false            If both iterators point to the same node in the same tree
+ * @return true             If both iterators point to the same node in the same tree
+ * @return false            If both iterators point to the same nodes of belong to different trees
  */
 template <typename val_t>
 bool
@@ -252,12 +251,14 @@ avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::
 }
 
 /**
- * @brief
+ * @brief                   Checks if the iterator points to different nodes or belong to different trees
  *
- * @tparam val_t
- * @param pOther
- * @return true
- * @return false
+ * @tparam val_t            Type of data held by the tree instance
+ *
+ * @param pOther            The iterator to compare to
+ *
+ * @return true             If both iterators point to the different nodes or belong to different trees
+ * @return false            If both iterators point to the same node in the same tree
  */
 template <typename val_t>
 bool

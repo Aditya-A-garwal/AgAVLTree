@@ -69,8 +69,8 @@ class AVL {
         using tree_ptr_t        = const AVL<val_t> *;
         using ref_t             = const val_t &;
 
-        node_ptr_t mPtr         {nullptr};
-        tree_ptr_t mTreePtr     {nullptr};
+        node_ptr_t mPtr         {nullptr};                                  // pointer to tree node (nullptr if points to end())
+        tree_ptr_t mTreePtr     {nullptr};                                  // pointer to tree instance
 
         NO_TEST_MODE (public:)
 
@@ -98,8 +98,8 @@ class AVL {
         using tree_ptr_t        = const AVL<val_t> *;
         using ref_t             = const val_t &;
 
-        node_ptr_t mPtr         {nullptr};
-        tree_ptr_t mTreePtr     {nullptr};
+        node_ptr_t mPtr         {nullptr};                                  // pointer to tree node (nullptr if points to rend())
+        tree_ptr_t mTreePtr     {nullptr};                                  // pointer to tree instance
 
         NO_TEST_MODE (public:)
 
@@ -574,13 +574,14 @@ avl_tree::AVL<val_t>::min (const arg_t & pA, const arg_t & pB)
 /**
  * @brief                   Calculates the depths of the left and right subtrees of the given node
  *
+ * @note                    The calculated depths are of the subtrees of the given node, i.e. they include the supplied node
+ *
  * @tparam val_t            Type of data held by tree instance
  *
  * @param pCur              Node whose subtrees's heights are to be calculated
  * @param pLdep             Reference to variable where left subtree's depth is kept
  * @param pRdep             Reference to variable where right subtree's depth is kept
  *
- * @note                    The calculated depths are of the subtrees of the given node, i.e. they include the supplied node
  */
 template <typename val_t>
 void
