@@ -1,43 +1,50 @@
-//! VERY IMPORTANT IMPLEMENT DESTRUCTOR TO FIX MEMORY LEAK
-
-#ifndef AVL_TREE_H
-#define AVL_TREE_H
-
-namespace avl_tree {
+#ifndef AVL_TREE_GUARD_H
+#define AVL_TREE_GUARD_H
 
 #ifdef AVL_TEST_MODE
-namespace balance_info {
+#define TEST_MODE(code)                         code
+#define NO_TEST_MODE(code)
+#else
+#define TEST_MODE(code)
+#define NO_TEST_MODE(code)                      code
+#endif
 
-int32_t ll_count;
-int32_t lr_count;
-int32_t rl_count;
-int32_t rr_count;
-
-void
-init ()
-{
-    ll_count = 0;
-    lr_count = 0;
-    rl_count = 0;
-    rr_count = 0;
-}
-};                        // namespace balance_info
-#endif                    // #ifdef AVL_TEST_MODE
-
+namespace avl_tree {
 template <typename val_t>
 class AVL {
 
-#ifdef AVL_TEST_MODE
-    public:
-#else
-    protected:
-#endif
+    TEST_MODE (public:)
+    NO_TEST_MODE (protected:)
+
+
+
     struct tree_node_t {
         tree_node_t * lptr {nullptr};
         tree_node_t * rptr {nullptr};
         uint8_t       height {0};
         val_t         val;
     };
+
+
+
+    struct dbg_info_t {
+
+        int32_t ll_count    {0};
+        int32_t lr_count    {0};
+        int32_t rl_count    {0};
+        int32_t rr_count    {0};
+
+        void
+        init ()
+        {
+            ll_count        = 0;
+            lr_count        = 0;
+            rl_count        = 0;
+            rr_count        = 0;
+        }
+    };
+
+
 
     using node_t        = tree_node_t;
     using node_ptr_t    = node_t *;
@@ -48,17 +55,16 @@ class AVL {
     using balance_t     = void (*) (node_ptr_t *);
     using comparator_t  = bool (*) (const val_t &, const val_t &);
 
-    public:
 
-    //      terator types
+
+    NO_TEST_MODE (public:)
+
+
 
     struct iterator {
 
-#ifdef AVL_TEST_MODE
-        public:
-#else
-        protected:
-#endif
+        TEST_MODE (public:)
+        NO_TEST_MODE (protected:)
 
         using tree_ptr_t        = const AVL<val_t> *;
         using ref_t             = const val_t &;
@@ -66,7 +72,7 @@ class AVL {
         node_ptr_t mPtr         {nullptr};
         tree_ptr_t mTreePtr     {nullptr};
 
-        public:
+        NO_TEST_MODE (public:)
 
         iterator                (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
         iterator                () = default;
@@ -86,11 +92,8 @@ class AVL {
 
     struct reverse_iterator {
 
-#ifdef AVL_TEST_MODE
-        public:
-#else
-        protected:
-#endif
+        TEST_MODE (public:)
+        NO_TEST_MODE (protected:)
 
         using tree_ptr_t        = const AVL<val_t> *;
         using ref_t             = const val_t &;
@@ -98,7 +101,7 @@ class AVL {
         node_ptr_t mPtr         {nullptr};
         tree_ptr_t mTreePtr     {nullptr};
 
-        public:
+        NO_TEST_MODE (public:)
 
         reverse_iterator        (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
         reverse_iterator        () = default;
@@ -156,23 +159,28 @@ class AVL {
 
     //      Utilities for testing
 
-#ifdef AVL_TEST_MODE
+    TEST_MODE (
     bool             check_balance              (node_ptr_t pCur);
     bool             check_balance              ();
     val_t            get_root_val               ();
-#endif
+    )
 
-#ifdef AVL_TEST_MODE
-    public:
-#else
-    private:
-#endif
 
-    node_ptr_t   mRoot {nullptr};
-    size_t       mSz {0};
 
-    comparator_t mComp;
-    comparator_t mEquals;
+    TEST_MODE (public:)
+    NO_TEST_MODE (private:)
+
+
+
+    node_ptr_t      mRoot       {nullptr};                                  // pointer to the root node
+    size_t          mSz         {0};                                        // size of tree (number of nodes)
+
+    comparator_t    mComp;                                                  // function pointer to < comparator (default uses operator<)
+    comparator_t    mEquals;                                                // function pointer to == comparator (default uses operator==)
+
+    TEST_MODE (
+    dbg_info_t      dbg_info;                                               // structure holding information related to debugging (TEST ONLY)
+    )
 
     //      Comparators
 
@@ -189,12 +197,12 @@ class AVL {
     //      Balance Utilities
 
     static void  calc_height                    (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep);
-    static void  balance_ll                     (link_ptr_t pRoot);
-    static void  balance_lr                     (link_ptr_t pRoot);
-    static void  balance_rl                     (link_ptr_t pRoot);
-    static void  balance_rr                     (link_ptr_t pRoot);
+    void  balance_ll                            (link_ptr_t pRoot);
+    void  balance_lr                            (link_ptr_t pRoot);
+    void  balance_rl                            (link_ptr_t pRoot);
+    void  balance_rr                            (link_ptr_t pRoot);
 
-    //
+    //      Subtree searches
 
     node_ptr_t   find_min                       (node_ptr_t pRoot) const;
     node_ptr_t   find_max                       (node_ptr_t pRoot) const;
@@ -343,6 +351,7 @@ template <typename val_t>
 typename avl_tree::AVL<val_t>::iterator
 avl_tree::AVL<val_t>::find (val_t pVal) const
 {
+    // in case nullptr is recieved, the iterator points to end()
     node_ptr_t res  {find_ptr (pVal)};
     return iterator (res, this);
 }
@@ -609,9 +618,7 @@ avl_tree::AVL<val_t>::balance_ll (avl_tree::AVL<val_t>::link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-#ifdef AVL_TEST_MODE
-    balance_info::ll_count += 1;
-#endif                    // #ifdef AVL_TEST_MODE
+    TEST_MODE (dbg_info.ll_count += 1;)
 }
 
 /**
@@ -653,9 +660,7 @@ avl_tree::AVL<val_t>::balance_lr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-#ifdef AVL_TEST_MODE
-    balance_info::lr_count += 1;
-#endif                    // #ifdef AVL_TEST_MODE
+    TEST_MODE (dbg_info.lr_count += 1;)
 }
 
 /**
@@ -697,9 +702,7 @@ avl_tree::AVL<val_t>::balance_rl (avl_tree::AVL<val_t>::link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-#ifdef AVL_TEST_MODE
-    balance_info::rl_count += 1;
-#endif                    // #ifdef AVL_TEST_MODE
+    TEST_MODE (dbg_info.rl_count += 1;)
 }
 
 /**
@@ -735,9 +738,7 @@ avl_tree::AVL<val_t>::balance_rr (avl_tree::AVL<val_t>::link_ptr_t pRoot)
 
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-#ifdef AVL_TEST_MODE
-    balance_info::rr_count += 1;
-#endif                    // #ifdef AVL_TEST_MODE
+    TEST_MODE (dbg_info.rr_count += 1;)
 }
 
 /**
@@ -1527,7 +1528,7 @@ avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::
     return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
 }
 
-#ifdef AVL_TEST_MODE
+TEST_MODE (
 template <typename val_t>
 bool
 avl_tree::AVL<val_t>::check_balance (avl_tree::AVL<val_t>::node_ptr_t cur)
@@ -1564,15 +1565,12 @@ avl_tree::AVL<val_t>::check_balance ()
     return 1;
 }
 
-#endif
-
-#ifdef AVL_TEST_MODE
 template <typename val_t>
 val_t
 avl_tree::AVL<val_t>::get_root_val ()
 {
     return mRoot->val;
 }
-#endif
+)
 
 #endif                    // Header guard

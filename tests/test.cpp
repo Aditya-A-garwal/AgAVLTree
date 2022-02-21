@@ -2,18 +2,15 @@
 
 #include <gtest/gtest.h>
 
-#define AVL_TEST_MODE \
-    1                                 // to be able to access private members and add extra diagnostic info collection
-#define CAP_TEST 0                    // to run capacity test or not
+#define AVL_TEST_MODE                   // to be able to access private members and add extra diagnostic info collection
+
 #include "../avl.h"
 
-namespace balance_info = avl_tree::balance_info;
-
-#define ASSERT_ROTATIONS(a, b, c, d)       \
-    ASSERT_EQ (balance_info::ll_count, a); \
-    ASSERT_EQ (balance_info::lr_count, b); \
-    ASSERT_EQ (balance_info::rl_count, c); \
-    ASSERT_EQ (balance_info::rr_count, d);
+#define ASSERT_ROTATIONS(tree, a, b, c, d)       \
+    ASSERT_EQ (tree.dbg_info.ll_count, a);      \
+    ASSERT_EQ (tree.dbg_info.lr_count, b);      \
+    ASSERT_EQ (tree.dbg_info.rl_count, c);      \
+    ASSERT_EQ (tree.dbg_info.rr_count, d);      \
 
 /**
  * @brief                       Inserts all given elements into a tree, in the same order
@@ -95,10 +92,8 @@ TEST (Insert, insert_ll_simple)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 1, 0);
-    ASSERT_ROTATIONS (1, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
 }
 
 /**
@@ -119,10 +114,8 @@ TEST (Insert, insert_lr_simple)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 0, 1);
-    ASSERT_ROTATIONS (0, 1, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
 }
 
 /**
@@ -143,10 +136,8 @@ TEST (Insert, insert_rl_simple)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 0, 2, 1);
-    ASSERT_ROTATIONS (0, 0, 1, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
 }
 
 /**
@@ -167,10 +158,8 @@ TEST (Insert, insert_rr_simple)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 0, 1, 2);
-    ASSERT_ROTATIONS (0, 0, 0, 1);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
 }
 
 /**
@@ -183,16 +172,14 @@ TEST (Insert, insert_ll_compound)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 1, 0);                           // first left-left rotation
-    ASSERT_ROTATIONS (1, 0, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 1, 0, 0, 0);                    //
 
     insert (tree, -1, -2);                            // second left-left rotation
-    ASSERT_ROTATIONS (2, 0, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 2, 0, 0, 0);                    //
 
     insert (tree, -3, -4);                            // third and fourth left-left rotations
-    ASSERT_ROTATIONS (4, 0, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 4, 0, 0, 0);                    //
 }
 
 /**
@@ -205,16 +192,14 @@ TEST (Insert, insert_lr_compound)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 0, 1);                           // first left-right rotation
-    ASSERT_ROTATIONS (0, 1, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 0, 1, 0, 0);                    //
 
     insert (tree, -2, -1);                            // second left-right rotation
-    ASSERT_ROTATIONS (0, 2, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 0, 2, 0, 0);                    //
 
     insert (tree, -4, -3);                            // third left-right, first left-left rotations
-    ASSERT_ROTATIONS (1, 3, 0, 0);                    //
+    ASSERT_ROTATIONS (tree, 1, 3, 0, 0);                    //
 }
 
 /**
@@ -227,16 +212,14 @@ TEST (Insert, insert_rl_compound)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 0, 2, 1);                           // first right-left rotation
-    ASSERT_ROTATIONS (0, 0, 1, 0);                    //
+    ASSERT_ROTATIONS (tree, 0, 0, 1, 0);                    //
 
     insert (tree, 4, 3);                              // second right-left rotiation
-    ASSERT_ROTATIONS (0, 0, 2, 0);                    //
+    ASSERT_ROTATIONS (tree, 0, 0, 2, 0);                    //
 
     insert (tree, 6, 5);                              // third right-left, first right-right rotation
-    ASSERT_ROTATIONS (0, 0, 3, 1);                    //
+    ASSERT_ROTATIONS (tree, 0, 0, 3, 1);                    //
 }
 
 /**
@@ -249,16 +232,14 @@ TEST (Insert, insert_rr_compound)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 0, 1, 2);                           // first right-right rotation
-    ASSERT_ROTATIONS (0, 0, 0, 1);                    //
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 1);                    //
 
     insert (tree, 3, 4);                              // second right-right rotation
-    ASSERT_ROTATIONS (0, 0, 0, 2);                    //
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 2);                    //
 
     insert (tree, 5, 6);                    // third and fourth right-right rotation
-    ASSERT_ROTATIONS (0, 0, 0, 4);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 4);
 }
 
 /**
@@ -324,14 +305,12 @@ TEST (Erase, no_child_ll)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7);
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 15);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                    7
@@ -344,7 +323,7 @@ TEST (Erase, no_child_ll)
 
     erase (tree, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 9);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after deletions (balanced)
     //                    7
@@ -357,7 +336,7 @@ TEST (Erase, no_child_ll)
 
     erase (tree, 9, 13);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (1, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
 
     // Expected shape of tree after deletions (left-left imbalance at node 7)
     //                    7
@@ -377,14 +356,12 @@ TEST (Erase, no_child_lr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7);
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 15);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                    7
@@ -397,7 +374,7 @@ TEST (Erase, no_child_lr)
 
     erase (tree, 0, 2, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 9);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after deletions (balanced)
     //                    7
@@ -410,7 +387,7 @@ TEST (Erase, no_child_lr)
 
     erase (tree, 9, 13);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 1, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
 
     // Expected shape of tree after deletions (left-right imbalance at node 7)
     //                    7
@@ -430,14 +407,12 @@ TEST (Erase, no_child_rl)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7);
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 15);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                    7
@@ -450,7 +425,7 @@ TEST (Erase, no_child_rl)
 
     erase (tree, 0, 2, 4, 6, 12, 14);
     ASSERT_EQ (tree.size (), 9);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after deletions (balanced)
     //                    7
@@ -463,7 +438,7 @@ TEST (Erase, no_child_rl)
 
     erase (tree, 1, 5);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 1, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
 
     // Expected shape of tree after insertions (right-left imbalance at node 7)
     //                    7
@@ -483,14 +458,12 @@ TEST (Erase, no_child_rr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7);
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), 15);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                    7
@@ -503,7 +476,7 @@ TEST (Erase, no_child_rr)
 
     erase (tree, 0, 2, 4, 6, 8, 10);
     ASSERT_EQ (tree.size (), 9);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                    7
@@ -516,7 +489,7 @@ TEST (Erase, no_child_rr)
 
     erase (tree, 1, 5);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 1);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
 
     // Expected shape of tree after deletions (right-right imbalance at node 7)
     //                    7
@@ -536,13 +509,11 @@ TEST (Erase, left_child_rl)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 3, 5);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // expected shape of tree after insertions (balanced)
     //                       2
@@ -552,7 +523,7 @@ TEST (Erase, left_child_rl)
 
     tree.erase (0);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 1, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
 
     // expected shape of tree after deletion (right-left imbalance at node 2)
     //                       2
@@ -569,13 +540,11 @@ TEST (Erase, left_child_rr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 7, 9);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                       2
@@ -585,7 +554,7 @@ TEST (Erase, left_child_rr)
 
     tree.erase (0);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 1);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
 
     // Expected shape of tree after insertions (right-right imbalance at node 2)
     //                       2
@@ -602,13 +571,11 @@ TEST (Erase, right_child_ll)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 0, 2);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                       7
@@ -618,7 +585,7 @@ TEST (Erase, right_child_ll)
 
     tree.erase (9);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (1, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
 
     // Expected shape of tree after deletions (left-left imbalance at node 7)
     //                       7
@@ -635,13 +602,11 @@ TEST (Erase, right_child_lr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 4, 6);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     // Expected shape of tree after insertions (balanced)
     //                       7
@@ -651,7 +616,7 @@ TEST (Erase, right_child_lr)
 
     tree.erase (9);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 1, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
 
     // Expected shape of tree after deletions (left-right imbalance at node 7)
     //                       7
@@ -664,89 +629,79 @@ TEST (Erase, both_child_find_min_basic)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), 6);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 }
 
 TEST (Erase, both_child_find_min_rl)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 7);
     insert (tree, 6);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 1, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
 }
 
 TEST (Erase, both_child_find_min_rr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
     insert (tree, 7);
     ASSERT_EQ (tree.size (), 8);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 1);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
 }
 
 TEST (Erase, both_child_ll)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 4);
     insert (tree, 2, 6);
     insert (tree, 1, 3, 5);
     insert (tree, 0);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     tree.erase (4);
     ASSERT_EQ (tree.size (), 6);
-    ASSERT_ROTATIONS (1, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
 }
 
 TEST (Erase, both_child_lr)
 {
     avl_tree::AVL<int32_t> tree;
 
-    balance_info::init ();
-
     insert (tree, 5);
     insert (tree, 2, 7);
     insert (tree, 1, 4, 6);
     insert (tree, 3);
     ASSERT_EQ (tree.size (), 7);
-    ASSERT_ROTATIONS (0, 0, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 
     tree.erase (5);
     ASSERT_EQ (tree.size (), 6);
-    ASSERT_ROTATIONS (0, 1, 0, 0);
+    ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
 }
 
 TEST (Iteration, forward)
