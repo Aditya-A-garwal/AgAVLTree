@@ -37,7 +37,7 @@ alternate_eq_comp (const point2D & a, const point2D & b)
 }
 
 int
-main (int argc, char * argv[])
+main (void)
 {
 
     int                v;
