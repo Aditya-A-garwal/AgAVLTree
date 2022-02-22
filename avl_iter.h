@@ -3,8 +3,6 @@
  *
  * @note                    if pPtr is nullptr, then the iterator is said to be pointing to pTreePtr->end() (the logical element after the end in the forward direction)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pPtr              The pointer to encapsulate (points to node or nullptr)
  * @param PTreeptr          The point to the tree which contains the node
  */
@@ -15,8 +13,6 @@ avl_tree::AVL<val_t>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) 
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @return avl_tree::AVL<val_t>::iterator::ref_t Data held by tree node the iterator points to
  */
@@ -29,8 +25,6 @@ avl_tree::AVL<val_t>::iterator::operator* () const
 
 /**
  * @brief                   Prefix increment operator (incremements the pointer to the next inorder node)
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
  */
@@ -48,8 +42,6 @@ avl_tree::AVL<val_t>::iterator::operator++ ()
 /**
  * @brief                   Suffix increment operator (incremements the pointer to the next inorder node)
  *
- * @tparam val_t            Type of data held by the tree instance
- *
  * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
  */
 template <typename val_t>
@@ -63,8 +55,6 @@ avl_tree::AVL<val_t>::iterator::operator++ (int)
 
 /**
  * @brief                   Prefix decrement operator (incremements the pointer to the next inorder node)
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
@@ -86,8 +76,6 @@ avl_tree::AVL<val_t>::iterator::operator-- ()
 /**
  * @brief                   Suffix decrement operator (incremements the pointer to the next inorder node)
  *
- * @tparam val_t            Type of data held by the tree instance
- *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
@@ -101,8 +89,6 @@ avl_tree::AVL<val_t>::iterator::operator-- (int)
 
 /**
  * @brief                   Checks if the iterator points to the same node in the same tree
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @param pOther            The iterator to compare to
  *
@@ -118,8 +104,6 @@ avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator
 
 /**
  * @brief                   Checks if the iterator points to different nodes or belong to different trees
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @param pOther            The iterator to compare to
  *
@@ -138,8 +122,6 @@ avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator
  *
  * @note                    if pPtr is nullptr, then the iterator is said to be pointing to pTreePtr->rend() (the logical element after the end in the reverse direction)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pPtr              The pointer to encapsulate (points to node or nullptr)
  * @param pTreePtr          The point to the tree which contains the node
  */
@@ -150,8 +132,6 @@ avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @return avl_tree::AVL<val_t>::reverse_iterator::ref_t Data held by tree node the iterator points to
  */
@@ -164,8 +144,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator* () const
 
 /**
  * @brief                   Prefix increment operator (incremements the pointer to the next inorder node)
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
  */
@@ -183,8 +161,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
 /**
  * @brief                   Suffix increment operator (incremements the pointer to the next inorder node)
  *
- * @tparam val_t            Type of data held by the tree instance
- *
  * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
  */
 template <typename val_t>
@@ -198,8 +174,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
 
 /**
  * @brief                   Prefix decrement operator (incremements the pointer to the next inorder node)
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
  */
@@ -220,8 +194,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
 /**
  * @brief                   Suffix decrement operator (incremements the pointer to the next inorder node)
  *
- * @tparam val_t            Type of data held by the tree instance
- *
  * @return avl_tree::AVL<val_t>::reverse_iterator Decremented Iterator
  */
 template <typename val_t>
@@ -235,8 +207,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
 
 /**
  * @brief                   Checks if the iterator points to different nodes or belong to different trees
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @param pOther            The iterator to compare to
  *
@@ -252,8 +222,6 @@ avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::
 
 /**
  * @brief                   Checks if the iterator points to different nodes or belong to different trees
- *
- * @tparam val_t            Type of data held by the tree instance
  *
  * @param pOther            The iterator to compare to
  *

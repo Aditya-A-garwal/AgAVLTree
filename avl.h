@@ -10,6 +10,12 @@
 #endif
 
 namespace avl_tree {
+
+/**
+ * @brief                       avl_tree::AVL is an implementation of the AVL tree data structure (a type of self balanced binary search tree)
+ *
+ * @tparam val_t                Type of data held by tree instance
+ */
 template <typename val_t>
 class AVL {
 
@@ -228,12 +234,10 @@ class AVL {
     node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal, node_ptr_t pCur) const;
     node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal) const;
 };
-};                    // namespace avl_tree
+}                     // namespace avl_tree
 
 /**
  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
- *
- * @tparam val_t
  */
 template <typename val_t>
 avl_tree::AVL<val_t>::AVL () : mComp {default_lessthan}, mEquals {default_equals}
@@ -241,8 +245,6 @@ avl_tree::AVL<val_t>::AVL () : mComp {default_lessthan}, mEquals {default_equals
 
 /**
  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
- *
- * @tparam val_t
  *
  * @param pLtComp
  * @param pEqComp
@@ -253,8 +255,6 @@ avl_tree::AVL<val_t>::AVL (const comparator_t pLtComp, const comparator_t pEqCom
 
 /**
  * @brief                   Destroy the avl tree::AVL<val t>::AVL object
- *
- * @tparam val_t            Type of data held by tree instance
  */
 template <typename val_t>
 avl_tree::AVL<val_t>::~AVL ()
@@ -264,8 +264,6 @@ avl_tree::AVL<val_t>::~AVL ()
 
 /**
  * @brief                   Attempts to insert a value into the tree
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              The value to be inserted into the tree
  *
@@ -282,8 +280,6 @@ avl_tree::AVL<val_t>::insert (val_t pVal)
 /**
  * @brief                   Attempts to erase a value from the tree
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              The value to be found and erased
  *
  * @return true             If value was successfuly erased
@@ -298,8 +294,6 @@ avl_tree::AVL<val_t>::erase (val_t pVal)
 
 /**
  * @brief                   Erases all elements from the tree (bringing size to 0)
- *
- * @tparam val_t            Type of data held by tree instance
  */
 template <typename val_t>
 void
@@ -318,8 +312,6 @@ avl_tree::AVL<val_t>::clear ()
 /**
  * @brief                   Finds and returns an iterator to a given value (end() if no match exists in the tree)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              The value to be found
  *
  * @return avl_tree::AVL<val_t>::iterator Iterator to matching value in the tree (end() if no match found)
@@ -336,8 +328,6 @@ avl_tree::AVL<val_t>::find (val_t pVal) const
 
 /**
  * @brief                   Finds and returns an iterator to the first value strictly greater than the given value (end() if no match exists)
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              The value to be compared with
  *
@@ -356,8 +346,6 @@ avl_tree::AVL<val_t>::first_greater_strict (val_t pVal) const
 /**
  * @brief                   Finds and returns an iterator to the first value greater than or equal to the given value (end() if no match exists)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal               The value to be compared with
  *
  * @return avl_tree::AVL<val_t>::iterator Iterator to first greater or equal value in the tree (end() if no match found)
@@ -374,8 +362,6 @@ avl_tree::AVL<val_t>::first_greater_equals (val_t pVal) const
 
 /**
  * @brief                   Finds and returns an iterator to the last value strictly less than the given value (end() if no match exists)
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal               The value to be compared with
  *
@@ -394,8 +380,6 @@ avl_tree::AVL<val_t>::last_smaller_strict (val_t pVal) const
 /**
  * @brief                   Finds and returns an iterator to the last value less than or equal to the given value (end() if no match exists)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              The value to be compared with
  *
  * @return avl_tree::AVL<val_t>::iterator Iterator to last less or equal value in the tree (end() if no match found)
@@ -413,8 +397,6 @@ avl_tree::AVL<val_t>::last_smaller_equals (val_t pVal) const
 /**
  * @brief                   Returns the size of the tree (number of elements)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return size_t           Size of tree
  */
 template <typename val_t>
@@ -426,8 +408,6 @@ avl_tree::AVL<val_t>::size () const
 
 /**
  * @brief                   Returns an iterator to the beginning
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @return avl_tree::AVL<val_t>::iterator Iterator to the first element
  */
@@ -442,8 +422,6 @@ avl_tree::AVL<val_t>::begin () const
 /**
  * @brief                   Returns an iterator to the element one after the last element
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return avl_tree::AVL<val_t>::iterator Iterator to the element following the last element
  */
 template <typename val_t>
@@ -457,8 +435,6 @@ avl_tree::AVL<val_t>::end () const
 /**
  * @brief                   Returns a reverse iterator to the beginning
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return avl_tree::AVL<val_t>::reverse_iterator Reverse Iterator to the beginning
  */
 template <typename val_t>
@@ -471,8 +447,6 @@ avl_tree::AVL<val_t>::rbegin () const
 
 /**
  * @brief                   Returns a reverse iterator to the element one after the last element
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @return avl_tree::AVL<val_t>::reverse_iterato Iterator to the element following the last element
  */
@@ -489,8 +463,6 @@ avl_tree::AVL<val_t>::rend () const
 /**
  * @brief                   Default comparator function for less than comparison if none given by user (requires < operator to be implemented)
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pA                First element (element to be compared to)
  * @param pB                Second element (element to be compared)
  *
@@ -506,8 +478,6 @@ avl_tree::AVL<val_t>::default_lessthan (const val_t & pA, const val_t & pB)
 
 /**
  * @brief                   Default comparator function for mEquals comparison if none given by user (requires == operator to be implemented)
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pA                First element (element to be compared to)
  * @param pB                Second element (element to be compared)
@@ -535,8 +505,6 @@ avl_tree::AVL<val_t>::default_equals (const val_t & pA, const val_t & pB)
 
 /**
  * @brief                   Returns the maximum of two elements (first if both compare equal)
- *
- * @tparam val_t            Type of data held by tree instance
  * @tparam arg_t            Type of values to be compared
  *
  * @param pA                First element to be compared
@@ -554,8 +522,6 @@ avl_tree::AVL<val_t>::max (const arg_t & pA, const arg_t & pB)
 
 /**
  * @brief                   Returns the minimum of two elements (first if both compare mEquals)
- *
- * @tparam val_t            Type of data held by tree instance
  * @tparam arg_t            Type of values to be compared
  *
  * @param pA                First element to be compared
@@ -576,8 +542,6 @@ avl_tree::AVL<val_t>::min (const arg_t & pA, const arg_t & pB)
  *
  * @note                    The calculated depths are of the subtrees of the given node, i.e. they include the supplied node
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pCur              Node whose subtrees's heights are to be calculated
  * @param pLdep             Reference to variable where left subtree's depth is kept
  * @param pRdep             Reference to variable where right subtree's depth is kept
@@ -594,8 +558,6 @@ avl_tree::AVL<val_t>::calc_height (node_ptr_t pCur, uint8_t & pLdep, uint8_t & p
 
 /**
  * @brief                   Function to balance a node which is left-left heavy
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
@@ -629,8 +591,6 @@ avl_tree::AVL<val_t>::balance_ll (link_ptr_t pRoot)
 
 /**
  * @brief                   Function to balance a node which is left-right heavy
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
@@ -672,8 +632,6 @@ avl_tree::AVL<val_t>::balance_lr (link_ptr_t pRoot)
 /**
  * @brief                   Function to balance a node which is right-left heavy
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
@@ -714,8 +672,6 @@ avl_tree::AVL<val_t>::balance_rl (link_ptr_t pRoot)
 /**
  * @brief                   Function to balance a node which is right-right heavy
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pRoot             Pointer to the edge between the pivot and it's parent
  */
 template <typename val_t>
@@ -750,8 +706,6 @@ avl_tree::AVL<val_t>::balance_rr (link_ptr_t pRoot)
 /**
  * @brief                   Finds the minimum value node in a subtree without modifying it
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pRoot             Root of the subtree to be processed
  *
  * @return node_ptr_t       Pointer to minimum value node in the subtree of pRoot
@@ -778,8 +732,6 @@ avl_tree::AVL<val_t>::find_min (node_ptr_t pRoot) const
 /**
  * @brief                   Finds the minimum value node in the entire tree without modifying it
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return node_ptr_t       Pointer to the minimum value node in the entire tree
  */
 template <typename val_t>
@@ -792,8 +744,6 @@ avl_tree::AVL<val_t>::find_min () const
 
 /**
  * @brief                   Finds the maximum value node in a subtree without modifying it
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pRoot             Root of the subtree to be processed
  *
@@ -821,8 +771,6 @@ avl_tree::AVL<val_t>::find_max (node_ptr_t pRoot) const
 /**
  * @brief                   Finds the maximum value node in the entire tree without modifying it
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return node_ptr_t       Pointer to the maximum value node in the entire tree
  */
 template <typename val_t>
@@ -835,8 +783,6 @@ avl_tree::AVL<val_t>::find_max () const
 
 /**
  * @brief                   Attempts to insert a new node in the subtree of an existing node
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pCur              Pointer to node's link in whose subtree a new value must be inserted
  * @param pVal              Reference to value to be inserted
@@ -915,8 +861,6 @@ avl_tree::AVL<val_t>::insert (link_ptr_t pCur, const val_t & pVal)
 
 /**
  * @brief                   Attempts to erase a node from the subtree of an existing node
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pCur              Pointer to node's link in whose subtree a new value must be inserted
  * @param pVal              Reference to value to be erased
@@ -1016,8 +960,6 @@ avl_tree::AVL<val_t>::erase (link_ptr_t pCur, const val_t & pVal)
 /**
  * @brief                   Clear the subtree of an entire node (including the node) by deleting
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pCur              Pointer to node whose subtree is to be deleted
  */
 template <typename val_t>
@@ -1039,8 +981,6 @@ avl_tree::AVL<val_t>::clear (node_ptr_t pCur)
 
 /**
  * @brief                   Finds inorder successor of a node and replace the node with it
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pCur              Pointer to node's link which is to be replaced
  *
@@ -1087,8 +1027,6 @@ avl_tree::AVL<val_t>::find_min_move_up (link_ptr_t pCur)
 /**
  * @brief                   Finds inorder successor of the root
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @return avl_tree::AVL<val_t>::node_ptr_t Inorder succesor of the root
  */
 template <typename val_t>
@@ -1100,8 +1038,6 @@ avl_tree::AVL<val_t>::find_min_move_up ()
 
 /**
  * @brief                   Finds a node with value equal to the given value
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              Value to find
  *
@@ -1132,8 +1068,6 @@ avl_tree::AVL<val_t>::find_ptr (const val_t & pVal) const
 /**
  * @brief                   Finds a node with value strictly greater than the given value in an existing node's subtree
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              Value to find
  * @param pCur              Pointer to node in whose subtree the search must take place
  *
@@ -1160,8 +1094,6 @@ avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal, node_ptr_t p
 /**
  * @brief                   Finds a node with value strictly greater than the given value
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              Value to find
  *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly greater value (or nullptr in the case of no match)
@@ -1175,8 +1107,6 @@ avl_tree::AVL<val_t>::first_greater_strict_ptr (const val_t & pVal) const
 
 /**
  * @brief                   Finds a node with value not less than the given value in an existing node's subtree
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              Value to find
  * @param pCur              Pointer to node in whose subtree the search must take place
@@ -1204,8 +1134,6 @@ avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal, node_ptr_t p
 /**
  * @brief                   Finds a node with value not less than the given value
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              Value to find
  *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a greater or equal value (or nullptr in the case of no match)
@@ -1219,8 +1147,6 @@ avl_tree::AVL<val_t>::first_greater_equals_ptr (const val_t & pVal) const
 
 /**
  * @brief                   Finds a node with value strictly less than the given value in an existing node's subtree
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              Value to find
  * @param pCur              Pointer to node in whose subtree the search must take place
@@ -1248,8 +1174,6 @@ avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal, node_ptr_t pC
 /**
  * @brief                   Finds a node with value strictly less than the given value
  *
- * @tparam val_t            Type of data held by tree instance
- *
  * @param pVal              Value to find
  *
  * @return avl_tree::AVL<val_t>::node_ptr_t Pointer to node with a strictly less value (or nullptr in the case of no match)
@@ -1263,8 +1187,6 @@ avl_tree::AVL<val_t>::last_smaller_strict_ptr (const val_t & pVal) const
 
 /**
  * @brief                   Finds a node with value not more than the given value in an existing node's subtree
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              Value to find
  * @param pCur              Pointer to node in whose subtree the search must take place
@@ -1291,8 +1213,6 @@ avl_tree::AVL<val_t>::last_smaller_equals_ptr (const val_t & pVal, node_ptr_t pC
 
 /**
  * @brief                   Finds a node with value not more than the given value
- *
- * @tparam val_t            Type of data held by tree instance
  *
  * @param pVal              Value to find
  *
