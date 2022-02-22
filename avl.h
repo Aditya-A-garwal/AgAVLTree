@@ -74,7 +74,7 @@ class AVL {
 
         NO_TEST_MODE (public:)
 
-        iterator                (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
+        iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         iterator                () = default;
 
         iterator operator++     ();
@@ -103,7 +103,7 @@ class AVL {
 
         NO_TEST_MODE (public:)
 
-        reverse_iterator        (node_ptr_t pPtr, tree_ptr_t pTree_ptr);
+        reverse_iterator        (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         reverse_iterator        () = default;
 
         reverse_iterator operator++     ();
@@ -870,7 +870,7 @@ avl_tree::AVL<val_t>::insert (link_ptr_t pCur, const val_t & pVal)
     }
 
     // found matching node, return false to indicate failed insertion
-    if (mEquals ((*pCur)->val, pVal)) {
+    if (mEquals (pVal, (*pCur)->val)) {
         return false;
     }
 
@@ -934,7 +934,7 @@ avl_tree::AVL<val_t>::erase (link_ptr_t pCur, const val_t & pVal)
     }
 
     // found a matching node, try to remove it
-    if (mEquals ((*pCur)->val, pVal)) {
+    if (mEquals (pVal, (*pCur)->val)) {
 
         node_ptr_t nxt {nullptr};
 
