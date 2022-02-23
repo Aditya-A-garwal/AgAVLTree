@@ -6,5 +6,5 @@ A set of unit tests have been provided along with the AVL tree to allow testing 
 * Insert
 * Erase
 * Iteration
-* BinarySearch
-* Comparator
+* Find
+* CustomComparator

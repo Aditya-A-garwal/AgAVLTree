@@ -1050,7 +1050,7 @@ TEST (Iteration, reverse_equality_test)
     ASSERT_NE (it1_cpy, it2);
 }
 
-TEST (BinarySearch, find_equal_strict_test)
+TEST (Find, find_equal_strict_test)
 {
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
@@ -1070,7 +1070,7 @@ TEST (BinarySearch, find_equal_strict_test)
     }
 }
 
-TEST (BinarySearch, find_greater_strict_test)
+TEST (Find, find_greater_strict_test)
 {
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
@@ -1091,7 +1091,7 @@ TEST (BinarySearch, find_greater_strict_test)
     ASSERT_EQ (tree.first_greater_strict (hi), tree.end ());
 }
 
-TEST (BinarySearch, find_greater_equals_test)
+TEST (Find, find_greater_equals_test)
 {
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
@@ -1123,7 +1123,7 @@ TEST (BinarySearch, find_greater_equals_test)
     }
 }
 
-TEST (BinarySearch, find_less_strict_test)
+TEST (Find, find_less_strict_test)
 {
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
@@ -1144,7 +1144,7 @@ TEST (BinarySearch, find_less_strict_test)
     ASSERT_EQ (tree.last_smaller_strict (lo), tree.end ());
 }
 
-TEST (BinarySearch, find_less_equals_test)
+TEST (Find, find_less_equals_test)
 {
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
@@ -1187,7 +1187,7 @@ eq (const char * const & a, const char * const & b)
     return strcmp (a, b) == 0;
 }
 
-TEST (Comparator, c_string_test)
+TEST (CustomComparator, c_string_test)
 {
 
     AgAVLTree<const char *> tree (lt, eq);
