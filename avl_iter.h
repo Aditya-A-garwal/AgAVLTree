@@ -7,18 +7,18 @@
  * @param PTreeptr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
+AgAVLTree<val_t>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
  *
- * @return avl_tree::AVL<val_t>::iterator::ref_t Data held by tree node the iterator points to
+ * @return AgAVLTree<val_t>::iterator::ref_t Data held by tree node the iterator points to
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::iterator::ref_t
-avl_tree::AVL<val_t>::iterator::operator* () const
+typename AgAVLTree<val_t>::iterator::ref_t
+AgAVLTree<val_t>::iterator::operator* () const
 {
     return mPtr->val;
 }
@@ -26,11 +26,11 @@ avl_tree::AVL<val_t>::iterator::operator* () const
 /**
  * @brief                   Prefix increment operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
+ * @return AgAVLTree<val_t>::iterator Incremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::iterator::operator++ ()
+typename AgAVLTree<val_t>::iterator
+AgAVLTree<val_t>::iterator::operator++ ()
 {
     // if not pointing to end(), then get the next greater node
     if (mPtr != nullptr) {
@@ -42,11 +42,11 @@ avl_tree::AVL<val_t>::iterator::operator++ ()
 /**
  * @brief                   Suffix increment operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::iterator Incremented Iterator
+ * @return AgAVLTree<val_t>::iterator Incremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::iterator::operator++ (int)
+typename AgAVLTree<val_t>::iterator
+AgAVLTree<val_t>::iterator::operator++ (int)
 {
     iterator cpy (this->mPtr, this->mTreePtr);                                  // create a copy of the current iterator,
     ++(*this);                                                                  // increment it,
@@ -56,11 +56,11 @@ avl_tree::AVL<val_t>::iterator::operator++ (int)
 /**
  * @brief                   Prefix decrement operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ * @return AgAVLTree<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::iterator::operator-- ()
+typename AgAVLTree<val_t>::iterator
+AgAVLTree<val_t>::iterator::operator-- ()
 {
     if (mPtr != nullptr) {                                                      // if the node being being pointed to is valid,
         node_ptr_t t    {mTreePtr->last_smaller_strict_ptr (mPtr->val)};        // try to get the next smaller node
@@ -76,11 +76,11 @@ avl_tree::AVL<val_t>::iterator::operator-- ()
 /**
  * @brief                   Suffix decrement operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ * @return AgAVLTree<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::iterator
-avl_tree::AVL<val_t>::iterator::operator-- (int)
+typename AgAVLTree<val_t>::iterator
+AgAVLTree<val_t>::iterator::operator-- (int)
 {
     iterator cpy (this->mPtr, this->mTreePtr);                                  // create a copy of the current iterator,
     --(*this);                                                                  // decrement it,
@@ -97,7 +97,7 @@ avl_tree::AVL<val_t>::iterator::operator-- (int)
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator & pOther) const
+AgAVLTree<val_t>::iterator::operator== (const AgAVLTree<val_t>::iterator & pOther) const
 {
     return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
 }
@@ -112,7 +112,7 @@ avl_tree::AVL<val_t>::iterator::operator== (const avl_tree::AVL<val_t>::iterator
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator & pOther) const
+AgAVLTree<val_t>::iterator::operator!= (const AgAVLTree<val_t>::iterator & pOther) const
 {
     return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
 }
@@ -126,18 +126,18 @@ avl_tree::AVL<val_t>::iterator::operator!= (const avl_tree::AVL<val_t>::iterator
  * @param pTreePtr          The point to the tree which contains the node
  */
 template <typename val_t>
-avl_tree::AVL<val_t>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
+AgAVLTree<val_t>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
 /**
  * @brief                   Dereferences and returns the value held by the encapsulated node
  *
- * @return avl_tree::AVL<val_t>::reverse_iterator::ref_t Data held by tree node the iterator points to
+ * @return AgAVLTree<val_t>::reverse_iterator::ref_t Data held by tree node the iterator points to
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::reverse_iterator::ref_t
-avl_tree::AVL<val_t>::reverse_iterator::operator* () const
+typename AgAVLTree<val_t>::reverse_iterator::ref_t
+AgAVLTree<val_t>::reverse_iterator::operator* () const
 {
     return mPtr->val;
 }
@@ -145,11 +145,11 @@ avl_tree::AVL<val_t>::reverse_iterator::operator* () const
 /**
  * @brief                   Prefix increment operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
+ * @return AgAVLTree<val_t>::reverse_iterator Incremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::reverse_iterator
-avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
+typename AgAVLTree<val_t>::reverse_iterator
+AgAVLTree<val_t>::reverse_iterator::operator++ ()
 {
     // if not pointing to rend(), then get the next greater node
     if (mPtr != nullptr) {
@@ -161,11 +161,11 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ ()
 /**
  * @brief                   Suffix increment operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::reverse_iterator Incremented Iterator
+ * @return AgAVLTree<val_t>::reverse_iterator Incremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::reverse_iterator
-avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
+typename AgAVLTree<val_t>::reverse_iterator
+AgAVLTree<val_t>::reverse_iterator::operator++ (int)
 {
     reverse_iterator cpy (this->mPtr, this->mTreePtr);                          // create a copy of the current iterator,
     ++(*this);                                                                  // increment it,
@@ -175,11 +175,11 @@ avl_tree::AVL<val_t>::reverse_iterator::operator++ (int)
 /**
  * @brief                   Prefix decrement operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::iterator Decremented Iterator
+ * @return AgAVLTree<val_t>::iterator Decremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::reverse_iterator
-avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
+typename AgAVLTree<val_t>::reverse_iterator
+AgAVLTree<val_t>::reverse_iterator::operator-- ()
 {
     if (mPtr != nullptr) {                                                      // if the node being being pointed to is valid,
         node_ptr_t t    {mTreePtr->first_greater_strict_ptr (mPtr->val)};       // try to get the next greater node
@@ -194,11 +194,11 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- ()
 /**
  * @brief                   Suffix decrement operator (incremements the pointer to the next inorder node)
  *
- * @return avl_tree::AVL<val_t>::reverse_iterator Decremented Iterator
+ * @return AgAVLTree<val_t>::reverse_iterator Decremented Iterator
  */
 template <typename val_t>
-typename avl_tree::AVL<val_t>::reverse_iterator
-avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
+typename AgAVLTree<val_t>::reverse_iterator
+AgAVLTree<val_t>::reverse_iterator::operator-- (int)
 {
     reverse_iterator cpy (this->mPtr, this->mTreePtr);                          // create a copy of the current iterator,
     --(*this);                                                                  // decrement it,
@@ -215,7 +215,7 @@ avl_tree::AVL<val_t>::reverse_iterator::operator-- (int)
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
+AgAVLTree<val_t>::reverse_iterator::operator== (const AgAVLTree<val_t>::reverse_iterator & pOther) const
 {
     return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
 }
@@ -230,7 +230,7 @@ avl_tree::AVL<val_t>::reverse_iterator::operator== (const avl_tree::AVL<val_t>::
  */
 template <typename val_t>
 bool
-avl_tree::AVL<val_t>::reverse_iterator::operator!= (const avl_tree::AVL<val_t>::reverse_iterator & pOther) const
+AgAVLTree<val_t>::reverse_iterator::operator!= (const AgAVLTree<val_t>::reverse_iterator & pOther) const
 {
     return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
 }

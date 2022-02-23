@@ -40,10 +40,10 @@ int
 main (void)
 {
 
-    int                v;
+    int                 v;
 
     // tree for simple int type
-    avl_tree::AVL<int> tree1;
+    AgAVLTree<int>      tree1;
 
     // insert numbers from 0 to 7 (inclusive of both endpoints)
     for (int i = 0; i < 8; ++i) {
@@ -140,7 +140,7 @@ main (void)
     std::cout << std::endl;
 
     // tree for point2D type (defined above)
-    avl_tree::AVL<point2D> tree2;
+    AgAVLTree<point2D>      tree2;
     tree2.insert ({0, 0});
     tree2.insert ({1, 2});
     tree2.insert ({2, -1});
@@ -152,7 +152,7 @@ main (void)
     std::cout << std::endl;
 
     // tree for point2D type, with custom comparators
-    avl_tree::AVL<point2D> tree3 (alternate_lt_comp, alternate_eq_comp);
+    AgAVLTree<point2D> tree3 (alternate_lt_comp, alternate_eq_comp);
     tree3.insert ({0, 0});
     tree3.insert ({1, 2});
     tree3.insert ({2, -1});

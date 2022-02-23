@@ -50,7 +50,7 @@ erase (tree_t & pTree, T1 pValue, T2... pValues)
 
 TEST (Smoke, smoke_test)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     constexpr int32_t      lo {-1'000'000};
     constexpr int32_t      hi {1'000'000};
@@ -90,7 +90,7 @@ TEST (Smoke, smoke_test)
  */
 TEST (Insert, insert_ll_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 1, 0);
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
@@ -112,7 +112,7 @@ TEST (Insert, insert_ll_simple)
  */
 TEST (Insert, insert_lr_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 0, 1);
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
@@ -134,7 +134,7 @@ TEST (Insert, insert_lr_simple)
  */
 TEST (Insert, insert_rl_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, 2, 1);
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
@@ -156,7 +156,7 @@ TEST (Insert, insert_rl_simple)
  */
 TEST (Insert, insert_rr_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, 1, 2);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
@@ -170,7 +170,7 @@ TEST (Insert, insert_rr_simple)
  */
 TEST (Insert, insert_ll_compound)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 1, 0);                           // first left-left rotation
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);                    //
@@ -190,7 +190,7 @@ TEST (Insert, insert_ll_compound)
  */
 TEST (Insert, insert_lr_compound)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 0, 1);                           // first left-right rotation
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);                    //
@@ -210,7 +210,7 @@ TEST (Insert, insert_lr_compound)
  */
 TEST (Insert, insert_rl_compound)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, 2, 1);                           // first right-left rotation
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);                    //
@@ -230,7 +230,7 @@ TEST (Insert, insert_rl_compound)
  */
 TEST (Insert, insert_rr_compound)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, 1, 2);                           // first right-right rotation
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);                    //
@@ -248,7 +248,7 @@ TEST (Insert, insert_rr_compound)
  */
 TEST (Erase, no_child_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     tree.insert (0);
     ASSERT_EQ (tree.erase (0), 1);
@@ -260,7 +260,7 @@ TEST (Erase, no_child_simple)
  */
 TEST (Erase, left_child_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     tree.insert (0);
     tree.insert (-1);
@@ -275,7 +275,7 @@ TEST (Erase, left_child_simple)
  */
 TEST (Erase, right_child_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, 1);
 
@@ -289,7 +289,7 @@ TEST (Erase, right_child_simple)
  */
 TEST (Erase, both_child_simple)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 0, -1, 1);
 
@@ -303,7 +303,7 @@ TEST (Erase, both_child_simple)
  */
 TEST (Erase, no_child_ll)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7);
     insert (tree, 3, 11);
@@ -354,7 +354,7 @@ TEST (Erase, no_child_ll)
  */
 TEST (Erase, no_child_lr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7);
     insert (tree, 3, 11);
@@ -405,7 +405,7 @@ TEST (Erase, no_child_lr)
  */
 TEST (Erase, no_child_rl)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7);
     insert (tree, 3, 11);
@@ -456,7 +456,7 @@ TEST (Erase, no_child_rl)
  */
 TEST (Erase, no_child_rr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7);
     insert (tree, 3, 11);
@@ -507,7 +507,7 @@ TEST (Erase, no_child_rr)
  */
 TEST (Erase, left_child_rl)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
@@ -538,7 +538,7 @@ TEST (Erase, left_child_rl)
  */
 TEST (Erase, left_child_rr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 2, 1, 6);
     insert (tree, 0, 4, 8);
@@ -569,7 +569,7 @@ TEST (Erase, left_child_rr)
  */
 TEST (Erase, right_child_ll)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
@@ -600,7 +600,7 @@ TEST (Erase, right_child_ll)
  */
 TEST (Erase, right_child_lr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
@@ -627,7 +627,7 @@ TEST (Erase, right_child_lr)
 
 TEST (Erase, both_child_find_min_basic)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 3);
     insert (tree, 1, 5);
@@ -642,7 +642,7 @@ TEST (Erase, both_child_find_min_basic)
 
 TEST (Erase, both_child_find_min_rl)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 3);
     insert (tree, 1, 5);
@@ -658,7 +658,7 @@ TEST (Erase, both_child_find_min_rl)
 
 TEST (Erase, both_child_find_min_rr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 3);
     insert (tree, 1, 5);
@@ -674,7 +674,7 @@ TEST (Erase, both_child_find_min_rr)
 
 TEST (Erase, both_child_ll)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 4);
     insert (tree, 2, 6);
@@ -690,7 +690,7 @@ TEST (Erase, both_child_ll)
 
 TEST (Erase, both_child_lr)
 {
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     insert (tree, 5);
     insert (tree, 2, 7);
@@ -709,7 +709,7 @@ TEST (Iteration, forward)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     auto                   end = tree.end ();
     for (int32_t v = lo; v <= hi; ++v) {
@@ -726,7 +726,7 @@ TEST (Iteration, forward)
 TEST (Iteration, reverse)
 {
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     constexpr int32_t      lo  = 1;
     constexpr int32_t      hi  = 1'000;
@@ -748,7 +748,7 @@ TEST (Iteration, for_each)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         tree.insert (v);
@@ -766,10 +766,10 @@ TEST (Iteration, end_iterator_test)
     constexpr int32_t                lo {1};
     constexpr int32_t                hi {1000};
 
-    avl_tree::AVL<int32_t>           tree;
+    AgAVLTree<int32_t>           tree;
 
-    avl_tree::AVL<int32_t>::iterator it;
-    avl_tree::AVL<int32_t>::iterator end = tree.end ();
+    AgAVLTree<int32_t>::iterator it;
+    AgAVLTree<int32_t>::iterator end = tree.end ();
 
     // While Tree is empty
     it                                   = tree.end ();
@@ -820,10 +820,10 @@ TEST (Iteration, rend_iterator_test)
     constexpr int32_t                        lo {1};
     constexpr int32_t                        hi {1000};
 
-    avl_tree::AVL<int32_t>                   tree;
+    AgAVLTree<int32_t>                   tree;
 
-    avl_tree::AVL<int32_t>::reverse_iterator it;
-    avl_tree::AVL<int32_t>::reverse_iterator end = tree.rend ();
+    AgAVLTree<int32_t>::reverse_iterator it;
+    AgAVLTree<int32_t>::reverse_iterator end = tree.rend ();
 
     // While Tree is empty
     it                                           = tree.rend ();
@@ -873,9 +873,9 @@ TEST (Iteration, begin_iterator_test)
     constexpr int32_t                lo {1};
     constexpr int32_t                hi {1000};
 
-    avl_tree::AVL<int32_t>           tree;
+    AgAVLTree<int32_t>           tree;
 
-    avl_tree::AVL<int32_t>::iterator it;
+    AgAVLTree<int32_t>::iterator it;
 
     // While tree is empty
     it = tree.begin ();
@@ -930,9 +930,9 @@ TEST (Iteration, rbegin_iterator_test)
     constexpr int32_t                        lo {1};
     constexpr int32_t                        hi {1000};
 
-    avl_tree::AVL<int32_t>                   tree;
+    AgAVLTree<int32_t>                   tree;
 
-    avl_tree::AVL<int32_t>::reverse_iterator it;
+    AgAVLTree<int32_t>::reverse_iterator it;
 
     // While tree is empty
     it = tree.rbegin ();
@@ -985,8 +985,8 @@ TEST (Iteration, rbegin_iterator_test)
 TEST (Iteration, equality_test)
 {
 
-    avl_tree::AVL<int32_t> tree1;
-    avl_tree::AVL<int32_t> tree2;
+    AgAVLTree<int32_t> tree1;
+    AgAVLTree<int32_t> tree2;
 
     tree1.insert (0);
     tree1.insert (1);
@@ -1019,8 +1019,8 @@ TEST (Iteration, equality_test)
 TEST (Iteration, reverse_equality_test)
 {
 
-    avl_tree::AVL<int32_t> tree1;
-    avl_tree::AVL<int32_t> tree2;
+    AgAVLTree<int32_t> tree1;
+    AgAVLTree<int32_t> tree2;
 
     tree1.insert (0);
     tree1.insert (1);
@@ -1055,7 +1055,7 @@ TEST (BinarySearch, find_equal_strict_test)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.find (v), tree.end ());
@@ -1075,7 +1075,7 @@ TEST (BinarySearch, find_greater_strict_test)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_strict (v), tree.end ());
@@ -1096,7 +1096,7 @@ TEST (BinarySearch, find_greater_equals_test)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_equals (v), tree.end ());
@@ -1128,7 +1128,7 @@ TEST (BinarySearch, find_less_strict_test)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_strict (v), tree.end ());
@@ -1149,7 +1149,7 @@ TEST (BinarySearch, find_less_equals_test)
     constexpr int32_t      lo {1};
     constexpr int32_t      hi {1000};
 
-    avl_tree::AVL<int32_t> tree;
+    AgAVLTree<int32_t> tree;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_equals (v), tree.end ());
@@ -1190,7 +1190,7 @@ eq (const char * const & a, const char * const & b)
 TEST (Comparator, c_string_test)
 {
 
-    avl_tree::AVL<const char *> tree (lt, eq);
+    AgAVLTree<const char *> tree (lt, eq);
 
     char                        ar[] = "useful";
 
