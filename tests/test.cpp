@@ -1190,7 +1190,7 @@ eq (const char * const & a, const char * const & b)
 TEST (CustomComparator, c_string_test)
 {
 
-    AgAVLTree<const char *> tree (lt, eq);
+    AgAVLTree<const char *, lt, eq> tree;
 
     char                        ar[] = "useful";
 

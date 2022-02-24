@@ -152,7 +152,7 @@ main (void)
     std::cout << std::endl;
 
     // tree for point2D type, with custom comparators
-    AgAVLTree<point2D> tree3 (alternate_lt_comp, alternate_eq_comp);
+    AgAVLTree<point2D, alternate_lt_comp, alternate_eq_comp> tree3;
     tree3.insert ({0, 0});
     tree3.insert ({1, 2});
     tree3.insert ({2, -1});
