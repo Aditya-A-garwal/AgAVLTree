@@ -45,9 +45,11 @@ default_equals (const val_t &pA, const val_t &pB)
 }
 
 /**
- * @brief                       AgAVLTree is an implementation of the AVL tree data structure (a type of self balanced binary search tree)
+ * @brief                   AgAVLTree is an implementation of the AVL tree data structure (a type of self balanced binary search tree)
  *
- * @tparam val_t                Type of data held by tree instance
+ * @tparam val_t            Type of data held by tree instance
+ * @tparam mComp            Comparator to use while making less than comparisons (defaults to operator<)
+ * @tparam mEquals          Comparator to use while making equals comparisons (defaults to operator==)
  */
 template <typename val_t, auto mComp = default_comp<val_t>, auto mEquals = default_equals<val_t>>
 class AgAVLTree {
@@ -830,6 +832,9 @@ AgAVLTree<val_t, mComp, mEquals>::insert (link_ptr_t pCur, const val_t & pVal)
         uint8_t ldep;                               // stores the left and
         uint8_t rdep;                               // right depths of the current node
 
+        // uint8_t lldep;
+        // uint8_t rrdep;
+
         calc_height (*pCur, ldep, rdep);
 
         // left side too heavy
@@ -837,6 +842,8 @@ AgAVLTree<val_t, mComp, mEquals>::insert (link_ptr_t pCur, const val_t & pVal)
 
             // check, in the direction of which grandhild, the insertion took place and balance towards that side
             (mComp (pVal, (*pCur)->lptr->val)) ? (balance_ll (pCur)) : (balance_lr (pCur));
+            // calc_height ((*pCur)->lptr, lldep, rrdep);
+            // (lldep >= rrdep) ? (balance_ll (pCur)) : (balance_lr (pCur));
             --ldep;
         }
 
@@ -845,6 +852,8 @@ AgAVLTree<val_t, mComp, mEquals>::insert (link_ptr_t pCur, const val_t & pVal)
 
             // check, in the direction of which grandhild, the insertion took place and balance towards that side
             (mComp (pVal, (*pCur)->rptr->val)) ? (balance_rl (pCur)) : (balance_rr (pCur));
+            // calc_height ((*pCur)->rptr, lldep, rrdep);
+            // (lldep >= rrdep) ? (balance_rl (pCur)) : (balance_rr (pCur));
             --rdep;
         }
 
