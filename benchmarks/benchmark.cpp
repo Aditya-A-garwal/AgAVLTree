@@ -1,16 +1,76 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
+#include <chrono>
 #include <set>
 #include <algorithm>
 
-#include "formatInteger.h"
-#include "scopedTimer.h"
-
 #include "../avl.h"
 
-int32_t     nInsert;
-int32_t     nFind;
-int32_t     nErase;
+template <typename T>
+std::string
+format_integer (T pNum)
+{
+
+    T           cpy {pNum};
+    int32_t     len {};
+
+    std::string res;
+
+    if(pNum == 0) {
+        return "0";
+    }
+
+    while (cpy) {
+        ++len, cpy /= 10;
+    }
+
+    for (int32_t i = 0, d; i < len; ++i) {
+
+        d = pNum % 10;
+        pNum /= 10;
+
+        res += (char) (d + '0');
+        if (i % 3 == 2 and i != len - 1) {
+            res += ',';
+        }
+    }
+
+    std::reverse (res.begin (), res.end ());
+
+    return res;
+}
+
+struct ScopedTimer {
+
+    private:
+    std::chrono::high_resolution_clock::time_point m_startPoint;
+    std::chrono::high_resolution_clock::time_point m_endPoint;
+
+    const char *                                   msg;
+
+    void
+    stop ()
+    {
+
+        m_endPoint = std::chrono::high_resolution_clock::now ();
+        auto diff  = std::chrono::duration_cast<std::chrono::milliseconds> (m_endPoint - m_startPoint).count ();
+        std::cout << "Time elapsed for (" << msg << "): " << format_integer (diff) << " ms" << std::endl;
+    }
+
+    public:
+    ScopedTimer (const char * pMsg) : msg {pMsg}
+    {
+
+        std::cout << "Starting new scoped timer for (" << msg << ")" << std::endl;
+        m_startPoint = std::chrono::high_resolution_clock::now ();
+    }
+
+    ~ScopedTimer ()
+    {
+        stop ();
+    }
+};
 
 int32_t     *buffInsert;
 int32_t     *buffFind;
@@ -20,10 +80,13 @@ void
 read_buffers (const char *pFilepath)
 {
     std::ifstream       fin (pFilepath);
+    int32_t             nInsert;
+    int32_t             nFind;
+    int32_t             nErase;
 
     if (!fin) {
         std::cout << "No file with name \"" << pFilepath << "\" exists" << std::endl;
-        std::exit (0);
+        std::exit (-1);
     }
 
     fin.tie (NULL);
@@ -147,19 +210,39 @@ run_benchmark (int32_t pN)
 }
 
 int
-main (void)
+main (int argc, char *argv[])
 {
     std::ios_base::sync_with_stdio (false);
     std::cout.tie (NULL);
     std::cin.tie (NULL);
 
-    read_buffers ("../random_all2.in");
+    if (argc < 3) {
+        std::cout << "TO FEW ARGUMENTS\n";
+        return -1;
+    }
 
-    run_benchmark (1'000'000);
-    // run_benchmark (5'000'000);
-    // run_benchmark (10'000'000);
-    // run_benchmark (15'000'000);
-    // run_benchmark (20'000'000);
+    read_buffers (argv[1]);
+
+    for (int32_t i = 2; i < argc; ++i) {
+        if (strcmp (argv[i], "1e6") == 0) {
+            run_benchmark (1'000'000);
+        }
+        else if (strcmp (argv[i], "5e6") == 0) {
+            run_benchmark (5'000'000);
+        }
+        else if (strcmp (argv[i], "1e7") == 0) {
+            run_benchmark (10'000'000);
+        }
+        else if (strcmp (argv[i], "1.5e7") == 0) {
+            run_benchmark (15'000'000);
+        }
+        else if (strcmp (argv[i], "2e7") == 0) {
+            run_benchmark (20'000'000);
+        }
+        else {
+            std::cout << argv[i] << " does not match any value\n";
+        }
+    }
 
     return 0;
 }

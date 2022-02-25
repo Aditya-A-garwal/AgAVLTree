@@ -1,21 +1,25 @@
-
-# Generate 27 random numbers each between -1e8 and 1e8 to be inserted, searched for and erased
 import random
 
-a = int (2e7)
-b = int (2e7)
-c = int (2e7)
+n   = int (2e7)
+step = int (1e6)
 
-lo = -int (1e8)
-hi = int (1e8)
+lst = []
+for i in range (0, n, step):
+    lst.append ([i for i in range(i, i + step)])
 
-print (a, b, c)
+print (n, n, n)
 
-for i in range (a):
-    print (random.randint (lo, hi))
+for i in lst:
+    random.shuffle (i)
+    for j in i:
+        print (j)
 
-for i in range(b):
-    print (random.randint (lo, hi))
+for i in lst:
+    random.shuffle (i)
+    for j in i:
+        print (j)
 
-for i in range(c):
-    print (random.randint (lo, hi))
+for i in lst:
+    random.shuffle (i)
+    for j in i:
+        print (j)
