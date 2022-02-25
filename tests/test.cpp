@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <functional>
 
 #include <gtest/gtest.h>
 
@@ -48,6 +49,10 @@ erase (tree_t & pTree, T1 pValue, T2... pValues)
     }
 }
 
+/**
+ * @brief   Test basic functionality of tree
+ *
+ */
 TEST (Smoke, smoke_test)
 {
     AgAVLTree<int32_t> tree;
@@ -625,6 +630,10 @@ TEST (Erase, right_child_lr)
     //             4     6
 }
 
+/**
+ * @brief   Test erasing a node with both children, but not resulting in any rotations
+ *
+ */
 TEST (Erase, both_child_find_min_basic)
 {
     AgAVLTree<int32_t> tree;
@@ -640,6 +649,10 @@ TEST (Erase, both_child_find_min_basic)
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
 }
 
+/**
+ * @brief   Test erasing a node with both children, and resulting in a right-left rotation
+ *
+ */
 TEST (Erase, both_child_find_min_rl)
 {
     AgAVLTree<int32_t> tree;
@@ -656,6 +669,10 @@ TEST (Erase, both_child_find_min_rl)
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
 }
 
+/**
+ * @brief   Test erasing a node with both children, and resulting in a right-right rotation
+ *
+ */
 TEST (Erase, both_child_find_min_rr)
 {
     AgAVLTree<int32_t> tree;
@@ -672,6 +689,10 @@ TEST (Erase, both_child_find_min_rr)
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
 }
 
+/**
+ * @brief   Test erasing a node with both children, and resulting in a left-left rotation (at the position of the deleted node)
+ *
+ */
 TEST (Erase, both_child_ll)
 {
     AgAVLTree<int32_t> tree;
@@ -688,6 +709,10 @@ TEST (Erase, both_child_ll)
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
 }
 
+/**
+ * @brief   Test erasing a node with both children, and resulting in a left-right rotation (at the position of the deleted node)
+ *
+ */
 TEST (Erase, both_child_lr)
 {
     AgAVLTree<int32_t> tree;
@@ -704,14 +729,19 @@ TEST (Erase, both_child_lr)
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
 }
 
+/**
+ * @brief   Test simple forward iteration
+ *
+ */
 TEST (Iteration, forward)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t       lo      {1};
+    constexpr int32_t       hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>      tree;
 
-    auto                   end = tree.end ();
+    auto                    end     = tree.end ();
+
     for (int32_t v = lo; v <= hi; ++v) {
         tree.insert (v);
     }
@@ -723,6 +753,10 @@ TEST (Iteration, forward)
     }
 }
 
+/**
+ * @brief   Test simple reverse iteration
+ *
+ */
 TEST (Iteration, reverse)
 {
 
@@ -743,6 +777,10 @@ TEST (Iteration, reverse)
     }
 }
 
+/**
+ * @brief   Test C++ style for each loop
+ *
+ */
 TEST (Iteration, for_each)
 {
     constexpr int32_t      lo {1};
@@ -755,24 +793,28 @@ TEST (Iteration, for_each)
     }
 
     int32_t v = lo;
-    for (auto & e : tree) {
+    for (auto &e : tree) {
         ASSERT_EQ (e, v);
         ++v;
     }
 }
 
+/**
+ * @brief   Test for operations on end() iterator
+ *
+ */
 TEST (Iteration, end_iterator_test)
 {
-    constexpr int32_t                lo {1};
-    constexpr int32_t                hi {1000};
+    constexpr int32_t               lo      {1};
+    constexpr int32_t               hi      {1000};
 
-    AgAVLTree<int32_t>           tree;
+    AgAVLTree<int32_t>              tree;
 
-    AgAVLTree<int32_t>::iterator it;
-    AgAVLTree<int32_t>::iterator end = tree.end ();
+    AgAVLTree<int32_t>::iterator    it;
+    AgAVLTree<int32_t>::iterator    end     = tree.end ();
 
     // While Tree is empty
-    it                                   = tree.end ();
+    it      = tree.end ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
@@ -785,14 +827,14 @@ TEST (Iteration, end_iterator_test)
     tree.insert (lo);
 
     // While tree has one element
-    it = tree.end ();
+    it      = tree.end ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
     ASSERT_EQ (it, end);
     --it;
     ASSERT_EQ (*it, lo);
-    it = tree.end ();
+    it      = tree.end ();
     it--;
     ASSERT_EQ (*it, lo);
 
@@ -802,7 +844,7 @@ TEST (Iteration, end_iterator_test)
 
     // While tree has many elements
     for (int32_t v = lo; v <= hi; ++v) {
-        it = tree.end ();
+        it  = tree.end ();
         ++it;
         ASSERT_EQ (it, end);
         it++;
@@ -815,18 +857,22 @@ TEST (Iteration, end_iterator_test)
     }
 }
 
+/**
+ * @brief   Test for operations on rend() iterator
+ *
+ */
 TEST (Iteration, rend_iterator_test)
 {
-    constexpr int32_t                        lo {1};
-    constexpr int32_t                        hi {1000};
+    constexpr int32_t                       lo      {1};
+    constexpr int32_t                       hi      {1000};
 
-    AgAVLTree<int32_t>                   tree;
+    AgAVLTree<int32_t>                      tree;
 
-    AgAVLTree<int32_t>::reverse_iterator it;
-    AgAVLTree<int32_t>::reverse_iterator end = tree.rend ();
+    AgAVLTree<int32_t>::reverse_iterator    it;
+    AgAVLTree<int32_t>::reverse_iterator    end     = tree.rend ();
 
     // While Tree is empty
-    it                                           = tree.rend ();
+    it      = tree.rend ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
@@ -839,14 +885,14 @@ TEST (Iteration, rend_iterator_test)
     tree.insert (lo);
 
     // While tree has one element
-    it = tree.rend ();
+    it      = tree.rend ();
     ++it;
     ASSERT_EQ (it, end);
     it++;
     ASSERT_EQ (it, end);
     --it;
     ASSERT_EQ (*it, lo);
-    it = tree.rend ();
+    it      = tree.rend ();
     it--;
     ASSERT_EQ (*it, lo);
 
@@ -855,30 +901,34 @@ TEST (Iteration, rend_iterator_test)
     }
 
     for (int32_t v = lo; v <= hi; ++v) {
-        it = tree.rend ();
+        it  = tree.rend ();
         ++it;
         ASSERT_EQ (it, end);
         it++;
         ASSERT_EQ (it, end);
         --it;
         ASSERT_EQ (*it, *(tree.begin ()));
-        it = tree.rend ();
+        it  = tree.rend ();
         it--;
         ASSERT_EQ (*it, *(tree.begin ()));
     }
 }
 
+/**
+ * @brief   Test all operation on begin() iterator
+ *
+ */
 TEST (Iteration, begin_iterator_test)
 {
-    constexpr int32_t                lo {1};
-    constexpr int32_t                hi {1000};
+    constexpr int32_t               lo      {1};
+    constexpr int32_t               hi      {1000};
 
-    AgAVLTree<int32_t>           tree;
+    AgAVLTree<int32_t>              tree;
 
-    AgAVLTree<int32_t>::iterator it;
+    AgAVLTree<int32_t>::iterator    it;
 
     // While tree is empty
-    it = tree.begin ();
+    it      = tree.begin ();
     --it;
     ASSERT_EQ (it, tree.begin ());
     it--;
@@ -886,14 +936,14 @@ TEST (Iteration, begin_iterator_test)
 
     // While tree has one element
     tree.insert (lo);
-    it = tree.begin ();
+    it      = tree.begin ();
     --it;
     ASSERT_EQ (it, tree.begin ());
     it--;
     ASSERT_EQ (it, tree.begin ());
     ++it;
     ASSERT_EQ (it, tree.end ());
-    it = tree.begin ();
+    it      = tree.begin ();
     it++;
     ASSERT_EQ (it, tree.end ());
 
@@ -902,7 +952,7 @@ TEST (Iteration, begin_iterator_test)
         tree.insert (v);
     }
 
-    it = tree.begin ();
+    it      = tree.begin ();
     --it;
     ASSERT_EQ (it, tree.begin ());
     it--;
@@ -912,30 +962,34 @@ TEST (Iteration, begin_iterator_test)
 
         ++it;
         ASSERT_EQ (*it, lo + 1);
-        it = tree.begin ();
+        it  = tree.begin ();
         it++;
         ASSERT_EQ (*it, lo + 1);
     } else {
 
         ++it;
         ASSERT_EQ (it, tree.end ());
-        it = tree.begin ();
+        it  = tree.begin ();
         it++;
         ASSERT_EQ (it, tree.end ());
     }
 }
 
+/**
+ * @brief   Test all operation on rbegin() iterator
+ *
+ */
 TEST (Iteration, rbegin_iterator_test)
 {
-    constexpr int32_t                        lo {1};
-    constexpr int32_t                        hi {1000};
+    constexpr int32_t                       lo  {1};
+    constexpr int32_t                       hi  {1000};
 
-    AgAVLTree<int32_t>                   tree;
+    AgAVLTree<int32_t>                      tree;
 
-    AgAVLTree<int32_t>::reverse_iterator it;
+    AgAVLTree<int32_t>::reverse_iterator    it;
 
     // While tree is empty
-    it = tree.rbegin ();
+    it      = tree.rbegin ();
     --it;
     ASSERT_EQ (it, tree.rbegin ());
     it--;
@@ -943,14 +997,14 @@ TEST (Iteration, rbegin_iterator_test)
 
     // While tree has one element
     tree.insert (lo);
-    it = tree.rbegin ();
+    it      = tree.rbegin ();
     --it;
     ASSERT_EQ (it, tree.rbegin ());
     it--;
     ASSERT_EQ (it, tree.rbegin ());
     ++it;
     ASSERT_EQ (it, tree.rend ());
-    it = tree.rbegin ();
+    it      = tree.rbegin ();
     it++;
     ASSERT_EQ (it, tree.rend ());
 
@@ -959,7 +1013,7 @@ TEST (Iteration, rbegin_iterator_test)
         tree.insert (v);
     }
 
-    it = tree.rbegin ();
+    it      = tree.rbegin ();
     --it;
     ASSERT_EQ (it, tree.rbegin ());
     it--;
@@ -969,24 +1023,30 @@ TEST (Iteration, rbegin_iterator_test)
 
         ++it;
         ASSERT_EQ (*it, hi - 1);
-        it = tree.rbegin ();
+        it  = tree.rbegin ();
         it++;
         ASSERT_EQ (*it, hi - 1);
-    } else {
+    }
+
+    else {
 
         ++it;
         ASSERT_EQ (it, tree.rend ());
-        it = tree.rbegin ();
+        it  = tree.rbegin ();
         it++;
         ASSERT_EQ (it, tree.rend ());
     }
 }
 
+/**
+ * @brief   Test for equality comparisons on iterators
+ *
+ */
 TEST (Iteration, equality_test)
 {
 
-    AgAVLTree<int32_t> tree1;
-    AgAVLTree<int32_t> tree2;
+    AgAVLTree<int32_t>  tree1;
+    AgAVLTree<int32_t>  tree2;
 
     tree1.insert (0);
     tree1.insert (1);
@@ -994,10 +1054,10 @@ TEST (Iteration, equality_test)
     tree2.insert (0);
     tree2.insert (1);
 
-    auto it1     = tree1.begin ();
-    auto it1_cpy = tree1.begin ();
-    auto it2     = tree2.begin ();
-    auto it2_cpy = tree2.begin ();
+    auto                it1         = tree1.begin ();
+    auto                it1_cpy     = tree1.begin ();
+    auto                it2         = tree2.begin ();
+    auto                it2_cpy     = tree2.begin ();
 
     // same tree, same node
     ASSERT_EQ (it1, it1_cpy);
@@ -1016,11 +1076,15 @@ TEST (Iteration, equality_test)
     ASSERT_NE (it1_cpy, it2);
 }
 
+/**
+ * @brief   Test for equality comparisons on reverse iterators
+ *
+ */
 TEST (Iteration, reverse_equality_test)
 {
 
-    AgAVLTree<int32_t> tree1;
-    AgAVLTree<int32_t> tree2;
+    AgAVLTree<int32_t>  tree1;
+    AgAVLTree<int32_t>  tree2;
 
     tree1.insert (0);
     tree1.insert (1);
@@ -1028,10 +1092,10 @@ TEST (Iteration, reverse_equality_test)
     tree2.insert (0);
     tree2.insert (1);
 
-    auto it1     = tree1.rbegin ();
-    auto it1_cpy = tree1.rbegin ();
-    auto it2     = tree2.rbegin ();
-    auto it2_cpy = tree2.rbegin ();
+    auto                it1     = tree1.rbegin ();
+    auto                it1_cpy = tree1.rbegin ();
+    auto                it2     = tree2.rbegin ();
+    auto                it2_cpy = tree2.rbegin ();
 
     // same tree, same node
     ASSERT_EQ (it1, it1_cpy);
@@ -1050,12 +1114,16 @@ TEST (Iteration, reverse_equality_test)
     ASSERT_NE (it1_cpy, it2);
 }
 
+/**
+ * @brief   Test all variations of find (strictly matching element)
+ *
+ */
 TEST (Find, find_equal_strict_test)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t   lo      {1};
+    constexpr int32_t   hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>  tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.find (v), tree.end ());
@@ -1070,12 +1138,16 @@ TEST (Find, find_equal_strict_test)
     }
 }
 
+/**
+ * @brief   Test all variations of first_greater_strict (smallest, strictly greater element)
+ *
+ */
 TEST (Find, find_greater_strict_test)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t   lo      {1};
+    constexpr int32_t   hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>  tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_strict (v), tree.end ());
@@ -1091,12 +1163,16 @@ TEST (Find, find_greater_strict_test)
     ASSERT_EQ (tree.first_greater_strict (hi), tree.end ());
 }
 
+/**
+ * @brief   Test all variations of first_greater_equals (smallest, greater or equal element)
+ *
+ */
 TEST (Find, find_greater_equals_test)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t   lo      {1};
+    constexpr int32_t   hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>  tree;
 
     for (int32_t v = lo; v <= hi; ++v) {
         ASSERT_EQ (tree.first_greater_equals (v), tree.end ());
@@ -1123,12 +1199,16 @@ TEST (Find, find_greater_equals_test)
     }
 }
 
+/**
+ * @brief   Test all variations of last_smaller_strict (largest, strictly smaller element)
+ *
+ */
 TEST (Find, find_less_strict_test)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t   lo      {1};
+    constexpr int32_t   hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>  tree;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_strict (v), tree.end ());
@@ -1144,12 +1224,16 @@ TEST (Find, find_less_strict_test)
     ASSERT_EQ (tree.last_smaller_strict (lo), tree.end ());
 }
 
+/**
+ * @brief   Test all variations of last_smaller_equals (greatest, smaller or equal element)
+ *
+ */
 TEST (Find, find_less_equals_test)
 {
-    constexpr int32_t      lo {1};
-    constexpr int32_t      hi {1000};
+    constexpr int32_t   lo      {1};
+    constexpr int32_t   hi      {1000};
 
-    AgAVLTree<int32_t> tree;
+    AgAVLTree<int32_t>  tree;
 
     for (int32_t v = hi; v >= lo; --v) {
         ASSERT_EQ (tree.last_smaller_equals (v), tree.end ());
@@ -1181,18 +1265,23 @@ lt (const char * const & a, const char * const & b)
 {
     return strcmp (a, b) < 0;
 }
+
 bool
 eq (const char * const & a, const char * const & b)
 {
     return strcmp (a, b) == 0;
 }
 
+/**
+ * @brief   Test if C style strings work (custom comparators)
+ *
+ */
 TEST (CustomComparator, c_string_test)
 {
 
     AgAVLTree<const char *, lt, eq> tree;
 
-    char                        ar[] = "useful";
+    char                            ar[]    = "useful";
 
     tree.insert ("AVL");
     tree.insert ("Trees");
