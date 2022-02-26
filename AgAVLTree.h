@@ -1282,6 +1282,6 @@ AgAVLTree<val_t, mComp, mEquals>::get_root_val ()
 }
 )
 
-#include "avl_iter.h"
+#include "AgAVLTree_iter.h"
 
 #endif                    // Header guard

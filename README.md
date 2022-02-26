@@ -1,4 +1,4 @@
-# AVLtree
+# AgAVLTree
 
 ## Overview
 This is a high-performance, templatized C++ implementation of the AVL tree datastructure, which is a self balancing binary search tree. It supports fast insertion, deletion, binary searching and iteration. It can be used for both, learning about AVL trees, and in applications.<br>
