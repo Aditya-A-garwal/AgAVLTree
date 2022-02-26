@@ -892,7 +892,7 @@ AgAVLTree<val_t, mComp, mEquals>::erase (link_ptr_t pCur, const val_t & pVal)
 
         // todo use inorder predeccessor if more efficient
         // both children exist, find its inorder successor to move up
-        if ((*pCur)->lptr != nullptr and (*pCur)->rptr != nullptr) {
+        if ((*pCur)->lptr != nullptr && (*pCur)->rptr != nullptr) {
 
             nxt       = find_min_move_up (&(*pCur)->rptr);
 
@@ -901,12 +901,12 @@ AgAVLTree<val_t, mComp, mEquals>::erase (link_ptr_t pCur, const val_t & pVal)
         }
 
         // only left child exists, move it up and delete the current node
-        else if ((*pCur)->lptr != nullptr and (*pCur)->rptr == nullptr) {
+        else if ((*pCur)->lptr != nullptr && (*pCur)->rptr == nullptr) {
             nxt = (*pCur)->lptr;
         }
 
         // only right child exists, make this the next node
-        else if ((*pCur)->lptr == nullptr and (*pCur)->rptr != nullptr) {
+        else if ((*pCur)->lptr == nullptr && (*pCur)->rptr != nullptr) {
             nxt = (*pCur)->rptr;
         }
 
@@ -1095,7 +1095,7 @@ AgAVLTree<val_t, mComp, mEquals>::first_greater_strict_ptr (const val_t & pVal, 
     }
 
     // if the current node <= supplied value, go right (current node's value is too small)
-    if (mComp (pCur->val, pVal) or mEquals (pCur->val, pVal)) {
+    if (mComp (pCur->val, pVal) || mEquals (pCur->val, pVal)) {
         return first_greater_strict_ptr (pVal, pCur->rptr);
     }
 
@@ -1175,7 +1175,7 @@ AgAVLTree<val_t, mComp, mEquals>::last_smaller_strict_ptr (const val_t & pVal, n
     }
 
     // if the supplied value <= current node, go left (current node's value is too big)
-    if (mComp (pVal, pCur->val) or mEquals (pVal, pCur->val)) {
+    if (mComp (pVal, pCur->val) || mEquals (pVal, pCur->val)) {
         return last_smaller_strict_ptr (pVal, pCur->lptr);
     }
 

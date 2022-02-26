@@ -165,7 +165,7 @@ format_integer (T pNum)
         pNum /= 10;
 
         res += (char) (d + '0');
-        if (i % 3 == 2 and i != len - 1) {
+        if (i % 3 == 2 && i != len - 1) {
             res += ',';
         }
     }
@@ -197,7 +197,7 @@ read_buffers (const char *pFilepath)
     buffFind            = new (std::nothrow) int[n];
     buffErase           = new (std::nothrow) int[n];
 
-    if (buffInsert == nullptr or buffFind == nullptr or buffErase == nullptr) {
+    if (buffInsert == nullptr || buffFind == nullptr || buffErase == nullptr) {
         std::cout << "Could not allocate buffers" << std::endl;
         std::exit (1);
     }

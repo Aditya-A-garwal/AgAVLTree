@@ -99,7 +99,7 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::iterator::operator== (const AgAVLTree<val_t, mComp, mEquals>::iterator & pOther) const
 {
-    return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
+    return (mPtr == pOther.mPtr) && (mTreePtr == pOther.mTreePtr);
 }
 
 /**
@@ -114,7 +114,7 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::iterator::operator!= (const AgAVLTree<val_t, mComp, mEquals>::iterator & pOther) const
 {
-    return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
+    return (mPtr != pOther.mPtr) || (mTreePtr != pOther.mTreePtr);
 }
 
 /**
@@ -217,7 +217,7 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::reverse_iterator::operator== (const AgAVLTree<val_t, mComp, mEquals>::reverse_iterator & pOther) const
 {
-    return (mPtr == pOther.mPtr) and (mTreePtr == pOther.mTreePtr);
+    return (mPtr == pOther.mPtr) && (mTreePtr == pOther.mTreePtr);
 }
 
 /**
@@ -232,5 +232,5 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::reverse_iterator::operator!= (const AgAVLTree<val_t, mComp, mEquals>::reverse_iterator & pOther) const
 {
-    return (mPtr != pOther.mPtr) or (mTreePtr != pOther.mTreePtr);
+    return (mPtr != pOther.mPtr) || (mTreePtr != pOther.mTreePtr);
 }
