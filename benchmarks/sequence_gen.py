@@ -1,6 +1,11 @@
-n   = int (2e7)
+import sys
 
-print (n, n, n)
+f               = open ('sequence_all.in', 'w')
+sys.stdout      = f
+
+n               = int (2e7)
+
+print (n)
 
 for i in range (n):
     print (i)

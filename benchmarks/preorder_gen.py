@@ -1,4 +1,9 @@
-n = int (2e7)
+import sys
+
+f               = open ('preorder_all.in', 'w')
+sys.stdout      = f
+
+n               = int (2e7)
 
 lst = [[i, i] for i in range (n)]
 
@@ -15,7 +20,7 @@ def dnc (lo, hi, lvl):
 dnc (0, n - 1, 0)
 lst.sort ()
 
-print (n, n, n)
+print (n)
 
 for ff, ss in lst:
     print (ss)
