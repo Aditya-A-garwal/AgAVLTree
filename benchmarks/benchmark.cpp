@@ -1,12 +1,20 @@
+// file and std IO
 #include <iostream>
 #include <fstream>
-#include <cstring>
-#include <algorithm>
-#include <tuple>
+
+// measuring time
 #include <chrono>
-#include <set>
+
+// tie
+#include <tuple>
+
+// table printing
 #include <vector>
 
+// std::set
+#include <set>
+
+// AgAVLTree
 #include "../AgAVLTree.h"
 
 struct Timer {
@@ -52,26 +60,26 @@ struct table {
     {}
 
     void
-    add_headers (std::string pHeaders[], int pSz)
+    add_headers (std::initializer_list<std::string> pHeaders)
     {
-        if (pSz == 0)
+        if (pHeaders.size () == 0)
         {
             std::cout << "ZERO COLOUMNS NOT ALLOWED IN TABLE\n";
             std::exit (1);
         }
-        mHeaders            = std::vector<std::string>(pHeaders, pHeaders + pSz);
+        mHeaders            = pHeaders;
     }
 
     void
-    add_row (std::string pElems[], int32_t pSz)
+    add_row (std::initializer_list<std::string> pElems)
     {
-        if (pSz != (int32_t)mHeaders.size ())
+        if (pElems.size () != mHeaders.size ())
         {
             std::cout << "NUMBER OF COLOUMNS IN ROW MUST MATCH NUMBER OF COLOUMNS IN HEADER\n";
             std::exit (1);
         }
 
-        mRows.push_back (std::vector<std::string>(pElems, pElems + pSz));
+        mRows.push_back (pElems);
     }
 
     friend std::ostream
@@ -141,6 +149,24 @@ struct table {
     }
 };
 
+bool
+streq (const char *pA, const char *pB)
+{
+    for (size_t i = 0; ; ++i) {
+
+        if (pA[i] == 0 and pB[i] == 0)
+            break;
+
+        if (pA[i] == pB[i])
+            continue;
+
+        else
+            return 0;
+    }
+
+    return true;
+}
+
 template <typename T>
 std::string
 format_integer (T pNum)
@@ -170,7 +196,9 @@ format_integer (T pNum)
         }
     }
 
-    std::reverse (res.begin (), res.end ());
+    for (auto i = 0ULL; i < (res.size () / 2); ++i) {
+        std::swap (res[i], res[res.size () - i - 1]);
+    }
 
     return res;
 }
@@ -179,11 +207,12 @@ int32_t     *buffInsert;
 int32_t     *buffFind;
 int32_t     *buffErase;
 
+int32_t     maxN;
+
 void
 read_buffers (const char *pFilepath)
 {
     std::ifstream       fin (pFilepath);
-    int32_t             n;
 
     if (!fin) {
         std::cout << "No file with name \"" << pFilepath << "\" exists" << std::endl;
@@ -191,28 +220,45 @@ read_buffers (const char *pFilepath)
     }
     fin.tie (NULL);
 
-    fin >> n;
+    fin >> maxN;
 
-    buffInsert          = new (std::nothrow) int[n];
-    buffFind            = new (std::nothrow) int[n];
-    buffErase           = new (std::nothrow) int[n];
+    buffInsert          = new (std::nothrow) int[maxN];
+    buffFind            = new (std::nothrow) int[maxN];
+    buffErase           = new (std::nothrow) int[maxN];
 
     if (buffInsert == nullptr || buffFind == nullptr || buffErase == nullptr) {
         std::cout << "Could not allocate buffers" << std::endl;
         std::exit (1);
     }
 
-    for (int32_t i = 0; i < n; ++i) {
+    std::cout << "Begin Reading File\n";
+    std::cout << "Found " << format_integer (maxN) << " records each for Insert, Find and Erase\n";
+
+    for (int32_t i = 0; i < maxN; ++i) {
         fin >> buffInsert[i];
+
+        if ((i & 65'535) == 0) {
+            std::cout << "\rReading Insert " << ((100 * (int64_t)i) / maxN) << '%';
+        }
     }
 
-    for (int32_t i = 0; i < n; ++i) {
+    for (int32_t i = 0; i < maxN; ++i) {
         fin >> buffFind[i];
+
+        if ((i & 65'535) == 0) {
+            std::cout << "\rReading Find   " << ((100 * (int64_t)i) / maxN) << '%';
+        }
     }
 
-    for (int32_t i = 0; i < n; ++i) {
+    for (int32_t i = 0; i < maxN; ++i) {
         fin >> buffErase[i];
+
+        if ((i & 65'535) == 0) {
+            std::cout << "\rReading Erase  " << ((100 * (int64_t)i) / maxN) << '%';
+        }
     }
+
+    std::cout << "\rDone Reading File    \n";
 }
 
 void
@@ -228,10 +274,14 @@ run_benchmark (int pN)
     int32_t                         measured;
 
     table results;
-    std::string                     row[]   = {"Operation", "Class", "Successful", "Time (ms)"};
 
     int32_t                         flag;
     int32_t                         cntr;
+
+    if (pN > maxN) {
+        std::cout << "\nGiven " << format_integer (pN) << " operations exceeds the number of records supplied by the file\n";
+        return;
+    }
 
     std::cout << '\n';
     std::cout << format_integer (pN) << " Insertions\n";
@@ -239,24 +289,17 @@ run_benchmark (int pN)
     std::cout << format_integer (pN) << " Erases\n";
     std::cout << '\n';
 
-    results.add_headers (row, 4);
-
-
-
+    results.add_headers ({"Operation", "Class", "Successful", "Time (ms)"});
 
 
     cntr = 0;
     timer.reset ();
     for (auto i = 0; i < pN; ++i) {
-        tie (std::ignore, flag)     = tree1.insert (buffInsert[i]);
+        std::tie(std::ignore, flag) = tree1.insert (buffInsert[i]);
         cntr                        += flag;
     }
     measured    = timer.elapsed ();
-    row[0]      = "Insertion";
-    row[1]      = "std::set";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
+    results.add_row ({"Insertion", "std::set", format_integer (cntr), format_integer (measured)});
 
     cntr = 0;
     timer.reset ();
@@ -265,13 +308,7 @@ run_benchmark (int pN)
         cntr                        += flag;
     }
     measured = timer.elapsed ();
-    row[0]      = "Insertion";
-    row[1]      = "AgAVLTree";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
-
-
+    results.add_row ({"Insertion", "AgAVLTree", format_integer (cntr), format_integer (measured)});
 
 
     cntr = 0;
@@ -281,11 +318,7 @@ run_benchmark (int pN)
         cntr                        += (int32_t)(it1 != tree1.end ());
     }
     measured    = timer.elapsed ();
-    row[0]      = "Find";
-    row[1]      = "std::set";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
+    results.add_row ({"Find", "std::set", format_integer (cntr), format_integer (measured)});
 
     cntr = 0;
     timer.reset ();
@@ -294,13 +327,7 @@ run_benchmark (int pN)
         cntr                        += (int32_t)(it2 != tree2.end ());
     }
     measured = timer.elapsed ();
-    row[0]      = "Find";
-    row[1]      = "AgAVLTree";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
-
-
+    results.add_row ({"Find", "AgAVLTree", format_integer (cntr), format_integer (measured)});
 
 
     cntr = 0;
@@ -310,11 +337,7 @@ run_benchmark (int pN)
         cntr                        += flag;
     }
     measured    = timer.elapsed ();
-    row[0]      = "Erase";
-    row[1]      = "std::set";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
+    results.add_row ({"Erase", "std::set", format_integer (cntr), format_integer (measured)});
 
     cntr = 0;
     timer.reset ();
@@ -323,14 +346,7 @@ run_benchmark (int pN)
         cntr                        += flag;
     }
     measured = timer.elapsed ();
-    row[0]      = "Erase";
-    row[1]      = "AgAVLTree";
-    row[2]      = format_integer (cntr);
-    row[3]      = format_integer (measured);
-    results.add_row (row, 4);
-
-
-
+    results.add_row ({"Erase", "AgAVLTree", format_integer (cntr), format_integer (measured)});;
 
 
     std::cout << results << std::endl;
@@ -339,32 +355,43 @@ run_benchmark (int pN)
 int
 main (int argc, char *argv[])
 {
-    std::ios_base::sync_with_stdio (false);
-    std::cout.tie (NULL);
-    std::cin.tie (NULL);
-
     if (argc < 3) {
-        std::cout << "TO FEW ARGUMENTS\n";
-        return -1;
+        std::cout << "Usage: ";
+        std::cout << argv[0] << " input_file op1 [op2...]\n";
+
+        std::cout << "\nOptions:\n";
+        std::cout << "  1e6\t\tperform 1 million operations of each type\n";
+        std::cout << "  5e6\t\tperform 5 million operations of each type\n";
+        std::cout << "  1e7\t\tperform 10 million operations of each type\n";
+        std::cout << "  1.5e7\t\tperform 15 million operations of each type\n";
+        std::cout << "  2e7\t\tperform 20 million operations of each type\n";
+
+        std::cout << "\nExample: ";
+        std::cout << argv[0] << " ../random_all.in 1e6 5e6\n";
+
+        return 1;
     }
 
     read_buffers (argv[1]);
 
     for (int32_t i = 2; i < argc; ++i) {
-        if (strcmp (argv[i], "1e6") == 0) {
+        if (streq (argv[i], "1e6")) {
             run_benchmark (1'000'000);
         }
-        else if (strcmp (argv[i], "5e6") == 0) {
+        else if (streq (argv[i], "5e6")) {
             run_benchmark (5'000'000);
         }
-        else if (strcmp (argv[i], "1e7") == 0) {
+        else if (streq (argv[i], "1e7")) {
             run_benchmark (10'000'000);
         }
-        else if (strcmp (argv[i], "1.5e7") == 0) {
+        else if (streq (argv[i], "1.5e7")) {
             run_benchmark (15'000'000);
         }
-        else if (strcmp (argv[i], "2e7") == 0) {
+        else if (streq (argv[i], "2e7")) {
             run_benchmark (20'000'000);
+        }
+        else if (streq (argv[i], "4e7")) {
+            run_benchmark (40'000'000);
         }
         else {
             std::cout << argv[i] << " does not match any value\n";
