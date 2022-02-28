@@ -18,7 +18,7 @@ struct point2D {
     bool
     operator== (const point2D & other) const
     {
-        return x == other.x and y == other.y;
+        return x == other.x && y == other.y;
     }
 };
 
