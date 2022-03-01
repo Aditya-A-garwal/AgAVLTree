@@ -28,3 +28,5 @@ for i in lst:
     random.shuffle (i)
     for j in i:
         print (j)
+
+f.close ()

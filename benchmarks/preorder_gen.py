@@ -30,3 +30,5 @@ for ff, ss in lst:
 
 for ff, ss in lst[::-1]:
     print (ss)
+
+f.close ()
