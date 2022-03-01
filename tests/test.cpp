@@ -180,6 +180,7 @@ TEST (Insert, insert_ll_compound)
     insert (tree, 2);
     insert (tree, 1, 0);
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (left-left imbalance at node 2)
     //                    2
@@ -193,6 +194,7 @@ TEST (Insert, insert_ll_compound)
     // second left-left rotation
     insert (tree, -1, -2);
     ASSERT_ROTATIONS (tree, 2, 0, 0, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (left-left imbalance at node 0)
     //                      1
@@ -251,6 +253,7 @@ TEST (Insert, insert_lr_compound)
     insert (tree, 2);
     insert (tree, 0, 1);
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (left-right imbalance at node 2)
     //                    2
@@ -264,6 +267,7 @@ TEST (Insert, insert_lr_compound)
     // second left-right rotation
     insert (tree, -2, -1);
     ASSERT_ROTATIONS (tree, 0, 2, 0, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (left-right imbalance at node 0)
     //                    1
@@ -319,6 +323,7 @@ TEST (Insert, insert_rl_compound)
     insert (tree, 0);
     insert (tree, 2, 1);
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-left imbalance at node 2)
     //                    0
@@ -332,6 +337,7 @@ TEST (Insert, insert_rl_compound)
     // second right-left rotiation
     insert (tree, 4, 3);
     ASSERT_ROTATIONS (tree, 0, 0, 2, 0);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (right-left imbalance at node 2)
     //                    1
@@ -387,6 +393,7 @@ TEST (Insert, insert_rr_compound)
     insert (tree, 0);
     insert (tree, 1, 2);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-right imbalance at node 0)
     //                    0
@@ -400,6 +407,7 @@ TEST (Insert, insert_rr_compound)
     // second right-right rotation
     insert (tree, 3, 4);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 2);
+    ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-right imbalance at node 2)
     //                  1
