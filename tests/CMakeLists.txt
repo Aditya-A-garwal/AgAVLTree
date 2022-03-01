@@ -4,18 +4,16 @@ find_package (GTest REQUIRED)
 
 macro (set_flags)
 
-    if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-        target_compile_options (test PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
+    set (CMAKE_CXX_FLAGS "")
+    set (CMAKE_CXX_FLAGS_RELEASE "")
+    set (CMAKE_CXX_FLAGS_DEBUG "")
+    set (CMAKE_CXX_FLAGS_RELMINSIZE "")
+    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
-    elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
-        target_compile_options (test PRIVATE "/Wall" "/W4" "/WX" "/Za")
-
-    elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "CLANG")
-        target_compile_options (test PRIVATE "")
-
-    else()
-        target_compile_options (test PRIVATE "")
-
+    if (MSVC)
+        target_compile_options (test PRIVATE "/W4" "/WX" "/EHsc")
+    else ()
+        target_compile_options (test PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors" "-O3")
     endif ()
 
 endmacro ()
@@ -38,5 +36,4 @@ target_link_libraries (
     pthread
 )
 
-# set (CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic-errors")
 set_flags ()

@@ -2,20 +2,16 @@ cmake_minimum_required (VERSION 3.16)
 
 macro (set_flags)
 
-    # message ("CONFIGURING BENCHMARKS")
+    set (CMAKE_CXX_FLAGS "")
+    set (CMAKE_CXX_FLAGS_RELEASE "")
+    set (CMAKE_CXX_FLAGS_DEBUG "")
+    set (CMAKE_CXX_FLAGS_RELMINSIZE "")
+    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
-    if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
+    if (MSVC)
+        target_compile_options (benchmark PRIVATE "/W4" "/WX" "/EHsc" "/Ox")
+    else ()
         target_compile_options (benchmark PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors" "-O3")
-
-    elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
-        target_compile_options (benchmark PRIVATE "/Wall" "/W4" "/WX" "/Za /O2")
-
-    elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "CLANG")
-        target_compile_options (benchmark PRIVATE "")
-
-    else()
-        target_compile_options (benchmark PRIVATE "")
-
     endif ()
 
 endmacro ()
@@ -25,5 +21,4 @@ add_executable (
     benchmark.cpp
 )
 
-# set (CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic-errors -O3")
 set_flags ()
