@@ -154,7 +154,7 @@ streq (const char *pA, const char *pB)
 {
     for (size_t i = 0; ; ++i) {
 
-        if (pA[i] == 0 and pB[i] == 0)
+        if (pA[i] == 0 && pB[i] == 0)
             break;
 
         if (pA[i] == pB[i])
@@ -196,7 +196,7 @@ format_integer (T pNum)
         }
     }
 
-    for (auto i = 0ULL; i < (res.size () / 2); ++i) {
+    for (auto i = 0; i < (int32_t)(res.size () / 2); ++i) {
         std::swap (res[i], res[res.size () - i - 1]);
     }
 
@@ -271,7 +271,7 @@ run_benchmark (int pN)
     AgAVLTree<int32_t>::iterator    it2;
 
     Timer                           timer;
-    int32_t                         measured;
+    int64_t                         measured;
 
     table results;
 
