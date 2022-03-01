@@ -8,7 +8,7 @@ macro (set_flags)
     set (CMAKE_CXX_FLAGS_RELMINSIZE "")
     set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
-    if (MSVC)
+    if (MSVC OR MSVC_IDE)
         target_compile_options (benchmark PRIVATE "/W4" "/WX" "/EHsc" "/Ox")
     else ()
         target_compile_options (benchmark PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors" "-O3")
