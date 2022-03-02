@@ -36,7 +36,9 @@ main (void)
     std::cout << "Allocated Array\n";
 
     // initialize array with numbers from 0 to n-1 and shuffle initially
-    std::iota (ar, ar + n, 0);
+    for (int32_t i = 0; i < n; ++i) {
+        ar[i]   = i;
+    }
     std::shuffle (ar, ar + n, std::mt19937(rd()));
 
     // print n (number of records) and print records thrice for insert, find and erase (re-shuffling each time)
