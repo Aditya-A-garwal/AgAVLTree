@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.16)
 
 macro (set_flags)
 
+    message ("Setting flags for benchmarks")
+
     set (CMAKE_CXX_FLAGS "")
     set (CMAKE_CXX_FLAGS_RELEASE "")
     set (CMAKE_CXX_FLAGS_DEBUG "")

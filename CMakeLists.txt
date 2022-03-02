@@ -20,7 +20,7 @@ macro (print_info)
 
     if (MSVC OR MSVC_IDE)
         message ("Detected MSVC")
-    elseif ("${CMAKE_CXX_COMPILER}" STREQUAL "*.clang")
+    elseif ("${CMAKE_CXX_COMPILER}" MATCHES ".*clang*")
         message ("Detected CLANG")
     else ()
         message ("Detected GNU")
@@ -30,6 +30,8 @@ endmacro ()
 
 macro (set_flags)
 
+    message ("Setting flags for main")
+
     set (CMAKE_CXX_FLAGS "")
     set (CMAKE_CXX_FLAGS_RELEASE "")
     set (CMAKE_CXX_FLAGS_DEBUG "")
@@ -37,16 +39,13 @@ macro (set_flags)
     set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
     if (MSVC OR MSVC_IDE)
-        target_compile_options (benchmark PRIVATE "/W4" "/WX" "/EHsc")
+        target_compile_options (main PRIVATE "/W4" "/WX" "/EHsc")
     else ()
-        target_compile_options (benchmark PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors" "-O3")
+        target_compile_options (main PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
     endif ()
 
 endmacro ()
 
-
-add_subdirectory (${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/build)
-add_subdirectory (${CMAKE_SOURCE_DIR}/benchmarks ${CMAKE_SOURCE_DIR}/benchmarks/build)
 
 add_executable (
     main
@@ -56,3 +55,6 @@ add_executable (
 # print_info ()
 
 set_flags ()
+
+add_subdirectory (${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/build)
+add_subdirectory (${CMAKE_SOURCE_DIR}/benchmarks ${CMAKE_SOURCE_DIR}/benchmarks/build)
