@@ -17,6 +17,22 @@
 // AgAVLTree
 #include "../AgAVLTree.h"
 
+// ┌─┬─┐
+// │ │ │
+// ├─┼─┤
+// │ │ │
+// └─┴─┘
+
+// constexpr   wchar_t     horizontalLine  = '─';
+// constexpr   wchar_t     verticalLine    = '│';
+
+// constexpr   wchar_t     topLeftLine     = '┌';
+// constexpr   wchar_t     botLeftLine     = '└';
+// constexpr   wchar_t     topRightLine    = '┐';
+// constexpr   wchar_t     botRightLine    = '┘';
+
+// constexpr   wchar_t     crossLine       = '┼';
+
 struct Timer {
 
     private:
@@ -111,6 +127,7 @@ struct table {
             stream << '-';
         }
         stream << '-' << '\n';
+
         for (int32_t i = 0; i < cols; ++i) {
             stream << "| ";
             stream << pOther.mHeaders[i];
@@ -284,9 +301,7 @@ run_benchmark (int pN)
     }
 
     std::cout << '\n';
-    std::cout << format_integer (pN) << " Insertions\n";
-    std::cout << format_integer (pN) << " Finds\n";
-    std::cout << format_integer (pN) << " Erases\n";
+    std::cout << format_integer (pN) << " Operations of each type\n";
     std::cout << '\n';
 
     results.add_headers ({"Operation", "Class", "Successful", "Time (ms)"});
