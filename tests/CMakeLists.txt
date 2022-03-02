@@ -4,6 +4,8 @@ find_package (GTest REQUIRED)
 
 macro (set_flags)
 
+    message ("Setting flags for tests")
+
     set (CMAKE_CXX_FLAGS "")
     set (CMAKE_CXX_FLAGS_RELEASE "")
     set (CMAKE_CXX_FLAGS_DEBUG "")
@@ -13,7 +15,7 @@ macro (set_flags)
     if (MSVC OR MSVC_IDE)
         target_compile_options (test PRIVATE "/W4" "/WX" "/EHsc")
     else ()
-        target_compile_options (test PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors" "-O3")
+        target_compile_options (test PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
     endif ()
 
 endmacro ()
