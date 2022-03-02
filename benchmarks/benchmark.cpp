@@ -238,7 +238,7 @@ read_buffers (const char *pFilepath)
         fin >> buffInsert[i];
 
         if ((i & 65'535) == 0) {
-            std::cout << "\rReading Insert " << ((100 * (int64_t)i) / maxN) << '%';
+            std::cout << "\rReading Insert " << ((100 * (int64_t)i) / maxN) << '%' << "  ";
         }
     }
 
@@ -246,7 +246,7 @@ read_buffers (const char *pFilepath)
         fin >> buffFind[i];
 
         if ((i & 65'535) == 0) {
-            std::cout << "\rReading Find   " << ((100 * (int64_t)i) / maxN) << '%';
+            std::cout << "\rReading Find   " << ((100 * (int64_t)i) / maxN) << '%' << "  ";
         }
     }
 
@@ -254,7 +254,7 @@ read_buffers (const char *pFilepath)
         fin >> buffErase[i];
 
         if ((i & 65'535) == 0) {
-            std::cout << "\rReading Erase  " << ((100 * (int64_t)i) / maxN) << '%';
+            std::cout << "\rReading Erase  " << ((100 * (int64_t)i) / maxN) << '%' << "  ";
         }
     }
 
