@@ -1,6 +1,15 @@
 cmake_minimum_required (VERSION 3.16)
 
-find_package (GTest REQUIRED)
+set (BUILD_GMOCK OFF)
+
+include (FetchContent)
+FetchContent_Declare (
+    googletest
+    URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+)
+
+set (gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable (googletest)
 
 macro (set_flags)
 
@@ -25,17 +34,10 @@ add_executable (
     test.cpp
 )
 
-target_include_directories (
-    test
-    PRIVATE ${GTEST_INCLUDE_DIRECTORIES}
-)
-
 target_link_libraries (
     test
-    libgtest.a
-    libgtest_main.a
+    gtest
     gtest_main
-    pthread
 )
 
 set_flags ()
