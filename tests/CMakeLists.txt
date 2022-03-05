@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.16)
 
-set (BUILD_GMOCK OFF)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+set(BUILD_GMOCK OFF)
 
 include (FetchContent)
 FetchContent_Declare (
