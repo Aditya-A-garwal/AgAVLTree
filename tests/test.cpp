@@ -62,23 +62,23 @@ TEST (Smoke, smoke_test)
 
     for (int32_t v = lo; v <= (hi / 2); ++v) {
         tree.insert (v);
-        ASSERT_EQ (tree.size (), v - lo + 1);
+        ASSERT_EQ (tree.size (), (size_t)(v - lo + 1));
     }
 
     for (int32_t v = (hi / 2); v <= hi; ++v) {
         tree.insert (v);
-        ASSERT_EQ (tree.size (), v - lo + 1);
+        ASSERT_EQ (tree.size (), (size_t)(v - lo + 1));
     }
 
     ASSERT_EQ (tree.check_balance (), true);
 
     ASSERT_EQ (tree.erase (hi + 1), 0);
-    ASSERT_EQ (tree.size (), hi - lo + 1);
+    ASSERT_EQ (tree.size (), (size_t)(hi - lo + 1));
     ASSERT_EQ (tree.erase (hi), 1);
-    ASSERT_EQ (tree.size (), hi - lo);
+    ASSERT_EQ (tree.size (), (size_t)(hi - lo));
 
     tree.clear ();
-    ASSERT_EQ (tree.size (), 0);
+    ASSERT_EQ (tree.size (), (size_t)0);
 }
 
 /**
@@ -479,7 +479,7 @@ TEST (Erase, left_child_simple)
     //                -1
 
     ASSERT_EQ (tree.erase (0), true);
-    ASSERT_EQ (tree.size (), 1);
+    ASSERT_EQ (tree.size (), (size_t)1);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -502,7 +502,7 @@ TEST (Erase, right_child_simple)
     //                       1
 
     ASSERT_EQ (tree.erase (0), true);
-    ASSERT_EQ (tree.size (), 1);
+    ASSERT_EQ (tree.size (), (size_t)1);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -525,7 +525,7 @@ TEST (Erase, both_child_simple)
     //                -1     1
 
     ASSERT_EQ (tree.erase (0), true);
-    ASSERT_EQ (tree.size (), 2);
+    ASSERT_EQ (tree.size (), (size_t)2);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -546,7 +546,7 @@ TEST (Erase, no_child_ll)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 15);
+    ASSERT_EQ (tree.size (), (size_t)15);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -560,7 +560,7 @@ TEST (Erase, no_child_ll)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 4, 6, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 9);
+    ASSERT_EQ (tree.size (), (size_t)9);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -574,7 +574,7 @@ TEST (Erase, no_child_ll)
     // 0     2
 
     erase (tree, 9, 13);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -607,7 +607,7 @@ TEST (Erase, no_child_lr)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 15);
+    ASSERT_EQ (tree.size (), (size_t)15);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -621,7 +621,7 @@ TEST (Erase, no_child_lr)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 0, 2, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 9);
+    ASSERT_EQ (tree.size (), (size_t)9);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -635,7 +635,7 @@ TEST (Erase, no_child_lr)
     //            4    6
 
     erase (tree, 9, 13);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -668,7 +668,7 @@ TEST (Erase, no_child_rl)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 15);
+    ASSERT_EQ (tree.size (), (size_t)15);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -682,7 +682,7 @@ TEST (Erase, no_child_rl)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 0, 2, 4, 6, 12, 14);
-    ASSERT_EQ (tree.size (), 9);
+    ASSERT_EQ (tree.size (), (size_t)9);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -696,7 +696,7 @@ TEST (Erase, no_child_rl)
     //                      8    10
 
     erase (tree, 1, 5);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -729,7 +729,7 @@ TEST (Erase, no_child_rr)
     insert (tree, 3, 11);
     insert (tree, 1, 5, 9, 13);
     insert (tree, 0, 2, 4, 6, 8, 10, 12, 14);
-    ASSERT_EQ (tree.size (), 15);
+    ASSERT_EQ (tree.size (), (size_t)15);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -743,7 +743,7 @@ TEST (Erase, no_child_rr)
     // 0     2    4    6    8    10   12   14
 
     erase (tree, 0, 2, 4, 6, 8, 10);
-    ASSERT_EQ (tree.size (), 9);
+    ASSERT_EQ (tree.size (), (size_t)9);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -757,7 +757,7 @@ TEST (Erase, no_child_rr)
     //                                12   14
 
     erase (tree, 1, 5);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -790,7 +790,7 @@ TEST (Erase, left_child_rl)
     insert (tree, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 3, 5);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -804,7 +804,7 @@ TEST (Erase, left_child_rl)
     //                         3     5
 
     tree.erase (0);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -837,7 +837,7 @@ TEST (Erase, left_child_rr)
     insert (tree, 1, 6);
     insert (tree, 0, 4, 8);
     insert (tree, 7, 9);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -851,7 +851,7 @@ TEST (Erase, left_child_rr)
     //                                     7     9
 
     tree.erase (0);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -883,7 +883,7 @@ TEST (Erase, right_child_ll)
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 0, 2);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -897,7 +897,7 @@ TEST (Erase, right_child_ll)
     // 0     2
 
     tree.erase (9);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -929,7 +929,7 @@ TEST (Erase, right_child_lr)
     insert (tree, 7, 3, 8);
     insert (tree, 1, 5, 9);
     insert (tree, 4, 6);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -943,7 +943,7 @@ TEST (Erase, right_child_lr)
     //             4     6
 
     tree.erase (9);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -975,7 +975,7 @@ TEST (Erase, both_child_find_min_basic)
     insert (tree, 3);
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -989,7 +989,7 @@ TEST (Erase, both_child_find_min_basic)
     // 0     2    4    6
 
     tree.erase (3);
-    ASSERT_EQ (tree.size (), 6);
+    ASSERT_EQ (tree.size (), (size_t)6);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1015,7 +1015,7 @@ TEST (Erase, both_child_find_min_rl)
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 7);
     insert (tree, 6);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1029,7 +1029,7 @@ TEST (Erase, both_child_find_min_rl)
     //                                          6
 
     tree.erase (3);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 1, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1062,7 +1062,7 @@ TEST (Erase, both_child_find_min_rr)
     insert (tree, 1, 5);
     insert (tree, 0, 2, 4, 6);
     insert (tree, 7);
-    ASSERT_EQ (tree.size (), 8);
+    ASSERT_EQ (tree.size (), (size_t)8);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1076,7 +1076,7 @@ TEST (Erase, both_child_find_min_rr)
     //                                      7
 
     tree.erase (3);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 1);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1109,7 +1109,7 @@ TEST (Erase, both_child_ll)
     insert (tree, 2, 6);
     insert (tree, 1, 3, 5);
     insert (tree, 0);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1123,7 +1123,7 @@ TEST (Erase, both_child_ll)
     //         0
 
     tree.erase (4);
-    ASSERT_EQ (tree.size (), 6);
+    ASSERT_EQ (tree.size (), (size_t)6);
     ASSERT_ROTATIONS (tree, 1, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1156,7 +1156,7 @@ TEST (Erase, both_child_lr)
     insert (tree, 2, 7);
     insert (tree, 1, 4, 6);
     insert (tree, 3);
-    ASSERT_EQ (tree.size (), 7);
+    ASSERT_EQ (tree.size (), (size_t)7);
     ASSERT_ROTATIONS (tree, 0, 0, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1170,7 +1170,7 @@ TEST (Erase, both_child_lr)
     //                    3
 
     tree.erase (5);
-    ASSERT_EQ (tree.size (), 6);
+    ASSERT_EQ (tree.size (), (size_t)6);
     ASSERT_ROTATIONS (tree, 0, 1, 0, 0);
     ASSERT_EQ (tree.check_balance (), true);
 
@@ -1808,7 +1808,7 @@ TEST (CustomComparator, c_string_test)
     // repeat insert should fail
     ASSERT_EQ (tree.insert (ar), false);
 
-    ASSERT_EQ (tree.size (), 5);
+    ASSERT_EQ (tree.size (), (size_t)5);
 
     // each element should be strictly greater than the previous one
     for (auto it1 = tree.begin (), it2 = ++tree.begin (); it2 != tree.end (); ++it1, ++it2) {
