@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "AgAVLTree.h"
+#include "../AgAVLTree.h"
 
 struct point2D {
 
