@@ -101,13 +101,13 @@ struct table {
     friend std::ostream
     &operator<< (std::ostream &stream, const table &pOther)
     {
-        int32_t                 cols    = pOther.mHeaders.size ();
+        int32_t                 cols    = (int32_t)pOther.mHeaders.size ();
         int32_t                 width   = 0;
 
         std::vector<int32_t>    sz (cols);
 
         for(int32_t col = 0; col < cols; ++col) {
-            sz[col] = pOther.mHeaders[col].size ();
+            sz[col] = (int32_t)pOther.mHeaders[col].size ();
         }
 
         for (auto &e : pOther.mRows) {
@@ -131,7 +131,7 @@ struct table {
         for (int32_t i = 0; i < cols; ++i) {
             stream << "| ";
             stream << pOther.mHeaders[i];
-            for (int32_t pad = pOther.mHeaders[i].size () + 2; pad < sz[i]; ++pad) {
+            for (int32_t pad = (int32_t)pOther.mHeaders[i].size () + 2; pad < sz[i]; ++pad) {
                 stream << ' ';
             }
         }
@@ -146,7 +146,7 @@ struct table {
             for (int32_t i = 0; i < cols; ++i) {
                 stream << "| ";
                 stream << row[i];
-                for (int32_t pad = row[i].size () + 2; pad < sz[i]; ++pad) {
+                for (int32_t pad = (int32_t)row[i].size () + 2; pad < sz[i]; ++pad) {
                     stream << ' ';
                 }
             }
@@ -348,7 +348,7 @@ run_benchmark (int pN)
     cntr = 0;
     timer.reset ();
     for (auto i = 0; i < pN; ++i) {
-        flag                        = tree1.erase (buffErase[i]);
+        flag                        = (int32_t)tree1.erase (buffErase[i]);
         cntr                        += flag;
     }
     measured    = timer.elapsed ();
