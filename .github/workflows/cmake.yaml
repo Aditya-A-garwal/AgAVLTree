@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build-ubuntu-gcc:
+  build-test-ubuntu-gcc:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
     - name: Test
       run: ./tests/build/test
 
-  build-ubuntu-llvm:
+  build-test-ubuntu-llvm:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
     - name: Test
       run: ./tests/build/test
 
-  build-win-msvc:
+  build-test-win-msvc:
     runs-on: windows-2022
 
     steps:
@@ -54,7 +54,7 @@ jobs:
     - name: Test
       run: .\\tests\\build\\test.exe
 
-  build-win-llvm:
+  build-test-win-llvm:
     runs-on: windows-2022
 
     steps:
