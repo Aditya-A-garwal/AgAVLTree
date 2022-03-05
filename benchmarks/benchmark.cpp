@@ -372,44 +372,45 @@ main (int argc, char *argv[])
 {
     if (argc < 3) {
         std::cout << "Usage: ";
-        std::cout << argv[0] << " input_file op1 [op2...]\n";
+        std::cout << argv[0] << " <input_file> <oper1 [oper2...]>\n";
 
-        std::cout << "\nOptions:\n";
-        std::cout << "  1e6\t\tperform 1 million operations of each type\n";
-        std::cout << "  5e6\t\tperform 5 million operations of each type\n";
-        std::cout << "  1e7\t\tperform 10 million operations of each type\n";
-        std::cout << "  1.5e7\t\tperform 15 million operations of each type\n";
-        std::cout << "  2e7\t\tperform 20 million operations of each type\n";
+        std::cout << '\n';
+        std::cout << "input_file:\tPath to file containing records\n";
+        std::cout << "oper:\t\tNumber of operations of each type to perform\n";
 
-        std::cout << "\nExample: ";
-        std::cout << argv[0] << " ../random_all.in 1e6 5e6\n";
+        std::cout << '\n';
+        std::cout << "Example: ";
+        std::cout << argv[0] << " ../random_all.in 50000 1000000\n";
 
+        return 1;
+    }
+
+    std::vector<int32_t>    args;
+    args.reserve (argc - 2);
+
+    for (int32_t i = 2, quantity; i < argc; ++i) {
+        quantity    = atol (argv[i]);
+
+        if (quantity <= 0) {
+            std::cout << "Ignoring invalid quantity \"" << argv[i] << "\"\n";
+            continue;
+        }
+
+        args.push_back (quantity);
+    }
+
+    if (args.size () <= 0) {
+        std::cout << "No valid quantities provided\n";
+        std::cout << "Exiting\n";
         return 1;
     }
 
     read_buffers (argv[1]);
 
-    for (int32_t i = 2; i < argc; ++i) {
-        if (streq (argv[i], "1e6")) {
-            run_benchmark (1'000'000);
-        }
-        else if (streq (argv[i], "5e6")) {
-            run_benchmark (5'000'000);
-        }
-        else if (streq (argv[i], "1e7")) {
-            run_benchmark (10'000'000);
-        }
-        else if (streq (argv[i], "1.5e7")) {
-            run_benchmark (15'000'000);
-        }
-        else if (streq (argv[i], "2e7")) {
-            run_benchmark (20'000'000);
-        }
-        else if (streq (argv[i], "4e7")) {
-            run_benchmark (40'000'000);
-        }
-        else {
-            std::cout << argv[i] << " does not match any value\n";
-        }
+    for (auto &quantity : args) {
+        run_benchmark (quantity);
     }
+
+    std::cout << "Exiting\n";
+    return 0;
 }
