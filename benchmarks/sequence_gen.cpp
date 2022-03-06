@@ -8,7 +8,7 @@ int
 main (void)
 {
     // Records will be written to ../sequence_all.in
-    std::ofstream           fout ("../sequence_all.in");
+    std::ofstream           fout (FILE_OUT);
 
     // 20 million records
     int32_t                 n       = 20'000'000;

@@ -8,7 +8,7 @@ int
 main (void)
 {
     // Records will be written to ../random_all.in
-    std::ofstream           fout ("../random_all.in");
+    std::ofstream           fout (FILE_OUT);
 
     // 20 million records, shuffling will be done in blocks of 1 million
     int32_t                 n       = 20'000'000;
