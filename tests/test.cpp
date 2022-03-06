@@ -5,7 +5,7 @@
 
 #define AVL_TEST_MODE                   // to be able to access private members and add extra diagnostic info collection
 
-#include "../AgAVLTree.h"
+#include "AgAVLTree.h"
 
 #define ASSERT_ROTATIONS(tree, a, b, c, d)       \
     ASSERT_EQ (tree.dbg_info.ll_count, a);      \

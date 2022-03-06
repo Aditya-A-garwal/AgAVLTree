@@ -15,7 +15,7 @@
 #include <set>
 
 // AgAVLTree
-#include "../AgAVLTree.h"
+#include "AgAVLTree.h"
 
 // ┌─┬─┐
 // │ │ │
