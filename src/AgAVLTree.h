@@ -317,7 +317,11 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::insert (val_t pVal)
 {
-    return insert (&mRoot, pVal);
+    if (insert (&mRoot, pVal)) {
+        ++mSz;
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -332,7 +336,11 @@ template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::erase (val_t pVal)
 {
-    return erase (&mRoot, pVal);
+    if (erase (&mRoot, pVal)) {
+        --mSz;
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -809,9 +817,6 @@ AgAVLTree<val_t, mComp, mEquals>::insert (link_ptr_t pCur, const val_t & pVal)
         // make the current node point to the newly created node
         *pCur   = ins;
 
-        // increment size after successful insertion
-        ++mSz;
-
         // return true to indicate successful insertion
         return true;
     }
@@ -913,9 +918,6 @@ AgAVLTree<val_t, mComp, mEquals>::erase (link_ptr_t pCur, const val_t & pVal)
         // delete the current node and move up the next node
         delete *pCur;
         *pCur = nxt;
-
-        // decrement size after successful deletion
-        --mSz;
     }
 
     // if not mtching node, try to recursively erase (go left if current > supplied value else right), return false if failed
