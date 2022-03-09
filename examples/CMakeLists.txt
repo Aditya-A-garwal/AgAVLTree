@@ -11,16 +11,36 @@ macro (set_flags)
     set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
     if (MSVC OR MSVC_IDE)
-        target_compile_options (example PRIVATE "/W4" "/WX" "/EHsc")
+        target_compile_options (demo_all PRIVATE "/W4" "/WX" "/EHsc")
+        target_compile_options (array_distinct PRIVATE "/W4" "/WX" "/EHsc")
+        target_compile_options (lumberjack PRIVATE "/W4" "/WX" "/EHsc")
+        target_compile_options (trains PRIVATE "/W4" "/WX" "/EHsc")
     else ()
-        target_compile_options (example PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
+        target_compile_options (demo_all PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
+        target_compile_options (array_distinct PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
+        target_compile_options (trains PRIVATE "-Wall" "-Wextra" "-Werror" "-pedantic-errors")
     endif ()
 
 endmacro ()
 
 add_executable (
-    example
-    example.cpp
+    demo_all
+    demo_all.cpp
+)
+
+add_executable (
+    array_distinct
+    array_distinct.cpp
+)
+
+add_executable (
+    lumberjack
+    lumberjack.cpp
+)
+
+add_executable (
+    trains
+    trains.cpp
 )
 
 set_flags ()

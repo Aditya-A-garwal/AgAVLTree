@@ -1,39 +1,89 @@
+/*
+ * In this example, all the features of the tree are shown
+*/
+
 #include <iostream>
 
 #include "AgAVLTree.h"
 
+/**
+ * @brief                   Structure for storing a point on the x-y plane
+ *
+ */
 struct point2D {
 
     int x;
     int y;
 
-    bool
-    operator< (const point2D & other) const
+    /**
+     * @brief           Compares two points, first based on their x coordinate (breaking ties by y coordinate)
+     *
+     * @param pA        First point to compare with
+     * @param pB        Second point to compare to
+     *
+     * @return true     If the x coordinate of the first point is strictly less than that of the second point,
+     *                  or if they are equal and the y coordinate of the first point is strictly less than that of the second point
+     * @return false    If the x coordinate of the first point is greater than that of the second point,
+     *                  or if they are equal and the y coordinate of the second point is strictly less than that of the first point
+     */
+    friend bool
+    operator< (const point2D &pA, const point2D &pB)
     {
-        if (x == other.x)
-            return y < other.y;
-        return x < other.x;
+        if (pA.x == pB.x) {
+            return pA.y < pB.y;
+        }
+        return pA.x < pB.x;
     }
 
-    bool
-    operator== (const point2D & other) const
+    /**
+     * @brief           Checks for equality of two points
+     *
+     * @param pA        First point to compare with
+     * @param pB        Second point to compare to
+     * @return true     If the x and y coordinates of the first point are strictly equal to that of the second
+     * @return false    If the x and y coordinates of the first point are not strictly equal to that of the second
+     */
+    friend bool
+    operator== (const point2D &pA, const point2D &pB)
     {
-        return x == other.x && y == other.y;
+        return (pA.x == pB.x) && (pA.y == pB.y);
     }
 };
 
+/**
+ * @brief               Compares two points based on the sum of their x and y coordinates
+ *
+ * @note                This comparison is arbitrary and does not have any special geometrical significance,
+ *                      it is only meant to highlight the features of the tree
+ *
+ * @param pA            First point to compare with
+ * @param pB            Second point to compare to
+ * @return true         If the sum of the x and y coodinates of the first point is strictly less than that of the second
+ * @return false        If the sum of the x and y coordinates of the first point is not strictly less than that of the second
+ */
 bool
-alternate_lt_comp (const point2D & a, const point2D & b)
+alternate_lt_comp (const point2D & pA, const point2D & pB)
 {
 
-    return a.x + a.y < b.x + b.y;
+    return pA.x + pA.y < pB.x + pB.y;
 }
 
+/**
+ * @brief               Checks for equality of two points based on the sum of their x and y coordinates
+ *
+ * @note                This comparison is arbitrary and does not have any special geometrical significance,
+ *                      it is only meant to highlight the features of the tree
+ *
+ * @param pA            First point to compare with
+ * @param pB            Second point to compare to
+ * @return true         If the sum of the x and y coordinates of both points are strictly equal
+ * @return false        If the sum of the x and y coordinates of both points are not strictly equal
+ */
 bool
-alternate_eq_comp (const point2D & a, const point2D & b)
+alternate_eq_comp (const point2D & pA, const point2D & pB)
 {
 
-    return a.x + a.y == b.x + b.y;
+    return pA.x + pA.y == pB.x + pB.y;
 }
 
 int
