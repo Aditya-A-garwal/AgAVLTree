@@ -46,7 +46,7 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DBUILD_GMOCK=OFF -DCMAKE_CXX_COMPILEr=g++ -DCMAKE_C_COMPILER=gcc -G "MinGW Makefiles"
+      run: cmake -B ${{github.workspace}}/build -DBUILD_GMOCK=OFF -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -G "MinGW Makefiles"
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build
