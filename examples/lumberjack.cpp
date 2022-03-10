@@ -1,7 +1,7 @@
 /*
- * In this example, we are given a set of logs and requests. Each log has a size and an ID. Each request
+ * In this example, we are given a set of logs and requests. Each Log has a size and an ID. Each request
  * has a minimum size requirement
- * For each request, report the smallest log that meets the minimum size requirement of the request and
+ * For each request, report the smallest Log that meets the minimum size requirement of the request and
  * remove it from the set of available logs, repeating this for each all requests in order
 */
 
@@ -10,10 +10,10 @@
 #include "AgAVLTree.h"
 
 /**
- * @brief               Structure to store information about a log (ID and size)
+ * @brief               Structure to store information about a Log (ID and size)
  *
  */
-struct log
+struct Log
 {
     int     mId;
     int     mSize;
@@ -21,13 +21,13 @@ struct log
     /**
      * @brief           Compares two logs based on their size (breaking ties by their IDs)
      *
-     * @param pA        First log to compare with
-     * @param pB        Second log to compare to
+     * @param pA        First Log to compare with
+     * @param pB        Second Log to compare to
      * @return true     If pA is smaller than pB (or if they are equal and pA's ID appears before that of pB)
      * @return false    If pA is larget than pb (or if they are equal and pA's ID appears after that of pB)
      */
     friend bool
-    operator< (const log &pA, const log &pB)
+    operator< (const Log &pA, const Log &pB)
     {
         if (pA.mSize == pB.mSize) {
             return pA.mId < pB.mId;
@@ -40,13 +40,13 @@ struct log
     /**
      * @brief           Checks for equality of two logs
      *
-     * @param pA        First log to compare with
-     * @param pB        Second log to compare to
+     * @param pA        First Log to compare with
+     * @param pB        Second Log to compare to
      * @return true     If pA and pB have the same size and ID
      * @return false    If Pa and pB do not have the same size and ID
      */
     friend bool
-    operator== (const log &a, const log &b)
+    operator== (const Log &a, const Log &b)
     {
         return (a.mSize == b.mSize) && (a.mSize == b.mSize);
     }
@@ -56,7 +56,7 @@ int
 main (void)
 {
     // initial set of logs (each having an ID and a size)
-    log                 ar[]        {
+    Log                 ar[]        {
         {0, 10},
         {1, 25},
         {2, 40},
@@ -87,9 +87,9 @@ main (void)
 
     int                 numRequests = sizeof (requests) / sizeof (requests[0]);
 
-    AgAVLTree<log>      tree;
+    AgAVLTree<Log>      tree;
 
-    // insert all log objects into the tree and print the final size of the tree
+    // insert all Log objects into the tree and print the final size of the tree
     for (auto &e : ar) {
         tree.insert (e);
     }
@@ -97,18 +97,18 @@ main (void)
 
     for (int i = 0; i < numRequests; ++i) {
 
-        // for each request, print the result, try to find the smallest log which meets the requirement
+        // for each request, print the result, try to find the smallest Log which meets the requirement
         std::cout << "For request #" << i << " (with size requirement " << requests[i] << "):\n\t";
         auto    it  = tree.first_greater_equals ({-1, requests[i]});
 
-        // if no such log, could be found, report it
+        // if no such Log, could be found, report it
         if (it == tree.end ()) {
-            std::cout << "No log could be found\n";
+            std::cout << "No Log could be found\n";
         }
 
-        // if a log could be found, report its ID and size, then remove it from the tree
+        // if a Log could be found, report its ID and size, then remove it from the tree
         else {
-            std::cout << "Found log #" << (*it).mId << " with size " << (*it).mSize << '\n';
+            std::cout << "Found Log #" << (*it).mId << " with size " << (*it).mSize << '\n';
             tree.erase (*it);
         }
         std::cout << '\n';
