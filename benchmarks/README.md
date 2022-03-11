@@ -1,7 +1,7 @@
 ## Overview
 A program for benchmarking the tree has also been included to measure the performance of the tree and compare it to std::set on the three operations- Insert, Find and Erase. The program requires a file to read records from, using which operations are performed.<br>
 The record file contains a single number ```N``` on the first line, which is the number of operations to perform of each type. The next ```3N``` lines contain the records to be inserted, searched for and erased (```N``` each).<br>
- Given below is an example which inserts, searches for, and erases the numbers between 1 and 3 (inclusive of both endpoints)-
+ Given below is an example which inserts, searches for, and erases the numbers between 1 and 3 (inclusive of both endpoints) -
 ```
 3
 1

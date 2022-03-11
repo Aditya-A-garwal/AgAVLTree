@@ -1,7 +1,7 @@
 ## Overview
-A set of examples have also been included to illustrate how to use the features provided by the tree in practice. Given below is a description of each example.
+The following examples demonstrate how to use the features provided by the tree in practice -
 
-* Number of distinct elements in array (```array_distinct.cpp```)- Given an array, count the number of distinct values in the array without modifying or sorting it. Additionally, print the elements to the console.
+* Number of distinct elements in array (```array_distinct.cpp```)- You are given an array, and must count the number of distinct values in the array without modifying or sorting it. Additionally, you must also print the elements to the console.
 
 * Lumberjack (```lumberjack.cpp```)- As a lumberjack, you have certain Logs of wood, each having a size and a unique ID, which you would like to sell. You recieve requests from people to purchase these logs, with each request having a minimum size requirement. For each request, you must report the smallest log which satisfies the size requirement of the request (or report if there are no satisfactory logs available). Each log can only be sold once, i.e. reporting the same log for more than one request is not allowed.
 
