@@ -20,7 +20,7 @@ main (void)
 
     // not possible to move ahead without opening file
     if (!fout) {
-        std::cout << "Unable to open file\n";
+        std::cout << "Unable to open file (Have you forgotten to create a directory named \"data\" in benchmarks/)\n";
         return 1;
     }
     fout.tie (NULL);

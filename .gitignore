@@ -1,6 +1,7 @@
 .vscode/
 
 **build
+**data
 
 CMakeLists.txt.user
 CMakeCache.txt
@@ -13,5 +14,3 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-
-benchmarks/*.in

@@ -26,9 +26,9 @@ endmacro ()
 
 macro (set_macros)
 
-    target_compile_definitions (random_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/random_all.in")
-    target_compile_definitions (sequence_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/sequence_all.in")
-    target_compile_definitions (preorder_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/preorder_all.in")
+    target_compile_definitions (random_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/data/random_all.in")
+    target_compile_definitions (sequence_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/data/sequence_all.in")
+    target_compile_definitions (preorder_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/data/preorder_all.in")
 
 endmacro ()
 
