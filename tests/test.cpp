@@ -197,21 +197,15 @@ TEST (Insert, insert_ll_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (left-left imbalance at node 0)
-    //                      1
-    //
-    //              0               2
-    //
-    //         -1
-    //
-    //       -2
+    //                               1
+    //               0                               2
+    //     -1
+    //  -2
 
     // Expected shape of tree after balancing (balanced)
-    //                1
-    //
-    //           -1       2
-    //
-    //         -2   0
-
+    //                               1
+    //              -1                               2
+    //      -2               0
 
     // third and fourth left-left rotations
     insert (tree, -3, -4);
@@ -220,23 +214,22 @@ TEST (Insert, insert_ll_compound)
 
     // Expected shape of tree after insertions (left-left imbalance at nodes -2, later at node 1)
     //                                  1
-    //
     //                 -1                              2
-    //
     //         -2               0
-    //
     //     -3
-    //
     //   -4
 
+    //                               1
+    //              -1                               2
+    //      -2               0
+    //  -3
+    //-4
+
     // Expected shape of tree after rebalancing (balanced)
-    //                    -1
-    //
-    //            -2               1
-    //
-    //        -3               0       2
-    //
-    //      -4
+    //                               1
+    //              -2                               1
+    //      -3                               0               2
+    //  -4
 }
 
 /**
@@ -270,20 +263,15 @@ TEST (Insert, insert_lr_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (left-right imbalance at node 0)
-    //                    1
-    //
-    //              0           2
-    //
-    //         -2
-    //
-    //           -1
+    //                               1
+    //               0                               2
+    //      -2
+    //          -1
 
     // Expected shape of tree after rebalancing (balanced)
-    //                1
-    //
-    //           -1       2
-    //
-    //         -2   0
+    //                               1
+    //              -1                               2
+    //      -2               0
 
     // third left-right, first left-left rotations
     insert (tree, -4, -3);
@@ -291,22 +279,16 @@ TEST (Insert, insert_lr_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                                  1
-    //
-    //                 -1                              2
-    //
-    //         -2             0
-    //
-    //     -4
-    //
-    //       -3
+    //                               1
+    //              -1                               2
+    //      -2               0
+    //  -4
+    //    -3
 
     // Expected shape of tree after rebalancing (balanced)
-    //          -1
-    //
-    //      -3       1
-    //
-    //    -4  -2   0   2
+    //                              -1
+    //              -3                               1
+    //      -4              -2               0               2
 }
 
 /**
@@ -340,20 +322,15 @@ TEST (Insert, insert_rl_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertion (right-left imbalance at node 2)
-    //                    1
-    //
-    //              0           2
-    //
-    //                              4
-    //
-    //                            3
+    //                               1
+    //               0                               2
+    //                                                       4
+    //                                                   3
 
     // Expected shape of tree after rebalancing (balanced)
-    //                    1
-    //
-    //                0       3
-    //
-    //                      2   4
+    //                               1
+    //               0                               3
+    //                                       2               4
 
     // third right-left, first right-right rotation
     insert (tree, 6, 5);
@@ -361,22 +338,16 @@ TEST (Insert, insert_rl_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-left imbalance at node 4, right-right later at node 1)
-    //                         1
-    //
-    //         0                               3
-    //
-    //                                 2               4
-    //
-    //                                                       6
-    //
-    //                                                     5
+    //                               1
+    //               0                               3
+    //                                       2               4
+    //                                                           6
+    //                                                         5
 
     // Expected shape of tree rebalancing (balanced)
-    //                3
-    //
-    //            1       5
-    //
-    //          0   2   4   6
+    //                               3
+    //               1                               5
+    //       0               2               4               6
 }
 
 /**
@@ -410,20 +381,15 @@ TEST (Insert, insert_rr_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-right imbalance at node 2)
-    //                  1
-    //
-    //          0               2
-    //
-    //                              3
-    //
-    //                                4
+    //                               1
+    //               0                               2
+    //                                                       3
+    //                                                           4
 
     // Expected shape of tree after rebalancing (balanced)
-    //                    1
-    //
-    //                0       3
-    //
-    //                      2   4
+    //                               1
+    //               0                               3
+    //                                       2               4
 
     // third and fourth right-right rotation
     insert (tree, 5, 6);
@@ -431,22 +397,16 @@ TEST (Insert, insert_rr_compound)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-right imabalance at node 4, later at node 1)
-    //                     1
-    //
-    //     0                               3
-    //
-    //                             2               4
-    //
-    //                                                 5
-    //
-    //                                                   6
+    //                               1
+    //               0                               3
+    //                                       2               4
+    //                                                           5
+    //                                                             6
 
     // Expected shape of tree after rebalancing (balanced)
-    //                3
-    //
-    //            1       5
-    //
-    //          0   2   4   6
+    //                               3
+    //               1                               5
+    //       0               2               4               6
 }
 
 /**
@@ -551,13 +511,10 @@ TEST (Erase, no_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    // 0     2    4    6    8    10   12   14
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //   0       2       4       6       8      10      12      14
 
     erase (tree, 4, 6, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), (size_t)9);
@@ -565,13 +522,10 @@ TEST (Erase, no_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    // 0     2
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //   0       2
 
     erase (tree, 9, 13);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -579,20 +533,15 @@ TEST (Erase, no_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (left-left imbalance at node 7)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5
-    //
-    // 0     2
+    //                               7
+    //               3                              11
+    //       1               5
+    //   0       2
 
     // Expected shape of tree after rebalancing
-    //                    3
-    //
-    //          1                   7
-    //
-    //    0          2         5         11
+    //                               3
+    //               1                               7
+    //       0               2               5              11
 }
 
 /**
@@ -612,13 +561,10 @@ TEST (Erase, no_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    // 0     2    4    6    8    10   12   14
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //   0       2       4       6       8      10      12      14
 
     erase (tree, 0, 2, 8, 10, 12, 14);
     ASSERT_EQ (tree.size (), (size_t)9);
@@ -626,13 +572,10 @@ TEST (Erase, no_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    //            4    6
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //                   4       6
 
     erase (tree, 9, 13);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -640,20 +583,15 @@ TEST (Erase, no_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (left-right imbalance at node 7)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5
-    //
-    //            4     6
+    //                               7
+    //               3                              11
+    //       1               5
+    //                   4       6
 
     // Expected shape of tree after rebalancing
-    //                    5
-    //
-    //          3                   7
-    //
-    //    1          4         6         11
+    //                               5
+    //               3                               7
+    //       1               4               6              11
 }
 
 /**
@@ -673,13 +611,10 @@ TEST (Erase, no_child_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    // 0     2    4    6    8    10   12   14
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //   0       2       4       6       8      10      12      14
 
     erase (tree, 0, 2, 4, 6, 12, 14);
     ASSERT_EQ (tree.size (), (size_t)9);
@@ -687,13 +622,10 @@ TEST (Erase, no_child_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    //                      8    10
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //                                   8      10
 
     erase (tree, 1, 5);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -701,20 +633,16 @@ TEST (Erase, no_child_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-left imbalance at node 7)
-    //                    7
-    //
-    //          3                    11
-    //
-    //                          9        13
-    //
-    //                      8     10
+    //                               7
+    //               3                              11
+    //                                       9              13
+    //                                   8      10
 
     // Expected shape of tree after rebalancing
-    //                    9
+    //                               9
+    //               7                              11
+    //       3               8              10              13
     //
-    //          7                    11
-    //
-    //     3         8          10       13
 }
 
 /**
@@ -734,13 +662,10 @@ TEST (Erase, no_child_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    // 0     2    4    6    8    10   12   14
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //   0       2       4       6       8      10      12      14
 
     erase (tree, 0, 2, 4, 6, 8, 10);
     ASSERT_EQ (tree.size (), (size_t)9);
@@ -748,13 +673,10 @@ TEST (Erase, no_child_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    7
-    //
-    //          3                    11
-    //
-    //    1          5          9        13
-    //
-    //                                12   14
+    //                               7
+    //               3                              11
+    //       1               5               9              13
+    //                                                  12      14
 
     erase (tree, 1, 5);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -762,20 +684,15 @@ TEST (Erase, no_child_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (right-right imbalance at node 7)
-    //                    7
-    //
-    //          3                    11
-    //
-    //                          9        13
-    //
-    //                                12    14
+    //                               7
+    //               3                              11
+    //                                       9              13
+    //                                                  12      14
 
     // Expected shape of tree after rebalancing
-    //                    11
-    //
-    //          7                    13
-    //
-    //     3        9           12        14
+    //                              11
+    //               7                              13
+    //       3               9              12              14
 }
 
 /**
@@ -795,13 +712,10 @@ TEST (Erase, left_child_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                       2
-    //
-    //          1                       6
-    //
-    //    0                       4           8
-    //
-    //                         3     5
+    //                               2
+    //               1                               6
+    //                                       4               8
+    //                                   3       5
 
     tree.erase (0);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -809,20 +723,15 @@ TEST (Erase, left_child_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletion (right-left imbalance at node 2)
-    //                       2
-    //
-    //          1                       6
-    //
-    //                            4           8
-    //
-    //                         3     5
+    //                               2
+    //               1                               6
+    //                                       4               8
+    //                                   3       5
 
     // Expected shape of tree after rebalancing
-    //                       4
-    //
-    //          2                       6
-    //
-    //    1          3            5           8
+    //                               4
+    //               2                               6
+    //       1               3               5               8
 }
 
 /**
@@ -842,13 +751,10 @@ TEST (Erase, left_child_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                       2
-    //
-    //          1                       6
-    //
-    //    0                       4           8
-    //
-    //                                     7     9
+    //                               2
+    //               1                               6
+    //       0                               4               8
+    //                                                   7       9
 
     tree.erase (0);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -856,20 +762,15 @@ TEST (Erase, left_child_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (right-right imbalance at node 2)
-    //                       2
-    //
-    //          1                       6
-    //
-    //                            4           8
-    //
-    //                                     7     9
+    //                               2
+    //               1                               6
+    //                                       4               8
+    //                                                   7       9
 
     // Expected shape of tree after rebalancing
-    //                       6
-    //
-    //          2                       8
-    //
-    //     1         4            7           9
+    //                               6
+    //               2                               8
+    //       1               4               7               9
 }
 
 /**
@@ -888,13 +789,10 @@ TEST (Erase, right_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                       7
-    //
-    //          3                       8
-    //
-    //    1           5                       9
-    //
-    // 0     2
+    //                               7
+    //               3                               8
+    //       1               5                               9
+    //   0       2
 
     tree.erase (9);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -902,20 +800,15 @@ TEST (Erase, right_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (left-left imbalance at node 7)
-    //                       7
-    //
-    //          3                       8
-    //
-    //    1           5
-    //
-    // 0     2
+    //                               7
+    //               3                               8
+    //       1               5
+    //   0       2
 
     // Expected shape of tree after rebalancing
-    //                       3
-    //
-    //          1                       7
-    //
-    //    0           2            5         8
+    //                               3
+    //               1                               7
+    //       0               2               5               8
 }
 
 /**
@@ -934,13 +827,10 @@ TEST (Erase, right_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                       7
-    //
-    //          3                       8
-    //
-    //    1           5                       9
-    //
-    //             4     6
+    //                               7
+    //               3                               8
+    //       1               5
+    //                   4       6
 
     tree.erase (9);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -948,20 +838,15 @@ TEST (Erase, right_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after deletions (left-right imbalance at node 7)
-    //                       7
-    //
-    //          3                       8
-    //
-    //    1           5
-    //
-    //             4     6
+    //                               7
+    //               3                               8
+    //       1               5
+    //                   4       6
 
     // Expected shape of tree after rebalancing
-    //                       5
-    //
-    //          3                       7
-    //
-    //    1           4            6
+    //                               5
+    //               3                               7
+    //       1               4               6
 }
 
 /**
@@ -980,13 +865,9 @@ TEST (Erase, both_child_find_min_basic)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    3
-    //
-    //          1                    5
-    //
-    //    1          5          9        13
-    //
-    // 0     2    4    6
+    //                               3
+    //               1                               5
+    //       0               2               4               6
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), (size_t)6);
@@ -994,13 +875,9 @@ TEST (Erase, both_child_find_min_basic)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after erase (balanced)
-    //                    9
-    //
-    //          1                    5
-    //
-    //    1          5                  13
-    //
-    // 0     2    4    6
+    //                               4
+    //               1                               5
+    //       0               2                               6
 }
 
 /**
@@ -1020,13 +897,10 @@ TEST (Erase, both_child_find_min_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                            3
-    //
-    //                  1                    5
-    //
-    //            0          2          4         7
-    //
-    //                                          6
+    //                               3
+    //               1                               5
+    //       0               2               4               7
+    //                                                   6
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -1034,20 +908,15 @@ TEST (Erase, both_child_find_min_rl)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after erase (right-left imbalance at node 5)
-    //                            4
-    //
-    //                  1                    5
-    //
-    //            0          2                    7
-    //
-    //                                          6
+    //                               4
+    //               1                               5
+    //       0               2                               7
+    //                                                   6
 
     // Expected shape of tree after rebalancing
-    //                            4
-    //
-    //                  1                    6
-    //
-    //            0          2          5         7
+    //                               4
+    //               1                               6
+    //       0               2               5               7
 }
 
 /**
@@ -1067,13 +936,10 @@ TEST (Erase, both_child_find_min_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                    3
-    //
-    //          1                   5
-    //
-    //     0         2         4         6
-    //
-    //                                      7
+    //                               3
+    //               1                               5
+    //       0               2               4               6
+    //                                                           7
 
     tree.erase (3);
     ASSERT_EQ (tree.size (), (size_t)7);
@@ -1081,20 +947,15 @@ TEST (Erase, both_child_find_min_rr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after erase (right-right imbalance at node 5)
-    //                            4
-    //
-    //                  1                   5
-    //
-    //             0         2                   6
-    //
-    //                                              7
+    //                               4
+    //               1                               5
+    //       0               2                               6
+    //                                                           7
 
     // Expected shape of tree after rebalancing
-    //                             4
-    //
-    //                   1                   6
-    //
-    //              0         2         5         7
+    //                               4
+    //               1                               6
+    //       0               2               5               7
 }
 
 /**
@@ -1114,13 +975,10 @@ TEST (Erase, both_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                            4
-    //
-    //                  2                    6
-    //
-    //            1          3          5
-    //
-    //         0
+    //                               4
+    //               2                               6
+    //       1               3               5
+    //   0
 
     tree.erase (4);
     ASSERT_EQ (tree.size (), (size_t)6);
@@ -1128,20 +986,16 @@ TEST (Erase, both_child_ll)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after erase (left-left imbalance at node 5)
-    //                            5
-    //
-    //                  2                    6
-    //
-    //            1          3
-    //
-    //         0
+    //                               5
+    //               2                               6
+    //       1               3
+    //   0
 
     // Expected shape of tree after rebalancing
-    //                            2
-    //
-    //                  1                    5
-    //
-    //            0                     3         6
+    //                               2
+    //               1                               5
+    //       0                               3               6
+    //                                   2
 }
 
 /**
@@ -1161,13 +1015,10 @@ TEST (Erase, both_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after insertions (balanced)
-    //                            5
-    //
-    //                  2                    7
-    //
-    //            1          4          6
-    //
-    //                    3
+    //                               5
+    //               2                               7
+    //       1               4               6
+    //                   3
 
     tree.erase (5);
     ASSERT_EQ (tree.size (), (size_t)6);
@@ -1175,20 +1026,15 @@ TEST (Erase, both_child_lr)
     ASSERT_EQ (tree.check_balance (), true);
 
     // Expected shape of tree after erase (left-right imbalance at node 6)
-    //                            6
-    //
-    //                  2                    7
-    //
-    //            1          4
-    //
-    //                    3
+    //                               6
+    //               2                               7
+    //       1               4
+    //                   3
 
     // Expected shape of tree after rebalancing
-    //                            4
-    //
-    //                  2                    6
-    //
-    //            1          3          7
+    //                               4
+    //               2                               7
+    //       1               3               6
 }
 
 /**
