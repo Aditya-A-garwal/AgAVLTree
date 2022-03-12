@@ -21,11 +21,12 @@ More information on each of the above can be found in their respective directori
 | Find smallest element strictly less       | O(logN)                   |
 | Find smallest element less or equal       | O(logN)                   |
 
-AVL trees can be used anywhere fast insertion, deletion and lookup of keys are required, Some examples of this are -
-* Counting the number of distinct elements in an array without sorting or modifying it
-* Implementing data structure such as sets, maps and priority queues
-* Maintaining a sorted container of objects, with insertions and deletions happening at random
+Since AVL trees are a kind of binary search tree, they have a very wide domain in which they can be used, some examples of this are -
+* Removing duplicate elements from an array
+* Implementing Associative data structures like sets and maps, where a key and value pair must be kept together (ordered by the key)
+* Implementing an index for a data base (in memory)
 
+More specific examples (along with implementations) have been given in the ```examples``` directory.
 ## How to Build
 ### Dependencies
 * CMake (version 3.16 or above)
@@ -38,9 +39,21 @@ The tree uses CMake as a build system generator. Create a build directory in the
 
     cmake -S .. -B .
 
-If the generator or compiler-toolchain needs to be changed, it can be done at this step. For example, to use NMake as a generator and GCC for compilation on Windows (instead of VS proj and the MSVC compiler), the command can be modified as follows -
+Then, to build all the targets, the following command can be run (in the build directory itself) -
+
+    cmake --build .
+
+If the generator or compiler-toolchain needs to be changed, it can be done while configuring CMake. For example, to use NMake as a generator and GCC for compilation on Windows (instead of VS proj and the MSVC compiler), the command can be modified as follows -
 
     cmake -S .. -B . -G "NMake Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+
+The above command also includes the benchmarks, tests and examples by default. Consequently, If any of them do not need to be built, then the command can be modified as follows -
+
+    cmake -S .. -B . -DBUILD_BENCHMARKS=off -DBUILD_TESTS=off -DBUILD_EXAMPLES=off
+
+For example, if only the tests do not have to be built, then the command may be modified to look like -
+
+    cmake -S .. -B . -DBUILD_TESTS=off
 
 **Note - In case a different compiler than the default is to be used, it is necessary to specify both the C and C++ compilers explicitly. This is because Google Test uses the C compiler as well.**
 ## How to Use
