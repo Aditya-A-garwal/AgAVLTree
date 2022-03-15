@@ -1,7 +1,7 @@
 #ifndef AG_AVL_TREE_GUARD_H
 #define AG_AVL_TREE_GUARD_H
 
-#ifdef AVL_TEST_MODE
+#ifdef AG_TEST_MODE
 #define TEST_MODE(...)                          __VA_ARGS__
 #define NO_TEST_MODE(...)
 #else
