@@ -1,8 +1,10 @@
 cmake_minimum_required (VERSION 3.16)
 
+# do not build gmock
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 set(BUILD_GMOCK OFF)
 
+# fetch the google test repository as a dependency and build it
 include (FetchContent)
 FetchContent_Declare (
     googletest
@@ -12,10 +14,12 @@ FetchContent_Declare (
 set (gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable (googletest)
 
+# helper macro to set flags for all targets
 macro (set_flags)
 
     message ("Setting flags for tests")
 
+    # all warnings (even extra) should be considered as errors
     set (CMAKE_CXX_FLAGS "")
     set (CMAKE_CXX_FLAGS_RELEASE "")
     set (CMAKE_CXX_FLAGS_DEBUG "")

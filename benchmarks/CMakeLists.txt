@@ -1,15 +1,19 @@
 cmake_minimum_required (VERSION 3.16)
 
+# helper macro to set compiler flags for all targets
 macro (set_flags)
 
     message ("Setting flags for benchmarks")
 
+    # clear out all flags which CMake sets by default based on the build mode
     set (CMAKE_CXX_FLAGS "")
     set (CMAKE_CXX_FLAGS_RELEASE "")
     set (CMAKE_CXX_FLAGS_DEBUG "")
     set (CMAKE_CXX_FLAGS_RELMINSIZE "")
     set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 
+    # all warnings (even extra) should be considered as errors
+    # additionally, optimize completely for speed
     if (MSVC OR MSVC_IDE)
         target_compile_options (benchmark PRIVATE "/W4" "/WX" "/EHsc" "/Ox")
         target_compile_options (random_gen PRIVATE "/W4" "/WX" "/EHsc" "/Ox")
@@ -24,6 +28,7 @@ macro (set_flags)
 
 endmacro ()
 
+# helper macro to define preprocessor macros for all targets
 macro (set_macros)
 
     target_compile_definitions (random_gen PRIVATE FILE_OUT="${CMAKE_CURRENT_SOURCE_DIR}/data/random_all.in")
