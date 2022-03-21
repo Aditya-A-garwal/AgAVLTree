@@ -1630,7 +1630,7 @@ lt (const char * const & a, const char * const & b)
 }
 
 bool
-eq (const char * const & a, const char * const & b)
+eq (const char *a, const char *b)
 {
     return strcmp (a, b) == 0;
 }
