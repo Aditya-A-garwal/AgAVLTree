@@ -69,20 +69,20 @@ class AgAVLTree {
 
 
     struct tree_node_t {
-        tree_node_t * lptr      {nullptr};
-        tree_node_t * rptr      {nullptr};
-        uint8_t       height    {0};
-        val_t         val;
+        tree_node_t * lptr      {nullptr};              /* Pointer to left child of the node */
+        tree_node_t * rptr      {nullptr};              /* Pointer to right child of the node */
+        uint8_t       height    {0};                    /* Height of subtree of node */
+        val_t         val;                              /* Value stored at this node */
     };
 
 
 
     struct dbg_info_t {
 
-        int32_t ll_count        {0};
-        int32_t lr_count        {0};
-        int32_t rl_count        {0};
-        int32_t rr_count        {0};
+        int32_t ll_count        {0};                    /* Number of times left-left rotation has occoured */
+        int32_t lr_count        {0};                    /* Number of times left-right rotation has occoured */
+        int32_t rl_count        {0};                    /* Number of times right-left rotation has occoured */
+        int32_t rr_count        {0};                    /* Number of times right-right rotation has occoured */
 
         void
         init ()
@@ -96,14 +96,14 @@ class AgAVLTree {
 
 
 
-    using node_t        = tree_node_t;
-    using node_ptr_t    = node_t *;
+    using node_t            = tree_node_t;              /* Type of node */
+    using node_ptr_t        = node_t *;                 /* Pointer to node */
 
-    using link_t        = node_t *;
-    using link_ptr_t    = link_t *;
+    using link_t            = node_t *;                 /* Type of link from a node to its child */
+    using link_ptr_t        = link_t *;                 /* Pointer to link between nodes */
 
-    using balance_t     = void (*) (node_ptr_t *);
-    using comparator_t  = bool (*) (const val_t &, const val_t &);
+    using lessthan_comp_t   = decltype (mComp);         /* Data type of the less-than comparator */
+    using equals_comp_t     = decltype (mEquals);       /* Data type of the equals comparator */
 
     NO_TEST_MODE (public:)
 
@@ -117,8 +117,8 @@ class AgAVLTree {
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
 
-        node_ptr_t mPtr         {nullptr};                                  // pointer to tree node (nullptr if points to end())
-        tree_ptr_t mTreePtr     {nullptr};                                  // pointer to tree instance
+        node_ptr_t mPtr         {nullptr};                                  /* Ppointer to tree node (nullptr if points to end()) */
+        tree_ptr_t mTreePtr     {nullptr};                                  /* Ppointer to tree instance */
 
         NO_TEST_MODE (public:)
 
@@ -146,8 +146,8 @@ class AgAVLTree {
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
 
-        node_ptr_t mPtr         {nullptr};                                  // pointer to tree node (nullptr if points to rend())
-        tree_ptr_t mTreePtr     {nullptr};                                  // pointer to tree instance
+        node_ptr_t mPtr         {nullptr};                                  /* Pointer to tree node (nullptr if points to rend()) */
+        tree_ptr_t mTreePtr     {nullptr};                                  /* Pointer to tree instance */
 
         NO_TEST_MODE (public:)
 
@@ -214,14 +214,12 @@ class AgAVLTree {
 
 
 
-    node_ptr_t      mRoot                       {nullptr};                  // pointer to the root node
-    size_t          mSz                         {0};                        // size of tree (number of nodes)
+    node_ptr_t      mRoot                       {nullptr};                  /* Pointer to the root node */
+    size_t          mSz                         {0};                        /* Size of tree (number of nodes) */
 
-    // comparator_t    mComp;                                                  // function pointer to < comparator (default uses operator<)
-    // comparator_t    mEquals;                                                // function pointer to == comparator (default uses operator==)
 
     TEST_MODE (
-    dbg_info_t      dbg_info;                                               // structure holding information related to debugging (TEST ONLY)
+    dbg_info_t      dbg_info;                                               /* Structure holding information related to debugging (TEST ONLY) */
     )
 
     //      Aggregators
