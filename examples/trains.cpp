@@ -1,4 +1,7 @@
-/*
+/**
+ * @file                    trains.cpp
+ * @author                  Aditya Agarwal (aditya,agarwal@dumblebots.com)
+ *
  * THIS IS AN INTERACTIVE EXAMPLE
  * A dynamic set of trains needs to be maintained, where new trains are added and old trains removed randomly
  * Each train has an ID, name and pickup time

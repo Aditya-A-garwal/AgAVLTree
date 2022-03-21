@@ -1,4 +1,7 @@
-/*
+/**
+ * @file                    array_distinct.cpp
+ * @author                  Aditya Agarwal (aditya,agarwal@dumblebots.com)
+ *
  * In this example, given an array, we need to find the number of distinct elements inside it without
  * modifying it
  * All the elements from the array be iterated over and inserted into an AVL tree one by one

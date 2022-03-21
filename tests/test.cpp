@@ -1,3 +1,9 @@
+/**
+ * @file                        test.cpp
+ * @author                      Aditya Agarwal (aditya.agarwal@dumblebots.com)
+ * @brief                       Unit Tests
+ */
+
 #include <cstdlib>
 #include <functional>
 

@@ -1,3 +1,9 @@
+/**
+ * @file                    AgAVLTree.h
+ * @author                  Aditya Agarwal (aditya,agarwal@dumblebots.com)
+ * @brief                   Implementation of the AgAVLTree class
+ */
+
 #ifndef AG_AVL_TREE_GUARD_H
 #define AG_AVL_TREE_GUARD_H
 

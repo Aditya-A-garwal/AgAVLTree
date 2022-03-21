@@ -1,4 +1,10 @@
 /**
+ * @file                    AgAVLTree_iter.h
+ * @author                  Aditya Agarwal (aditya,agarwal@dumblebots.com)
+ * @brief                   Implementation of AgAVLTree forward and reverse iterator methods
+ */
+
+/**
  * @brief                   Construct a new avl tree::AVL<val t>::iterator::iterator object
  *
  * @note                    if pPtr is nullptr, then the iterator is said to be pointing to pTreePtr->end() (the logical element after the end in the forward direction)

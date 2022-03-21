@@ -1,4 +1,7 @@
-/*
+/**
+ * @file                    demo_all.cpp
+ * @author                  Aditya Agarwal (aditya.agarwal@dumblebots.com)
+ *
  * In this example, all the features of the tree are shown
 */
 

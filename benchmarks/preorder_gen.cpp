@@ -1,3 +1,9 @@
+/**
+ * @file                preorder_gen.cpp
+ * @author              Aditya Agarwal (aditya.agarwal@dumblebots.com)
+ * @brief               Program to generate benchmark record file, with records in preorder
+ */
+
 #include <iostream>
 #include <fstream>
 

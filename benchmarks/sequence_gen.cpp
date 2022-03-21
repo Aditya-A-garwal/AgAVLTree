@@ -1,3 +1,9 @@
+/**
+ * @file                sequence_gen.cpp
+ * @author              Aditya Agarwal (aditya.agarwal@dumblebots.com)
+ * @brief               Program to generate benchmark record file, with records in ascending order
+ */
+
 #include <iostream>
 #include <fstream>
 

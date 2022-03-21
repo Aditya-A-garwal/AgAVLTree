@@ -1,4 +1,7 @@
-/*
+/**
+ * @file                lumberjack.cpp
+ * @author              Aditya Agarwal (aditya.agarwal@dumblebots.com)
+ *
  * In this example, we are given a set of logs and requests. Each Log has a size and an ID. Each request
  * has a minimum size requirement
  * For each request, report the smallest Log that meets the minimum size requirement of the request and
