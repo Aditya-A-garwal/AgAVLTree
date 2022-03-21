@@ -22,7 +22,7 @@
  */
 template <typename val_t>
 bool
-default_comp (const val_t &pA, const val_t &pB)
+ag_default_comp (const val_t &pA, const val_t &pB)
 {
     return pA < pB;
 }
@@ -39,7 +39,7 @@ default_comp (const val_t &pA, const val_t &pB)
  */
 template <typename val_t>
 bool
-default_equals (const val_t &pA, const val_t &pB)
+ag_default_equals (const val_t &pA, const val_t &pB)
 {
     return pA == pB;
 }
@@ -51,8 +51,11 @@ default_equals (const val_t &pA, const val_t &pB)
  * @tparam mComp            Comparator to use while making less than comparisons (defaults to operator<)
  * @tparam mEquals          Comparator to use while making equals comparisons (defaults to operator==)
  */
-template <typename val_t, auto mComp = default_comp<val_t>, auto mEquals = default_equals<val_t>>
+template <typename val_t, auto mComp = ag_default_comp<val_t>, auto mEquals = ag_default_equals<val_t>>
 class AgAVLTree {
+
+    static_assert (std::is_invocable<decltype (mComp), val_t, val_t>::value, "Lessthan comparator must be callable");
+    static_assert (std::is_invocable<decltype (mEquals), val_t, val_t>::value, "Equals comparator must be callable");
 
     TEST_MODE (public:)
     NO_TEST_MODE (protected:)
@@ -1286,4 +1289,6 @@ AgAVLTree<val_t, mComp, mEquals>::get_root_val ()
 
 #include "AgAVLTree_iter.h"
 
+#undef TEST_MODE
+#undef NO_TEST_MODE
 #endif                    // Header guard
