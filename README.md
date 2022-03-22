@@ -1,10 +1,10 @@
 # AgAVLTree
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-ubuntu-gcc?label=build-test-ubuntu-gcc)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-ubuntu-llvm?label=build-test-ubuntu-llvm)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-mingw?label=build-test-windows-mingw)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-llvm?label=build-test-windows-llvm)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-msvc?label=build-test-windows-msvc)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-ubuntu-gcc?label=build-test-ubuntu-gcc)](https://github.com/Aditya-A-garwal/AgAVLTree/actions/workflows/build-test-ubuntu-gcc.yaml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-ubuntu-llvm?label=build-test-ubuntu-llvm)](https://github.com/Aditya-A-garwal/AgAVLTree/actions/workflows/build-test-ubuntu-llvm.yaml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-mingw?label=build-test-windows-mingw)](https://github.com/Aditya-A-garwal/AgAVLTree/actions/workflows/build-test-windows-mingw.yaml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-llvm?label=build-test-windows-llvm)](https://github.com/Aditya-A-garwal/AgAVLTree/actions/workflows/build-test-windows-llvm.yaml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aditya-A-garwal/AgAVLTree/build-test-windows-msvc?label=build-test-windows-msvc)](https://github.com/Aditya-A-garwal/AgAVLTree/actions/workflows/build-test-windows-msvc.yaml)
 
 ## Overview
 This is a high-performance, templatized C++ implementation of the AVL tree data structure, which is a type of self balancing binary search tree. It supports fast insertion, deletion, binary searching and bidirectional iteration. It can be used for both, learning about AVL trees, and in applications.<br>
