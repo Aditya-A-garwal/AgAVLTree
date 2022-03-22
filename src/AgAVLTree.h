@@ -818,6 +818,7 @@ AgAVLTree<val_t, mComp, mEquals>::insert (link_ptr_t pCur, const val_t & pVal)
 
         // failed insertion (new failed)
         if (ins == nullptr) {
+            DBG_MODE (std::cout << "Could not allocate new node\n";)
             return false;
         }
 
