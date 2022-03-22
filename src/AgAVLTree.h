@@ -63,9 +63,8 @@ class AgAVLTree {
     static_assert (std::is_invocable<decltype (mComp), val_t, val_t>::value, "Lessthan comparator must be callable");
     static_assert (std::is_invocable<decltype (mEquals), val_t, val_t>::value, "Equals comparator must be callable");
 
-    DBG_MODE (public:)
-    NO_DBG_MODE (protected:)
 
+    protected:
 
 
     struct tree_node_t {
@@ -105,14 +104,14 @@ class AgAVLTree {
     using lessthan_comp_t   = decltype (mComp);         /* Data type of the less-than comparator */
     using equals_comp_t     = decltype (mEquals);       /* Data type of the equals comparator */
 
-    NO_DBG_MODE (public:)
+
+    public:
 
 
 
     struct iterator {
 
-        DBG_MODE (public:)
-        NO_DBG_MODE (protected:)
+        protected:
 
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
@@ -120,7 +119,7 @@ class AgAVLTree {
         node_ptr_t mPtr         {nullptr};                                  /* Ppointer to tree node (nullptr if points to end()) */
         tree_ptr_t mTreePtr     {nullptr};                                  /* Ppointer to tree instance */
 
-        NO_DBG_MODE (public:)
+        public:
 
         iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         iterator                () = default;
@@ -140,8 +139,7 @@ class AgAVLTree {
 
     struct reverse_iterator {
 
-        DBG_MODE (public:)
-        NO_DBG_MODE (protected:)
+        protected:
 
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
@@ -149,7 +147,7 @@ class AgAVLTree {
         node_ptr_t mPtr         {nullptr};                                  /* Pointer to tree node (nullptr if points to rend()) */
         tree_ptr_t mTreePtr     {nullptr};                                  /* Pointer to tree instance */
 
-        NO_DBG_MODE (public:)
+        public:
 
         reverse_iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         reverse_iterator                () = default;
@@ -165,6 +163,10 @@ class AgAVLTree {
         bool             operator!=     (const reverse_iterator & pOther) const;
     };
 
+
+    DBG_MODE (
+    dbg_info_t      dbg_info;                                               /* Structure holding information related to debugging (TEST ONLY) */
+    )
 
 
     //      Constructors
@@ -209,18 +211,13 @@ class AgAVLTree {
 
 
 
-    DBG_MODE (public:)
-    NO_DBG_MODE (private:)
+    private:
 
 
 
     node_ptr_t      mRoot                       {nullptr};                  /* Pointer to the root node */
     size_t          mSz                         {0};                        /* Size of tree (number of nodes) */
 
-
-    DBG_MODE (
-    dbg_info_t      dbg_info;                                               /* Structure holding information related to debugging (TEST ONLY) */
-    )
 
     //      Aggregators
 
@@ -270,38 +267,15 @@ class AgAVLTree {
     node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal) const;
 };
 
-// template <typename val_t, auto comp, auto equals>
-// using AggAVLTree<val_t> = AgAVLTree<val_t, comp, equals>;
-
-// /**
-//  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
-//  */
-// template <typename val_t, auto mComp, auto mEquals>
-// AgAVLTree<val_t, mComp, mEquals>::AgAVLTree () :
-//     mComp       {default_lessthan},
-//     mEquals     {default_equals}
-// {}
-
 
 /**
  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
+ *
  */
 template <typename val_t, auto mComp, auto mEquals>
 AgAVLTree<val_t, mComp, mEquals>::AgAVLTree ()
 {
 }
-
-// /**
-//  * @brief                   Construct a new avl tree::AVL<val t>::AVL object
-//  *
-//  * @param pLtComp
-//  * @param pEqComp
-//  */
-// template <typename val_t, auto mComp, auto mEquals>
-// AgAVLTree<val_t, mComp, mEquals>::AgAVLTree (const comparator_t pLtComp, const comparator_t pEqComp) :
-//     mComp       {pLtComp},
-//     mEquals     {pEqComp}
-// {}
 
 /**
  * @brief                   Destroy the avl tree::AVL<val t>::AVL object
