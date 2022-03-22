@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#define AG_TEST_MODE                    // to be able to access private members and add extra diagnostic info collection
+#define AG_DBG_MODE                     // to be able to access private members and add extra diagnostic info collection
 
 #include "AgAVLTree.h"
 

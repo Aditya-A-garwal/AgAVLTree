@@ -7,12 +7,12 @@
 #ifndef AG_AVL_TREE_GUARD_H
 #define AG_AVL_TREE_GUARD_H
 
-#ifdef AG_TEST_MODE
-#define TEST_MODE(...)                          __VA_ARGS__
-#define NO_TEST_MODE(...)
+#ifdef AG_DBG_MODE
+#define DBG_MODE(...)                          __VA_ARGS__
+#define NO_DBG_MODE(...)
 #else
-#define TEST_MODE(...)
-#define NO_TEST_MODE(...)                       __VA_ARGS__
+#define DBG_MODE(...)
+#define NO_DBG_MODE(...)                       __VA_ARGS__
 #endif
 
 #include <type_traits>
@@ -63,8 +63,8 @@ class AgAVLTree {
     static_assert (std::is_invocable<decltype (mComp), val_t, val_t>::value, "Lessthan comparator must be callable");
     static_assert (std::is_invocable<decltype (mEquals), val_t, val_t>::value, "Equals comparator must be callable");
 
-    TEST_MODE (public:)
-    NO_TEST_MODE (protected:)
+    DBG_MODE (public:)
+    NO_DBG_MODE (protected:)
 
 
 
@@ -105,14 +105,14 @@ class AgAVLTree {
     using lessthan_comp_t   = decltype (mComp);         /* Data type of the less-than comparator */
     using equals_comp_t     = decltype (mEquals);       /* Data type of the equals comparator */
 
-    NO_TEST_MODE (public:)
+    NO_DBG_MODE (public:)
 
 
 
     struct iterator {
 
-        TEST_MODE (public:)
-        NO_TEST_MODE (protected:)
+        DBG_MODE (public:)
+        NO_DBG_MODE (protected:)
 
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
@@ -120,7 +120,7 @@ class AgAVLTree {
         node_ptr_t mPtr         {nullptr};                                  /* Ppointer to tree node (nullptr if points to end()) */
         tree_ptr_t mTreePtr     {nullptr};                                  /* Ppointer to tree instance */
 
-        NO_TEST_MODE (public:)
+        NO_DBG_MODE (public:)
 
         iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         iterator                () = default;
@@ -140,8 +140,8 @@ class AgAVLTree {
 
     struct reverse_iterator {
 
-        TEST_MODE (public:)
-        NO_TEST_MODE (protected:)
+        DBG_MODE (public:)
+        NO_DBG_MODE (protected:)
 
         using tree_ptr_t        = const AgAVLTree<val_t, mComp, mEquals> *;
         using ref_t             = const val_t &;
@@ -149,7 +149,7 @@ class AgAVLTree {
         node_ptr_t mPtr         {nullptr};                                  /* Pointer to tree node (nullptr if points to rend()) */
         tree_ptr_t mTreePtr     {nullptr};                                  /* Pointer to tree instance */
 
-        NO_TEST_MODE (public:)
+        NO_DBG_MODE (public:)
 
         reverse_iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
         reverse_iterator                () = default;
@@ -201,7 +201,7 @@ class AgAVLTree {
 
     //      Utilities for testing
 
-    TEST_MODE (
+    DBG_MODE (
     bool             check_balance              (node_ptr_t pCur);
     bool             check_balance              ();
     val_t            get_root_val               ();
@@ -209,8 +209,8 @@ class AgAVLTree {
 
 
 
-    TEST_MODE (public:)
-    NO_TEST_MODE (private:)
+    DBG_MODE (public:)
+    NO_DBG_MODE (private:)
 
 
 
@@ -218,7 +218,7 @@ class AgAVLTree {
     size_t          mSz                         {0};                        /* Size of tree (number of nodes) */
 
 
-    TEST_MODE (
+    DBG_MODE (
     dbg_info_t      dbg_info;                                               /* Structure holding information related to debugging (TEST ONLY) */
     )
 
@@ -602,7 +602,7 @@ AgAVLTree<val_t, mComp, mEquals>::balance_ll (link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-    TEST_MODE (dbg_info.ll_count += 1;)
+    DBG_MODE (dbg_info.ll_count += 1;)
 }
 
 /**
@@ -642,7 +642,7 @@ AgAVLTree<val_t, mComp, mEquals>::balance_lr (link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-    TEST_MODE (dbg_info.lr_count += 1;)
+    DBG_MODE (dbg_info.lr_count += 1;)
 }
 
 /**
@@ -682,7 +682,7 @@ AgAVLTree<val_t, mComp, mEquals>::balance_rl (link_ptr_t pRoot)
     // bot->height = max (ldep, rdep);
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-    TEST_MODE (dbg_info.rl_count += 1;)
+    DBG_MODE (dbg_info.rl_count += 1;)
 }
 
 /**
@@ -716,7 +716,7 @@ AgAVLTree<val_t, mComp, mEquals>::balance_rr (link_ptr_t pRoot)
 
     bot->height     = 1 + max (bot->lptr->height, bot->rptr->height);
 
-    TEST_MODE (dbg_info.rr_count += 1;)
+    DBG_MODE (dbg_info.rr_count += 1;)
 }
 
 /**
@@ -1246,7 +1246,7 @@ AgAVLTree<val_t, mComp, mEquals>::last_smaller_equals_ptr (const val_t & pVal) c
     return last_smaller_equals_ptr (pVal, mRoot);
 }
 
-TEST_MODE (
+DBG_MODE (
 template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::check_balance (node_ptr_t cur)
@@ -1293,6 +1293,6 @@ AgAVLTree<val_t, mComp, mEquals>::get_root_val ()
 
 #include "AgAVLTree_iter.h"
 
-#undef TEST_MODE
-#undef NO_TEST_MODE
+#undef DBG_MODE
+#undef NO_DBG_MODE
 #endif                    // Header guard
