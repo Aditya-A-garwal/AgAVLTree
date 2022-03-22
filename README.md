@@ -62,6 +62,14 @@ For example, if only the tests do not have to be built, then the command may be 
     cmake -S .. -B . -DBUILD_TESTS=off
 
 **Note - In case a different compiler than the default is to be used, it is necessary to specify both the C and C++ compilers explicitly. This is because Google Test uses the C compiler as well.**
+
+### Building Online Documentation
+
+[Doxygen](https://github.com/doxygen/doxygen) has been used for generating the documentation for the repository. To generate docs, cd into the ```doxygen``` directory and run the following command -
+
+    doxygen config
+
+This will build the online documentation in the ```doxygen/html``` directory.
 ## How to Use
 To use the tree, include the file ```AgAVLTree.h``` in your program and instantiate the ```AgAVLTree``` class. The type of data which the instance manages should be passed as a template argument. Additionally, custom comparators for less-than and equals comparisons can also be provided, which, if given, would be used over any overloaded < and == operators. If these are not provided, the type must have operator< and operator== implemented.<br>
 The class contains insert and erase methods to insert and erase nodes, which return true or false depending on whether the insertion/erasing was succesful.
