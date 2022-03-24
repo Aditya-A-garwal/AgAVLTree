@@ -1667,3 +1667,59 @@ TEST (CustomComparator, c_string_test)
         ASSERT_EQ (lt (*it1, *it2), true);
     }
 }
+
+TEST (CopyConstructor, multiElementTree)
+{
+    constexpr int                   lo  = 1;
+    constexpr int                   hi  = 1'000;
+
+    AgAVLTree<int>                  tree1;
+
+    for (auto i = lo; i <= hi; ++i) {
+        ASSERT_TRUE (tree1.insert (i));
+    }
+
+    AgAVLTree<int>                  tree2 (tree1);
+
+    ASSERT_EQ (tree1.size (), tree2.size ());
+
+    auto                            it1 = tree1.begin ();
+    auto                            it2 = tree2.begin ();
+
+    for (; it1 != tree1.end (); ++it1, ++it2) {
+        ASSERT_EQ (*it1, *it2);
+    }
+
+    ASSERT_TRUE (tree2.erase (hi));
+
+    ASSERT_EQ (tree1.size (), hi - lo + 1);
+    ASSERT_EQ (tree2.size (), hi - lo);
+
+    it1 = tree1.begin ();
+    it2 = tree2.begin ();
+
+    for (auto i = lo; i <= hi; ++i, ++it1) {
+        ASSERT_EQ (*it1, i);
+    }
+    ASSERT_EQ (it1, tree1.end ());
+
+    for (auto i = lo; i < hi; ++i, ++it2) {
+        ASSERT_EQ (*it2, i);
+    }
+    ASSERT_EQ (++it2, tree2.end ());
+}
+
+TEST (CopyConstructor, emptyTree)
+{
+    AgAVLTree<int>                  tree1;
+    AgAVLTree<int>                  tree2 (tree1);
+
+    ASSERT_EQ (tree1.size (), tree2.size ());
+
+    auto                            it1 = tree1.begin ();
+    auto                            it2 = tree2.begin ();
+
+    for (; it1 != tree1.end (); ++it1, ++it2) {
+        ASSERT_EQ (*it1, *it2);
+    }
+}
