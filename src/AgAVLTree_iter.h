@@ -13,7 +13,7 @@
  * @param PTreeptr          The point to the tree which contains the node
  */
 template <typename val_t, auto mComp, auto mEquals>
-AgAVLTree<val_t, mComp, mEquals>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
+AgAVLTree<val_t, mComp, mEquals>::iterator::iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) noexcept :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 
@@ -132,7 +132,7 @@ AgAVLTree<val_t, mComp, mEquals>::iterator::operator!= (const AgAVLTree<val_t, m
  * @param pTreePtr          The point to the tree which contains the node
  */
 template <typename val_t, auto mComp, auto mEquals>
-AgAVLTree<val_t, mComp, mEquals>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) :
+AgAVLTree<val_t, mComp, mEquals>::reverse_iterator::reverse_iterator (node_ptr_t pPtr, tree_ptr_t pTreePtr) noexcept :
     mPtr {pPtr}, mTreePtr {pTreePtr}
 {}
 

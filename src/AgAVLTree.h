@@ -121,7 +121,7 @@ class AgAVLTree {
 
         public:
 
-        iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
+        iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr) noexcept;
         iterator                () = default;
 
         iterator operator++     ();
@@ -149,7 +149,7 @@ class AgAVLTree {
 
         public:
 
-        reverse_iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr);
+        reverse_iterator                (node_ptr_t pPtr, tree_ptr_t pTreePtr) noexcept;
         reverse_iterator                () = default;
 
         reverse_iterator operator++     ();
@@ -171,9 +171,9 @@ class AgAVLTree {
 
     //      Constructors
 
-    AgAVLTree                                   ();
-    // AgAVLTree                                   (const comparator_t pLtComp, const comparator_t pEqComp);
-    AgAVLTree                                   (const AgAVLTree &) = delete;
+    AgAVLTree                                   () noexcept;
+    AgAVLTree                                   (const AgAVLTree &) noexcept;
+    AgAVLTree                                   (AgAVLTree &&) noexcept;
 
     //      Destructor
 
@@ -189,17 +189,17 @@ class AgAVLTree {
 
     //      Modifiers
 
-    bool             insert                     (const val_t pVal);
-    bool             erase                      (const val_t pVal);
+    bool             insert                     (const val_t & pVal);
+    bool             erase                      (const val_t & pVal);
     void             clear                      ();
 
     //      Binary search
 
-    iterator         find                       (const val_t pVal) const;
-    iterator         first_greater_strict       (const val_t pVal) const;
-    iterator         first_greater_equals       (const val_t pVal) const;
-    iterator         last_smaller_strict        (const val_t pVal) const;
-    iterator         last_smaller_equals        (const val_t pVal) const;
+    iterator         find                       (const val_t & pVal) const;
+    iterator         first_greater_strict       (const val_t & pVal) const;
+    iterator         first_greater_equals       (const val_t & pVal) const;
+    iterator         last_smaller_strict        (const val_t & pVal) const;
+    iterator         last_smaller_equals        (const val_t & pVal) const;
 
     //      Utilities for testing
 
@@ -273,7 +273,7 @@ class AgAVLTree {
  *
  */
 template <typename val_t, auto mComp, auto mEquals>
-AgAVLTree<val_t, mComp, mEquals>::AgAVLTree ()
+AgAVLTree<val_t, mComp, mEquals>::AgAVLTree () noexcept
 {
 }
 
@@ -296,7 +296,7 @@ AgAVLTree<val_t, mComp, mEquals>::~AgAVLTree ()
  */
 template <typename val_t, auto mComp, auto mEquals>
 bool
-AgAVLTree<val_t, mComp, mEquals>::insert (val_t pVal)
+AgAVLTree<val_t, mComp, mEquals>::insert (const val_t &pVal)
 {
     if (insert (&mRoot, pVal)) {
         ++mSz;
@@ -315,7 +315,7 @@ AgAVLTree<val_t, mComp, mEquals>::insert (val_t pVal)
  */
 template <typename val_t, auto mComp, auto mEquals>
 bool
-AgAVLTree<val_t, mComp, mEquals>::erase (val_t pVal)
+AgAVLTree<val_t, mComp, mEquals>::erase (const val_t &pVal)
 {
     if (erase (&mRoot, pVal)) {
         --mSz;
@@ -351,7 +351,7 @@ AgAVLTree<val_t, mComp, mEquals>::clear ()
  */
 template <typename val_t, auto mComp, auto mEquals>
 typename AgAVLTree<val_t, mComp, mEquals>::iterator
-AgAVLTree<val_t, mComp, mEquals>::find (val_t pVal) const
+AgAVLTree<val_t, mComp, mEquals>::find (const val_t &pVal) const
 {
     // get a pointer to the node with the appropriate value and give its ownership to an iterator instance
     // in case nullptr is recieved, the iterator points to end()
@@ -368,7 +368,7 @@ AgAVLTree<val_t, mComp, mEquals>::find (val_t pVal) const
  */
 template <typename val_t, auto mComp, auto mEquals>
 typename AgAVLTree<val_t, mComp, mEquals>::iterator
-AgAVLTree<val_t, mComp, mEquals>::first_greater_strict (val_t pVal) const
+AgAVLTree<val_t, mComp, mEquals>::first_greater_strict (const val_t &pVal) const
 {
     // get a pointer to the node with the appropriate value and give its ownership to an iterator instance
     // in case nullptr is recieved, the iterator points to end()
@@ -385,7 +385,7 @@ AgAVLTree<val_t, mComp, mEquals>::first_greater_strict (val_t pVal) const
  */
 template <typename val_t, auto mComp, auto mEquals>
 typename AgAVLTree<val_t, mComp, mEquals>::iterator
-AgAVLTree<val_t, mComp, mEquals>::first_greater_equals (val_t pVal) const
+AgAVLTree<val_t, mComp, mEquals>::first_greater_equals (const val_t &pVal) const
 {
     // get a pointer to the node with the appropriate value and give its ownership to an iterator instance
     // in case nullptr is recieved, the iterator points to end()
@@ -402,7 +402,7 @@ AgAVLTree<val_t, mComp, mEquals>::first_greater_equals (val_t pVal) const
  */
 template <typename val_t, auto mComp, auto mEquals>
 typename AgAVLTree<val_t, mComp, mEquals>::iterator
-AgAVLTree<val_t, mComp, mEquals>::last_smaller_strict (val_t pVal) const
+AgAVLTree<val_t, mComp, mEquals>::last_smaller_strict (const val_t &pVal) const
 {
     // get a pointer to the node with the appropriate value and give its ownership to an iterator instance
     // in case nullptr is recieved, the iterator points to end()
@@ -419,7 +419,7 @@ AgAVLTree<val_t, mComp, mEquals>::last_smaller_strict (val_t pVal) const
  */
 template <typename val_t, auto mComp, auto mEquals>
 typename AgAVLTree<val_t, mComp, mEquals>::iterator
-AgAVLTree<val_t, mComp, mEquals>::last_smaller_equals (val_t pVal) const
+AgAVLTree<val_t, mComp, mEquals>::last_smaller_equals (const val_t &pVal) const
 {
     // get a pointer to the node with the appropriate value and give its ownership to an iterator instance
     // in case nullptr is recieved, the iterator points to end()
