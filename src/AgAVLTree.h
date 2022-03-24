@@ -27,8 +27,8 @@
  * @return false            If pA is not stricly less than pB
  */
 template <typename val_t>
-bool
-ag_default_comp (const val_t &pA, const val_t &pB)
+static bool
+ag_avl_default_comp (const val_t &pA, const val_t &pB)
 {
     return pA < pB;
 }
@@ -44,8 +44,8 @@ ag_default_comp (const val_t &pA, const val_t &pB)
  * @return false            if pA is not strictly equal to pB
  */
 template <typename val_t>
-bool
-ag_default_equals (const val_t &pA, const val_t &pB)
+static bool
+ag_avl_default_equals (const val_t &pA, const val_t &pB)
 {
     return pA == pB;
 }
@@ -57,7 +57,7 @@ ag_default_equals (const val_t &pA, const val_t &pB)
  * @tparam mComp            Comparator to use while making less than comparisons (defaults to operator<)
  * @tparam mEquals          Comparator to use while making equals comparisons (defaults to operator==)
  */
-template <typename val_t, auto mComp = ag_default_comp<val_t>, auto mEquals = ag_default_equals<val_t>>
+template <typename val_t, auto mComp = ag_avl_default_comp<val_t>, auto mEquals = ag_avl_default_equals<val_t>>
 class AgAVLTree {
 
     static_assert (std::is_invocable<decltype (mComp), val_t, val_t>::value, "Lessthan comparator must be callable");
