@@ -1066,6 +1066,10 @@ TEST (Iteration, forward)
     for (auto it = tree.begin (); it != end; ++it, ++v) {
         ASSERT_EQ (*it, v);
     }
+
+    // make sure postfix increment operator is proper
+    auto                    it      = tree.begin ();
+    ASSERT_EQ (*(it++), *(tree.begin()));
 }
 
 /**
