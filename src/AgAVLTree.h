@@ -301,6 +301,20 @@ AgAVLTree<val_t, mComp, mEquals>::AgAVLTree (const AgAVLTree &pOther) noexcept
     mSz = pOther.size ();
 }
 
+/**
+ * @brief                   Move construct a new AgAVLTree<val_t, mComp, mEquals>::AgAVLTree object
+ *
+ * @param pOther            Tree to move
+ */
+template <typename val_t, auto mComp, auto mEquals>
+AgAVLTree<val_t, mComp, mEquals>::AgAVLTree (AgAVLTree &&pOther) noexcept
+{
+    mSz             = pOther.size ();
+    mRoot           = pOther.mRoot;
+
+    pOther.mRoot    = nullptr;
+}
+
 template <typename val_t, auto mComp, auto mEquals>
 bool
 AgAVLTree<val_t, mComp, mEquals>::copy_subtree (node_ptr_t *pNodeThis, const node_ptr_t pNodeOther)
