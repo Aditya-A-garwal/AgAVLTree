@@ -171,42 +171,42 @@ class AgAVLTree {
 
     //      Constructors
 
-    AgAVLTree                                   () noexcept;
-    AgAVLTree                                   (const AgAVLTree &) noexcept;
-    AgAVLTree                                   (AgAVLTree &&) noexcept;
+    AgAVLTree                                       ()                                      noexcept;
+    AgAVLTree                                       (const AgAVLTree &)                     noexcept;
+    AgAVLTree                                       (AgAVLTree &&)                          noexcept;
 
     //      Destructor
 
-    ~AgAVLTree                                  ();
+    ~AgAVLTree                                      ();
 
     //      Iteration and Iterators
 
-    size_t           size                       () const;
-    iterator         begin                      () const;
-    iterator         end                        () const;
-    reverse_iterator rbegin                     () const;
-    reverse_iterator rend                       () const;
+    size_t           size                           ()                                      const;
+    iterator         begin                          ()                                      const;
+    iterator         end                            ()                                      const;
+    reverse_iterator rbegin                         ()                                      const;
+    reverse_iterator rend                           ()                                      const;
 
     //      Modifiers
 
-    bool             insert                     (const val_t & pVal);
-    bool             erase                      (const val_t & pVal);
-    void             clear                      ();
+    bool             insert                         (const val_t & pVal);
+    bool             erase                          (const val_t & pVal);
+    void             clear                          ();
 
     //      Binary search
 
-    iterator         find                       (const val_t & pVal) const;
-    iterator         first_greater_strict       (const val_t & pVal) const;
-    iterator         first_greater_equals       (const val_t & pVal) const;
-    iterator         last_smaller_strict        (const val_t & pVal) const;
-    iterator         last_smaller_equals        (const val_t & pVal) const;
+    iterator         find                           (const val_t & pVal)                    const;
+    iterator         first_greater_strict           (const val_t & pVal)                    const;
+    iterator         first_greater_equals           (const val_t & pVal)                    const;
+    iterator         last_smaller_strict            (const val_t & pVal)                    const;
+    iterator         last_smaller_equals            (const val_t & pVal)                    const;
 
     //      Utilities for testing
 
     DBG_MODE (
-    bool             check_balance              (node_ptr_t pCur);
-    bool             check_balance              ();
-    val_t            get_root_val               ();
+    bool             check_balance                  (node_ptr_t pCur);
+    bool             check_balance                  ();
+    val_t            get_root_val                   ();
     )
 
 
@@ -222,55 +222,57 @@ class AgAVLTree {
     //      Aggregators
 
     template <typename arg_t>
-    static arg_t max                            (const arg_t & pA, const arg_t & pB);
+    static arg_t    max                             (const arg_t & pA, const arg_t & pB);
+
     template <typename arg_t>
-    static arg_t min                            (const arg_t & pA, const arg_t & pB);
+    static arg_t    min                             (const arg_t & pA, const arg_t & pB);
 
     //      Balance Utilities
 
-    static void  calc_height                    (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep);
-    void  balance_ll                            (link_ptr_t pRoot);
-    void  balance_lr                            (link_ptr_t pRoot);
-    void  balance_rl                            (link_ptr_t pRoot);
-    void  balance_rr                            (link_ptr_t pRoot);
+    static void     calc_height                     (node_ptr_t pCur, uint8_t & pLdep, uint8_t & pRdep);
+    void            balance_ll                      (link_ptr_t pRoot);
+    void            balance_lr                      (link_ptr_t pRoot);
+    void            balance_rl                      (link_ptr_t pRoot);
+    void            balance_rr                      (link_ptr_t pRoot);
 
     //      Subtree searches
 
-    node_ptr_t   find_min                       (node_ptr_t pRoot) const;
-    node_ptr_t   find_max                       (node_ptr_t pRoot) const;
-    node_ptr_t   find_min                       () const;
-    node_ptr_t   find_max                       () const;
+    node_ptr_t      find_min                        (node_ptr_t pRoot)                      const;
+    node_ptr_t      find_max                        (node_ptr_t pRoot)                      const;
+    node_ptr_t      find_min                        ()                                      const;
+    node_ptr_t      find_max                        ()                                      const;
 
     //      Modifiers
 
-    bool         insert                         (link_ptr_t pCur, const val_t & pVal);
-    bool         erase                          (link_ptr_t pCur, const val_t & pVal);
-    void         clear                          (node_ptr_t pCur);
+    bool            insert                          (link_ptr_t pCur, const val_t & pVal);
+    bool            erase                           (link_ptr_t pCur, const val_t & pVal);
+    void            clear                           (node_ptr_t pCur);
+
+    bool            copy_subtree                    (node_ptr_t *pNodeThis, const node_ptr_t pNodeOther);
 
     //      Erase modifiers
 
-    node_ptr_t   find_min_move_up               (link_ptr_t pCur);
-    node_ptr_t   find_min_move_up               ();
-    node_ptr_t   find_max_move_up               (link_ptr_t pCur);
-    node_ptr_t   find_max_move_up               ();
+    node_ptr_t      find_min_move_up                (link_ptr_t pCur);
+    node_ptr_t      find_min_move_up                ();
+    node_ptr_t      find_max_move_up                (link_ptr_t pCur);
+    node_ptr_t      find_max_move_up                ();
 
     //      Binary search
 
-    node_ptr_t   find_ptr                       (const val_t & pVal) const;
-    node_ptr_t   first_greater_strict_ptr       (const val_t & pVal, node_ptr_t pVur) const;
-    node_ptr_t   first_greater_strict_ptr       (const val_t & pVal) const;
-    node_ptr_t   first_greater_equals_ptr       (const val_t & pVal, node_ptr_t pCur) const;
-    node_ptr_t   first_greater_equals_ptr       (const val_t & pVal) const;
-    node_ptr_t   last_smaller_strict_ptr        (const val_t & pVal, node_ptr_t pCur) const;
-    node_ptr_t   last_smaller_strict_ptr        (const val_t & pVal) const;
-    node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal, node_ptr_t pCur) const;
-    node_ptr_t   last_smaller_equals_ptr        (const val_t & pVal) const;
+    node_ptr_t      find_ptr                        (const val_t & pVal)                    const;
+    node_ptr_t      first_greater_strict_ptr        (const val_t & pVal, node_ptr_t pVur)   const;
+    node_ptr_t      first_greater_strict_ptr        (const val_t & pVal)                    const;
+    node_ptr_t      first_greater_equals_ptr        (const val_t & pVal, node_ptr_t pCur)   const;
+    node_ptr_t      first_greater_equals_ptr        (const val_t & pVal)                    const;
+    node_ptr_t      last_smaller_strict_ptr         (const val_t & pVal, node_ptr_t pCur)   const;
+    node_ptr_t      last_smaller_strict_ptr         (const val_t & pVal)                    const;
+    node_ptr_t      last_smaller_equals_ptr         (const val_t & pVal, node_ptr_t pCur)   const;
+    node_ptr_t      last_smaller_equals_ptr         (const val_t & pVal)                    const;
 };
 
 
 /**
- * @brief                   Construct a new avl tree::AVL<val t>::AVL object
- *
+ * @brief Construct a new AgAVLTree<val_t, mComp, mEquals>::AgAVLTree object
  */
 template <typename val_t, auto mComp, auto mEquals>
 AgAVLTree<val_t, mComp, mEquals>::AgAVLTree () noexcept
@@ -278,12 +280,52 @@ AgAVLTree<val_t, mComp, mEquals>::AgAVLTree () noexcept
 }
 
 /**
- * @brief                   Destroy the avl tree::AVL<val t>::AVL object
+ * @brief                   Copy construct a new AgAVLTree<val_t, mComp, mEquals>::AgAVLTree object
+ *
+ * @param pOther            Tree to copy
+ */
+template <typename val_t, auto mComp, auto mEquals>
+AgAVLTree<val_t, mComp, mEquals>::AgAVLTree (const AgAVLTree &pOther) noexcept
+{
+    clear ();
+
+    if (pOther.size () == 0) {
+        return;
+    }
+
+    if (!copy_subtree (&mRoot, pOther.mRoot)) {
+        // set some flag to false
+        return;
+    }
+
+    mSz = pOther.size ();
+}
+
+template <typename val_t, auto mComp, auto mEquals>
+bool
+AgAVLTree<val_t, mComp, mEquals>::copy_subtree (node_ptr_t *pNodeThis, const node_ptr_t pNodeOther)
+{
+    if (pNodeOther == nullptr) {
+        return true;
+    }
+
+    // try to copy the current node, if could not allocate, return failed
+    *pNodeThis      = new (std::nothrow) node_t {nullptr, nullptr, pNodeOther->height, pNodeOther->val};
+    if (*pNodeThis == nullptr) {
+        return false;
+    }
+
+    // recursively repeat for both children
+    return copy_subtree (&((*pNodeThis)->lptr), pNodeOther->lptr) && copy_subtree (&((*pNodeThis)->rptr), pNodeOther->rptr);
+}
+
+/**
+ * @brief Destroy the AgAVLTree<val_t, mComp, mEquals>::AgAVLTree object
  */
 template <typename val_t, auto mComp, auto mEquals>
 AgAVLTree<val_t, mComp, mEquals>::~AgAVLTree ()
 {
-    this->clear();
+    clear();
 }
 
 /**
