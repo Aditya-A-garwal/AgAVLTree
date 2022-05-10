@@ -351,8 +351,9 @@ run_benchmark (int pN)
     cntr = 0;
     timer.reset ();
     for (auto i = 0; i < pN; ++i) {
-        it2                         = tree2.find (buffFind[i]);
-        cntr                        += (int32_t)(it2 != tree2.end ());
+        // it2                         = tree2.find (buffFind[i]);
+        // cntr                        += (int32_t)(it2 != tree2.end ());
+        cntr                        += (int32_t)(tree2.exists (buffFind[i]));
     }
     measured = timer.elapsed ();
     results.add_row ({"Find", "AgAVLTree", format_integer (cntr), format_integer (measured)});

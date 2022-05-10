@@ -195,6 +195,7 @@ class AgAVLTree {
 
     //      Binary search
 
+    bool             exists                         (const val_t & pVal)                    const;
     iterator         find                           (const val_t & pVal)                    const;
     iterator         first_greater_strict           (const val_t & pVal)                    const;
     iterator         first_greater_equals           (const val_t & pVal)                    const;
@@ -396,6 +397,36 @@ AgAVLTree<val_t, mComp, mEquals>::clear ()
     clear (mRoot);
     mRoot   = nullptr;
     mSz     = 0;
+}
+
+/**
+ * @brief                   Checks and returns whether a given value exists in the tree
+ *
+ * @param pVal              The value to be found
+ *
+ * @return true             If the value is present in the tree
+ * @return false            If the value is not present in the tree
+ */
+template <typename val_t, auto mComp, auto mEquals>
+bool
+AgAVLTree<val_t, mComp, mEquals>::exists (const val_t &pVal) const
+{
+    node_ptr_t cur {mRoot};
+
+    // repeat while a valid node is being pointed to (not crossed a leaf)
+    while (cur != nullptr) {
+
+        // if a matching node was found, return success
+        if (mEquals (pVal, cur->val)) {
+            return true;
+        }
+
+        // go left if current node is too big, else go right
+        cur = (mComp (pVal, cur->val)) ? (cur->lptr) : (cur->rptr);
+    }
+
+    // if no match was found, return null
+    return false;
 }
 
 /**
